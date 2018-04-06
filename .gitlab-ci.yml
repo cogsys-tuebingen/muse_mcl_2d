@@ -24,6 +24,7 @@ before_script:
   - ln -s $CI_PROJECT_DIR src/$CI_PROJECT_NAME
   # clone dependencies here:
   - cd src
+  - git clone gitlab@gitlab.cs.uni-tuebingen.de:apps/muse_smc.git -b devel muse_smc
   - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_indexed_storage.git -b devel cslibs_indexed_storage
   - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_boost_geometry.git -b devel cslibs_boost_geometry
   - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_vectormaps.git -b devel cslibs_vectormaps
