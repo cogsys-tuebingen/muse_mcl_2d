@@ -49,7 +49,6 @@ catkin_package(
     INCLUDE_DIRS    include
     LIBRARIES       ${PROJECT_NAME}_resampling ${PROJECT_NAME}_sampling
     CATKIN_DEPENDS  muse_smc cslibs_math_ros cslibs_math_2d cslibs_plugins cslibs_plugins_data
-    CFG_EXTRAS      muse_mcl_2d_install_dependencies.cmake
 )
 
 include_directories(
