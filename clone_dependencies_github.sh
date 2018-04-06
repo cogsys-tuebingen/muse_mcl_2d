@@ -2,7 +2,7 @@
 
 git clone https://github.com/cogsys-tuebingen/muse_smc.git
 
-git clone https://github.com/cogsys-tuebingen/cslibs_utility.git lis/cslibs_utility
+git clone https://github.com/cogsys-tuebingen/cslibs_utility.git libs/cslibs_utility
 git clone https://github.com/cogsys-tuebingen/cslibs_plugins.git libs/cslibs_plugins
 git clone https://github.com/cogsys-tuebingen/cslibs_math.git libs/cslibs_math
 git clone https://github.com/cogsys-tuebingen/cslibs_gridmaps.git libs/cslibs_gridmaps

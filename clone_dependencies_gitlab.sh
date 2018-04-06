@@ -2,7 +2,7 @@
 
 git clone gitlab@gitlab.cs.uni-tuebingen.de:apps/muse_smc.git
 
-git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_utility.git lis/cslibs_utility
+git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_utility.git libs/cslibs_utility
 git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_plugins.git libs/cslibs_plugins
 git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_math.git libs/cslibs_math
 git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_gridmaps.git libs/cslibs_gridmaps
