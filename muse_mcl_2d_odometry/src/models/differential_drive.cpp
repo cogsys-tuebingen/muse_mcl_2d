@@ -27,7 +27,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
 
     const double delta_trans = odometry.getDeltaLinear();
     double delta_rot1 = 0.0;
-    if(delta_trans >= 0.01) {
+    if(delta_trans >= 0.000001) {
        delta_rot1  = cslibs_math::common::angle::difference(odometry.getDeltaAngularAbs(),
                                                             odometry.getStartPose().yaw());
     }
@@ -73,8 +73,8 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
         const double delta_rot_hat1  = cslibs_math::common::angle::difference(delta_rot1, rng_delta_rot_hat1_->get());
         const double delta_trans_hat = delta_trans - rng_delta_trans_hat_->get();
         const double delta_rot_hat2  = cslibs_math::common::angle::difference(delta_rot2, rng_delta_rot_hat2_->get());
-        const double tx = sample.tx() + delta_trans_hat * std::cos(sample.yaw() + delta_rot_hat1);
-        const double ty = sample.ty() + delta_trans_hat * std::sin(sample.yaw() + delta_rot_hat1);
+        const double tx  = sample.tx() + delta_trans_hat * std::cos(sample.yaw() + delta_rot_hat1);
+        const double ty  = sample.ty() + delta_trans_hat * std::sin(sample.yaw() + delta_rot_hat1);
         const double yaw = cslibs_math::common::angle::normalize(sample.yaw() + delta_rot_hat1 + delta_rot_hat2);
         sample.setFrom(tx,ty,yaw);
     }
