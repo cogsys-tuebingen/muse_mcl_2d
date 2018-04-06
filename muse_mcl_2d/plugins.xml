@@ -1,0 +1,53 @@
+<library path="libmuse_mcl_2d_resampling">
+   <!-- Resampling -->
+   <class type="muse_mcl_2d::KLD2D" base_class_type="muse_mcl_2d::Resampling2D">
+     <description>2D resampling with adaptive sample size.</description>
+   </class>
+   <class type="muse_mcl_2d::Multinomial" base_class_type="muse_mcl_2d::Resampling2D">
+     <description>Multinomial sampling.</description>
+   </class>
+   <class type="muse_mcl_2d::Residual" base_class_type="muse_mcl_2d::Resampling2D">
+     <description>Residual resampling.</description>
+   </class>
+   <class type="muse_mcl_2d::Stratified" base_class_type="muse_mcl_2d::Resampling2D">
+     <description>Stratified resampling.</description>
+   </class>
+   <class type="muse_mcl_2d::Systematic" base_class_type="muse_mcl_2d::Resampling2D">
+     <description>Systematic resampling.</description>
+   </class>
+   <class type="muse_mcl_2d::WheelOfFortune" base_class_type="muse_mcl_2d::Resampling2D">
+     <description>Systematic resampling.</description>
+   </class>
+   <class type="muse_mcl_2d::LocalRegenerationKLD2D" base_class_type="muse_mcl_2d::Resampling2D">
+     <description>2D resampling with adaptive sample size and local regeneration.</description>
+   </class>
+</library>
+<library path="libmuse_mcl_2d_sampling">
+    <!-- Pose Generation -->
+    <class type="muse_mcl_2d::Normal2D" base_class_type="muse_mcl_2d::NormalSampling2D">
+        <description>2D normal distributed pose generation for pose initialation by the user.</description>
+    </class>
+    <class type="muse_mcl_2d::UniformAllMaps2D" base_class_type="muse_mcl_2d::UniformSampling2D">
+        <description>
+        2D uniform pose generation for global initialization with an axis aligned
+        bounding rectangle containing all given maps.
+        </description>
+    </class>
+    <class type="muse_mcl_2d::UniformPrimaryMap2D" base_class_type="muse_mcl_2d::UniformSampling2D">
+    <description>
+       2D uniform pose generation for global initialization with an axis aligned
+       bounding rectangle of the main map. All other maps are used for validation.
+    </description>
+</class>
+</library>
+<library path="libmuse_mcl_2d_density">
+    <class type="muse_mcl_2d::SimpleSampleDensity2D" base_class_type="muse_mcl_2d::SampleDensity2D">
+    <description>Simple density grid to estimate the sample density.</description>
+    </class>
+    <class type="muse_mcl_2d::MCSampleDensity2D" base_class_type="muse_mcl_2d::SampleDensity2D">
+    <description>
+        This is an extension of the simple density estimation using
+        using the last angular mean as an offset for the next iteration.
+    </description>
+    </class>
+</library>

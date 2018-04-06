@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>muse_mcl_2d</name>
+  <version>0.0.4</version>
+  <description>The muse_mcl_2d package</description>
+
+  <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
+  <author email="richard.hanten@uni-tuebingen.de">Richard Hanten</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>cslibs_boost_geometry</depend>
+  <depend>cslibs_indexed_storage</depend>
+  <depend>cslibs_vectormaps</depend>
+  <depend>cslibs_math_2d</depend>
+  <depend>cslibs_math_ros</depend>
+  <depend>cslibs_plugins</depend>
+  <depend>cslibs_plugins_data</depend>
+  <depend>nav_msgs</depend>
+  <depend>pcl_ros</depend>
+  <depend>pluginlib</depend>
+  <depend>roscpp</depend>
+  <depend>rostest</depend>
+  <depend>sensor_msgs</depend>
+  <depend>muse_smc</depend>
+  <depend>visualization_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>message_runtime</depend>
+  <depend>std_msgs</depend>
+  <depend>Eigen3</depend>
+
+  <export>
+    <muse_mcl_2d plugin="${prefix}/plugins.xml" />
+  </export>
+</package>

@@ -1,0 +1,12 @@
+<library path="libmuse_mcl_2d_vectormaps">
+   <class type="muse_mcl_2d_vectormaps::VectorMapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+     <description>Provides vector map given a vector map filename.</description>
+   </class>
+
+   <class type="muse_mcl_2d_vectormaps::BeamModelVector" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Vector beam model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_vectormaps::LikelihoodFieldModelVector" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Vector likelihoodfield model update function.</description>
+   </class>
+</library>

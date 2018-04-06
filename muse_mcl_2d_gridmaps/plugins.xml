@@ -1,0 +1,66 @@
+<library path="libmuse_mcl_2d_gridmaps_providers">
+   <class type="muse_mcl_2d_gridmaps::BinaryGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+     <description>Provides binarized map versions given a destinct threshold by topic.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::BinaryGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+      <description>Provides binarized map versions given a destinct threshold by service.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::DistanceGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+      <description>Provides cspace map versions given a destinct threshold by topic.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::DistanceGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+      <description>Provides cspace map versions given a destinct threshold by Service.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::ProbabilityGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+      <description>Provides floating point probability map versions by topic.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::ProbabilityGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+      <description>Provides floating point probability map versions by service.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+      <description>Provides floating point probability map versions by topic.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+      <description>Provides floating point probability map versions by service.</description>
+   </class>
+</library>
+<library path="libmuse_mcl_2d_gridmaps_models">
+   <class type="muse_mcl_2d_gridmaps::BeamModel" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Beam model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::BeamModelAMCL" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Beam model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::BeamModelMLE" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Beam model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::BeamModelLog" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Beam model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::BeamModelAMCLNormalized" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Beam model update function.</description>
+   </class>
+
+
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModel" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Likelihoodfield model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModelAMCL" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Likelihoodfield model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldProbModelAMCL" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Likelihoodfield model update function with consistency check.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModelLog" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Likelihoodfield model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModelAMCLNormalized" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Likelihoodfield model update function with consistency check.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModelPC" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Likelihoodfield model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModelPCNormalized" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>Likelihoodfield model update function.</description>
+   </class>
+</library>

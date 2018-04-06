@@ -1,0 +1,3 @@
+geometry_msgs/PoseWithCovariance pose
+---
+bool success

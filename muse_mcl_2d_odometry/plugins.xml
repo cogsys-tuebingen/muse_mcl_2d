@@ -1,0 +1,15 @@
+<library path="libmuse_mcl_2d_odometry_models">
+<!-- Propagation Functions -->
+<class type="muse_mcl_2d_odometry::DifferentialDrive" base_class_type="muse_mcl_2d::PredictionModel2D">
+  <description>Differential drive propagation model.</description>
+</class>
+<class type="muse_mcl_2d_odometry::DifferentialDriveAbs" base_class_type="muse_mcl_2d::PredictionModel2D">
+  <description>
+     Differential drive propagation model using only absolute values in the terms,
+     instead of quadratic ones.
+</description>
+</class>
+<class type="muse_mcl_2d_odometry::OmniDrive" base_class_type="muse_mcl_2d::PredictionModel2D">
+  <description>Omnidirectional drive propagation model.</description>
+</class>
+</library>

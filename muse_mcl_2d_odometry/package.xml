@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>muse_mcl_2d_odometry</name>
+  <version>0.0.4</version>
+  <description>The muse_mcl_2d_odometry package</description>
+
+  <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
+  <author email="richard.hanten@uni-tuebingen.de">Richard Hanten</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>muse_mcl_2d</depend>
+  <depend>nav_msgs</depend>
+  <depend>pluginlib</depend>
+  <depend>roscpp</depend>
+  <depend>tf</depend>
+
+  <export>
+    <muse_mcl_2d plugin="${prefix}/plugins.xml" />
+  </export>
+</package>

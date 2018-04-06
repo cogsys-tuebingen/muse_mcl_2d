@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>muse_mcl_2d_vectormaps</name>
+    <version>0.0.4</version>
+    <description>The muse_mcl_2d_vectormaps package</description>
+
+    <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
+    <author email="richard.hanten@uni-tuebingen.de">Richard Hanten</author>
+
+    <license>BSD</license>
+    <buildtool_depend>catkin</buildtool_depend>
+    <depend>muse_mcl_2d</depend>
+    <depend>cslibs_vectormaps</depend>
+    <depend>cslibs_plugins_data</depend>
+    <depend>muse_smc</depend>
+    <depend>pluginlib</depend>
+    <depend>roscpp</depend>
+    <depend>rostest</depend>
+
+    <export>
+        <muse_mcl_2d plugin="${prefix}/plugins.xml" />
+    </export>
+</package>
