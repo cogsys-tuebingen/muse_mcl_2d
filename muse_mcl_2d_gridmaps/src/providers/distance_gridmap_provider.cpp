@@ -43,7 +43,8 @@ void DistanceGridmapProvider::callback(const nav_msgs::OccupancyGridConstPtr &ms
     /// conversion can take time
     /// we allow concurrent loading, this way, the front end thread is not blocking.
     auto load = [this, msg]() {
-        if(map_load_mutex_.try_lock()) {
+         {
+            std::unique_lock<std::mutex>(map_mutex_);
             if(!map_ || cslibs_time::Time(msg->info.map_load_time.toNSec()) > map_->getStamp()) {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << msg->info.width << " x " << msg->info.height << "]");
                 cslibs_gridmaps::static_maps::DistanceGridmap::Ptr map;
@@ -52,27 +53,9 @@ void DistanceGridmapProvider::callback(const nav_msgs::OccupancyGridConstPtr &ms
                 map_.reset(new DistanceGridmap(map, msg->header.frame_id));
                 ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
             }
-            map_load_mutex_.unlock();
-            notify_.notify_one();
         }
+        notify_.notify_all();
     };
-    auto load_blocking = [this, msg]() {
-        if(map_load_mutex_.try_lock()) {
-            if(!map_ || cslibs_time::Time(msg->info.map_load_time.toNSec()) > map_->getStamp()) {
-                std::unique_lock<std::mutex> l(map_mutex_);
-                ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << msg->info.width << " x " << msg->info.height << "]");
-                cslibs_gridmaps::static_maps::DistanceGridmap::Ptr map;
-                cslibs_gridmaps::static_maps::conversion::from(*msg, map, binarization_threshold_, maximum_distance_);
-                map_.reset(new DistanceGridmap(map, msg->header.frame_id));
-                ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
-            }
-            map_load_mutex_.unlock();
-            notify_.notify_one();
-        }
-    };
-    if(blocking_)
-        worker_ = std::thread(load_blocking);
-    else
-        worker_ = std::thread(load);
+    worker_ = std::thread(load);
 }
 }
