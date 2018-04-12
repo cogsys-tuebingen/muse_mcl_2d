@@ -29,9 +29,9 @@ DifferentialDriveAbs::Result::Ptr DifferentialDriveAbs::apply(const cslibs_plugi
 
     const double delta_trans = odometry.getDeltaLinear();
     double delta_rot1 = 0.0;
-    if(delta_trans >= 0.01) {
+    if(delta_trans >= translation_threshold_) {
        delta_rot1  = cslibs_math::common::angle::difference(odometry.getDeltaAngularAbs(),
-                                                       odometry.getStartPose().yaw());
+                                                            odometry.getStartPose().yaw());
     }
     const double delta_rot2 = cslibs_math::common::angle::difference(odometry.getDeltaAngular(), delta_rot1);
 
@@ -90,5 +90,6 @@ void DifferentialDriveAbs::doSetup(ros::NodeHandle &nh_private)
     alpha_2_ = nh_private.param<double>(param_name("alpha2"), 0.1);
     alpha_3_ = nh_private.param<double>(param_name("alpha3"), 0.1);
     alpha_4_ = nh_private.param<double>(param_name("alpha4"), 0.1);
+    translation_threshold_ = nh_private.param<double>(param_name("translation_threshold"), 0.001);
 }
 }
