@@ -23,6 +23,7 @@ protected:
     double       alpha_3_;
     double       alpha_4_;
     double       alpha_5_;
+    double       translation_threshold_;
 
     cslibs_math::random::Normal<1>::Ptr rng_delta_rot_hat1_;
     cslibs_math::random::Normal<1>::Ptr rng_delta_trans_hat_;

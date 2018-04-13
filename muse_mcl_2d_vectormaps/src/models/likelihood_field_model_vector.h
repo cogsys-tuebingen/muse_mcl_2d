@@ -4,14 +4,13 @@
 #include <muse_mcl_2d/update/update_model_2d.hpp>
 
 namespace muse_mcl_2d_vectormaps {
-
 class LikelihoodFieldModelVector :  public muse_mcl_2d::UpdateModel2D {
 public:
     LikelihoodFieldModelVector();
 
-    virtual void apply(const data_t::ConstPtr        &data,
-                       const state_space_t::ConstPtr &map,
-                       sample_set_t::weight_iterator_t set) override;
+    virtual void apply(const data_t::ConstPtr          &data,
+                       const state_space_t::ConstPtr   &map,
+                       sample_set_t::weight_iterator_t  set) override;
 
 protected:
     std::size_t max_beams_;
@@ -23,7 +22,6 @@ protected:
 
     virtual void doSetup(ros::NodeHandle &nh) override;
 };
-
 }
 
 #endif // LIKELIHOOD_FIELD_MODEL_VECTOR_H

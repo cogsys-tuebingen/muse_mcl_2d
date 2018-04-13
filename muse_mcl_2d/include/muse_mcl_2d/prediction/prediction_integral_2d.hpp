@@ -4,12 +4,11 @@
 #include <muse_mcl_2d/samples/sample_2d.hpp>
 #include <muse_mcl_2d/prediction/prediction_model_2d.hpp>
 
-
 #include <muse_smc/prediction/prediction_integral.hpp>
-
+#include <cslibs_plugins_data/data.hpp>
 
 namespace muse_mcl_2d {
-class PredictionIntegral2D : public muse_smc::PredictionIntegral<StateSpaceDescription2D>
+class PredictionIntegral2D : public muse_smc::PredictionIntegral<StateSpaceDescription2D, cslibs_plugins_data::Data>
 {
 public:
     inline PredictionIntegral2D() :
@@ -17,7 +16,6 @@ public:
         angular_distance_abs_(0.0)
     {
     }
-
 
     inline PredictionIntegral2D(const double linear_threshold,
                                 const double angular_threshold) :
@@ -75,6 +73,4 @@ private:
 };
 }
 
-
 #endif // PREDICTION_INTEGRAL_2D_HPP
-

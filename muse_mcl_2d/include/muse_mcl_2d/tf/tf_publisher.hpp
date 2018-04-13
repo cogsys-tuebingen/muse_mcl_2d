@@ -1,7 +1,6 @@
 #ifndef TRANSFORM_PUBLISHER_ANCHORED_HPP
 #define TRANSFORM_PUBLISHER_ANCHORED_HPP
 
-
 #include <thread>
 #include <mutex>
 #include <memory>
@@ -58,7 +57,6 @@ public:
                 ros::Time::now(),
                 world_frame_, odom_frame_),
         w_T_b_(cslibs_math_2d::Transform2d::identity(), cslibs_time::Time(ros::Time::now().toNSec())),
-        wait_for_transform_(true),
         tf_rate_(rate)
     {
     }
@@ -99,15 +97,7 @@ public:
 
             tf_time_of_transform_ = w_T_o_.stamp_;
         }
-
-        wait_for_transform_ = false;
     }
-
-    inline void resetTransform()
-    {
-        wait_for_transform_ = true;
-    }
-
 
 private:
     const std::string        odom_frame_;
@@ -125,7 +115,6 @@ private:
 
     tf::StampedTransform     w_T_o_;
     stamped_t                w_T_b_;
-    std::atomic_bool         wait_for_transform_;
     ros::Rate                tf_rate_;
     ros::Time                tf_time_of_transform_;
 
@@ -133,18 +122,14 @@ private:
     {
         running_ = true;
         while(!stop_) {
-            if(!wait_for_transform_) {
-                std::unique_lock<std::mutex> l(tf_mutex_);
-                w_T_o_.stamp_ = ros::Time::now();
-                tf_broadcaster_.sendTransform(w_T_o_);
-            }
+            std::unique_lock<std::mutex> l(tf_mutex_);
+            w_T_o_.stamp_ = ros::Time::now();
+            tf_broadcaster_.sendTransform(w_T_o_);
             tf_rate_.sleep();
         }
         running_ = false;
     }
 };
-
-
 }
 
 #endif // TRANSFORM_PUBLISHER_ANCHORED_HPP

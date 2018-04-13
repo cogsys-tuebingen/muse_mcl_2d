@@ -52,16 +52,19 @@ public:
     void poseInitialization(const geometry_msgs::PoseWithCovarianceStampedConstPtr &msg);
 
 private:
+    using data_t                 = cslibs_plugins_data::Data;
+    using data_provider_t        = cslibs_plugins_data::DataProvider2D;
+
     using map_provider_map_t     = std::map<std::string, MapProvider2D::Ptr>;
-    using data_provider_map_t    = std::map<std::string, cslibs_plugins_data::DataProvider2D::Ptr>;
+    using data_provider_map_t    = std::map<std::string, typename data_provider_t::Ptr>;
     using update_model_map_t     = std::map<std::string, UpdateModel2D::Ptr>;
 
-    using UpdateRelay2D          = muse_smc::UpdateRelay<StateSpaceDescription2D>;
-    using PredictionRelay2D      = muse_smc::PredictionRelay<StateSpaceDescription2D>;
-    using smc_t                  = muse_smc::SMC<StateSpaceDescription2D>;
+    using UpdateRelay2D          = muse_smc::UpdateRelay<StateSpaceDescription2D, data_t, data_provider_t>;
+    using PredictionRelay2D      = muse_smc::PredictionRelay<StateSpaceDescription2D, data_t, data_provider_t>;
+    using smc_t                  = muse_smc::SMC<StateSpaceDescription2D, data_t>;
     using sample_set_t           = muse_smc::SampleSet<StateSpaceDescription2D>;
-    using prediction_integrals_t = muse_smc::PredictionIntegrals<StateSpaceDescription2D>;
-    using scheduler_t            = muse_smc::Scheduler<StateSpaceDescription2D>;
+    using prediction_integrals_t = muse_smc::PredictionIntegrals<StateSpaceDescription2D, data_t>;
+    using scheduler_t            = muse_smc::Scheduler<StateSpaceDescription2D, data_t>;
     using rate_scheduler_t       = muse_mcl_2d::CFSRate;
 
     using update_model_mapping_t = UpdateRelay2D::map_t;
@@ -105,4 +108,4 @@ private:
 };
 }
 
-#endif /* MUSE_MCL_NODE_H */
+#endif // MUSE_MCL_NODE_H

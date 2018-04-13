@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <class_loader/class_loader_register_macro.h>
 
-
 #include <muse_smc/samples/sample_density.hpp>
 
 #include <muse_mcl_2d/samples/sample_2d.hpp>
@@ -14,14 +13,16 @@
 #include <cslibs_math/statistics/weighted_angular_mean.hpp>
 #include <cslibs_math/statistics/weighted_distribution.hpp>
 
+#include <cslibs_plugins/plugin.hpp>
+
 namespace muse_mcl_2d {
-class SampleDensity2D : public muse_smc::SampleDensity<Sample2D>
+class SampleDensity2D : public muse_smc::SampleDensity<Sample2D>, public cslibs_plugins::Plugin
 {
 public:
-    using Ptr                       = std::shared_ptr<SampleDensity2D>;
-    using ConstPtr                  = std::shared_ptr<SampleDensity2D const>;
-    using state_t                   = StateSpaceDescription2D::state_t;
-    using covariance_t              = StateSpaceDescription2D::covariance_t;
+    using Ptr          = std::shared_ptr<SampleDensity2D>;
+    using ConstPtr     = std::shared_ptr<SampleDensity2D const>;
+    using state_t      = StateSpaceDescription2D::state_t;
+    using covariance_t = StateSpaceDescription2D::covariance_t;
 
     inline const static std::string Type()
     {
@@ -32,10 +33,10 @@ public:
     using angular_mean_t      = cslibs_math::statistics::WeightedAngularMean;
     using allocator_t         = Eigen::aligned_allocator<std::pair<const int, distribution_t>>;
     using distribution_map_t  = std::unordered_map<int,
-                                                  distribution_t,
-                                                  std::hash<int>,
-                                                  std::equal_to<int>,
-                                                  allocator_t>;
+                                                   distribution_t,
+                                                   std::hash<int>,
+                                                   std::equal_to<int>,
+                                                   allocator_t>;
     using angular_mean_map_t  = std::unordered_map<int, angular_mean_t>;
     using sample_ptr_vector_t = std::vector<const Sample2D *>;
     using cluster_map_t       = std::unordered_map<int, sample_ptr_vector_t>;
@@ -47,7 +48,6 @@ public:
     virtual std::size_t histogramSize() const = 0;
     virtual bool maxClusterMean(state_t &mean, covariance_t &covariance) const = 0;
     virtual void mean(state_t &mean, covariance_t &covariance) const = 0;
-
 };
 }
 

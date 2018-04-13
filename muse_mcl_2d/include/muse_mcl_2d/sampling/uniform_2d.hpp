@@ -7,10 +7,12 @@
 #include <muse_mcl_2d/samples/sample_2d.hpp>
 #include <muse_mcl_2d/map/map_provider_2d.hpp>
 #include <muse_mcl_2d/map/map_2d.hpp>
+
 #include <cslibs_math_ros/tf/tf_listener_2d.hpp>
+#include <cslibs_plugins/plugin.hpp>
 
 namespace muse_mcl_2d {
-class UniformSampling2D : public muse_smc::UniformSampling<StateSpaceDescription2D>
+class UniformSampling2D : public muse_smc::UniformSampling<StateSpaceDescription2D>, public cslibs_plugins::Plugin
 {
 public:
     using Ptr = std::shared_ptr<UniformSampling2D>;
@@ -37,17 +39,14 @@ public:
     }
 
 protected:
-    std::size_t         sample_size_;
-    ros::Duration       sampling_timeout_;
-    ros::Duration       tf_timeout_;
-    cslibs_math_ros::tf::TFListener2d::Ptr     tf_;
+    std::size_t                            sample_size_;
+    ros::Duration                          sampling_timeout_;
+    ros::Duration                          tf_timeout_;
+    cslibs_math_ros::tf::TFListener2d::Ptr tf_;
 
     virtual void doSetup(const std::map<std::string, MapProvider2D::Ptr> &map_providers,
                          ros::NodeHandle &nh) = 0 ;
-
-
 };
 }
-
 
 #endif // UNIFORM_2D_HPP

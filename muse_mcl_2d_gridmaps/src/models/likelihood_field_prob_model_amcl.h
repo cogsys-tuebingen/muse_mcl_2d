@@ -9,9 +9,9 @@ class LikelihoodFieldProbModelAMCL : public muse_mcl_2d::UpdateModel2D
 public:
     LikelihoodFieldProbModelAMCL();
 
-    virtual void apply(const data_t::ConstPtr        &data,
-                       const state_space_t::ConstPtr &map,
-                       sample_set_t::weight_iterator_t set) override;
+    virtual void apply(const data_t::ConstPtr          &data,
+                       const state_space_t::ConstPtr   &map,
+                       sample_set_t::weight_iterator_t  set) override;
 
 protected:
     std::size_t max_beams_;
@@ -32,4 +32,5 @@ protected:
 
 };
 }
+
 #endif // LIKELIHOODFIELD_PROB_MODEL_AMCL_H

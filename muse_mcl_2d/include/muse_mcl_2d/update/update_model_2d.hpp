@@ -1,17 +1,21 @@
 #ifndef UPDATE_MODEL2D_HPP
 #define UPDATE_MODEL2D_HPP
 
-#include <muse_smc/update/update_model.hpp>
-
 #include <muse_mcl_2d/samples/sample_2d.hpp>
-#include <cslibs_math_ros/tf/tf_listener_2d.hpp>
 #include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 
+#include <muse_smc/update/update_model.hpp>
+
+#include <cslibs_math_ros/tf/tf_listener_2d.hpp>
+
+#include <cslibs_plugins_data/data.hpp>
+
 namespace muse_mcl_2d {
-class UpdateModel2D : public muse_smc::UpdateModel<StateSpaceDescription2D>
+class UpdateModel2D : public muse_smc::UpdateModel<StateSpaceDescription2D, cslibs_plugins_data::Data>
 {
 public:
-    using Ptr = std::shared_ptr<UpdateModel2D>;
+    using Ptr    = std::shared_ptr<UpdateModel2D>;
+    using data_t = cslibs_plugins_data::Data;
 
     inline const static std::string Type()
     {
@@ -45,7 +49,6 @@ protected:
     std::string     robot_base_frame_;
 
     virtual void doSetup(ros::NodeHandle &nh) = 0;
-
 };
 }
 
