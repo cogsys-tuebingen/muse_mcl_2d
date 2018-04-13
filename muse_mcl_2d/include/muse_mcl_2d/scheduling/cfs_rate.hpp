@@ -153,12 +153,12 @@ public:
     }
 
 protected:
-    time_t                  next_update_time_;
-    time_t                  resampling_time_;
-    duration_t              resampling_period_;
-    mean_duration_map_t     mean_durations_;        /// track the mean duration per particle
-    nice_map_t              nice_values_;
-    queue_t                 q_;
+    time_t              next_update_time_;
+    time_t              resampling_time_;
+    duration_t          resampling_period_;
+    mean_duration_map_t mean_durations_;        /// track the mean duration per particle
+    nice_map_t          nice_values_;
+    queue_t             q_;
 };
 }
 

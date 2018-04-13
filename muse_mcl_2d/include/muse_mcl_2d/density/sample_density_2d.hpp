@@ -16,7 +16,8 @@
 #include <cslibs_plugins/plugin.hpp>
 
 namespace muse_mcl_2d {
-class SampleDensity2D : public muse_smc::SampleDensity<Sample2D>, public cslibs_plugins::Plugin
+class SampleDensity2D : public muse_smc::SampleDensity<Sample2D>,
+                        public cslibs_plugins::Plugin
 {
 public:
     using Ptr          = std::shared_ptr<SampleDensity2D>;

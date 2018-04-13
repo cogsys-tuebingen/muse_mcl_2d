@@ -35,7 +35,6 @@ public:
     {
     }
 
-
     inline Sample2D& operator = (const Sample2D &other)
     {
         if(&other != this) {

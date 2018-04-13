@@ -44,9 +44,9 @@ public:
 
 protected:
     cslibs_math_ros::tf::TFListener2d::Ptr tf_;
-    ros::Duration   tf_timeout_;
-    std::string     world_frame_;
-    std::string     robot_base_frame_;
+    ros::Duration tf_timeout_;
+    std::string   world_frame_;
+    std::string   robot_base_frame_;
 
     virtual void doSetup(ros::NodeHandle &nh) = 0;
 };

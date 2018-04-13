@@ -13,7 +13,8 @@
 #include <class_loader/class_loader_register_macro.h>
 
 namespace muse_mcl_2d {
-class Resampling2D : public muse_smc::Resampling<StateSpaceDescription2D, cslibs_plugins_data::Data>, public cslibs_plugins::Plugin
+class Resampling2D : public muse_smc::Resampling<StateSpaceDescription2D, cslibs_plugins_data::Data>,
+                     public cslibs_plugins::Plugin
 {
 public:
     using Ptr    = std::shared_ptr<Resampling2D>;

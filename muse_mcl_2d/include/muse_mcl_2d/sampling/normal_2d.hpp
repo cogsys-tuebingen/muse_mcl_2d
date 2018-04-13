@@ -14,7 +14,8 @@
 #include <ros/time.h>
 
 namespace muse_mcl_2d {
-class NormalSampling2D : public muse_smc::NormalSampling<StateSpaceDescription2D>, public cslibs_plugins::Plugin
+class NormalSampling2D : public muse_smc::NormalSampling<StateSpaceDescription2D>,
+                         public cslibs_plugins::Plugin
 {
 public:
     using Ptr = std::shared_ptr<NormalSampling2D>;

@@ -12,7 +12,8 @@
 #include <cslibs_plugins/plugin.hpp>
 
 namespace muse_mcl_2d {
-class UniformSampling2D : public muse_smc::UniformSampling<StateSpaceDescription2D>, public cslibs_plugins::Plugin
+class UniformSampling2D : public muse_smc::UniformSampling<StateSpaceDescription2D>,
+                          public cslibs_plugins::Plugin
 {
 public:
     using Ptr = std::shared_ptr<UniformSampling2D>;

@@ -8,11 +8,13 @@
 
 #include <cslibs_math_ros/tf/tf_listener_2d.hpp>
 
+#include <cslibs_plugins/plugin.hpp>
 #include <cslibs_plugins_data/types/odometry_2d.hpp>
 #include <cslibs_plugins_data/data.hpp>
 
 namespace muse_mcl_2d {
-class PredictionModel2D : public muse_smc::PredictionModel<StateSpaceDescription2D, cslibs_plugins_data::Data>
+class PredictionModel2D : public muse_smc::PredictionModel<StateSpaceDescription2D, cslibs_plugins_data::Data>,
+                          public cslibs_plugins::Plugin
 {
 public:
     using Ptr = std::shared_ptr<PredictionModel2D>;
@@ -58,8 +60,8 @@ public:
 
 protected:
     cslibs_math_ros::tf::TFListener2d::Ptr tf_;
-    double                                 eps_zero_linear_;
-    double                                 eps_zero_angular_;
+    double eps_zero_linear_;
+    double eps_zero_angular_;
 
     virtual void doSetup(ros::NodeHandle &nh) = 0;
 };
