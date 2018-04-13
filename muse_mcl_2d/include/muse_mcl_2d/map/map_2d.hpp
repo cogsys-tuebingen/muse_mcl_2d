@@ -1,8 +1,6 @@
 #ifndef MAP_2D_HPP
 #define MAP_2D_HPP
 
-#include <ros/ros.h>
-
 #include <muse_smc/state_space/state_space.hpp>
 #include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 

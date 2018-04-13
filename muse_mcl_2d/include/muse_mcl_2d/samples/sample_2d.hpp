@@ -7,14 +7,12 @@
 #include <cslibs_math_2d/linear/pose.hpp>
 #include <cslibs_math_2d/linear/covariance.hpp>
 
-#include <memory>
-
 namespace muse_mcl_2d {
 struct Sample2D {
 public:
-    using Ptr                       = std::shared_ptr<Sample2D>;
-    using allocator_t               = std::allocator<Sample2D>;
-    using state_t                   = cslibs_math_2d::Pose2d;
+    using Ptr         = std::shared_ptr<Sample2D>;
+    using allocator_t = std::allocator<Sample2D>;
+    using state_t     = cslibs_math_2d::Pose2d;
 
     double       weight;
     state_t      state;
@@ -57,6 +55,5 @@ public:
     }
 } __attribute__ ((aligned (128)));
 }
-
 
 #endif // SAMPLE_2D_HPP

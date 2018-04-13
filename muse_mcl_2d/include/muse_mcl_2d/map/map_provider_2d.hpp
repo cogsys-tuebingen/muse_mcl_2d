@@ -23,5 +23,4 @@ public:
 };
 }
 
-
 #endif // MAP_PROVIDER_2D_HPP
