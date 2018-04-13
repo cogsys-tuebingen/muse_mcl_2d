@@ -1,7 +1,6 @@
 #ifndef TRANSFORM_PUBLISHER_ANCHORED_HPP
 #define TRANSFORM_PUBLISHER_ANCHORED_HPP
 
-
 #include <thread>
 #include <mutex>
 #include <memory>
@@ -143,8 +142,6 @@ private:
         running_ = false;
     }
 };
-
-
 }
 
 #endif // TRANSFORM_PUBLISHER_ANCHORED_HPP

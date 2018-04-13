@@ -15,5 +15,4 @@ struct StateSpaceDescription2D
 };
 }
 
-
 #endif // STATE_SPACE_2D_HPP

@@ -105,7 +105,6 @@ private:
     ParameterLogger::Ptr    logger_;
 
     void run();
-
 };
 }
 

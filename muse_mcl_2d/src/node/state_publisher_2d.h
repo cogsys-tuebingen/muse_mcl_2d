@@ -37,7 +37,6 @@ private:
     cslibs_math_2d::Covariance2d          latest_w_T_b_covariance_;
 
     void publishState(const sample_set_t::ConstPtr &sample_set);
-
 };
 }
 

@@ -12,7 +12,7 @@
 #include <ros/ros.h>
 
 namespace muse_mcl_2d {
-class CFSRate : public muse_smc::Scheduler<StateSpaceDescription2D>
+class CFSRate : public muse_smc::Scheduler<StateSpaceDescription2D, cslibs_plugins_data::Data>
 {
 public:
     struct Entry {
@@ -57,12 +57,13 @@ public:
 
     using Ptr                 = std::shared_ptr<CFSRate>;
     using rate_t              = cslibs_time::Rate;
-    using update_t            = muse_smc::Update<StateSpaceDescription2D>;
+    using data_t              = cslibs_plugins_data::Data;
+    using update_t            = muse_smc::Update<StateSpaceDescription2D, data_t>;
     using queue_t             = __gnu_pbds::priority_queue<Entry, typename Entry::Greater, __gnu_pbds::rc_binomial_heap_tag>;
     using mean_duration_t     = cslibs_time::statistics::DurationMean;
     using mean_duration_map_t = std::unordered_map<id_t, mean_duration_t>;
     using time_priority_map_t = std::unordered_map<id_t, double>;
-    using resampling_t        = muse_smc::Resampling<StateSpaceDescription2D>;
+    using resampling_t        = muse_smc::Resampling<StateSpaceDescription2D, data_t>;
     using sample_set_t        = muse_smc::SampleSet<StateSpaceDescription2D>;
     using nice_map_t          = std::unordered_map<id_t, double>;
     using time_t              = cslibs_time::Time;
@@ -87,7 +88,7 @@ public:
         }
     }
 
-    virtual bool apply(typename update_t::Ptr &u,
+    virtual bool apply(typename update_t::Ptr     &u,
                        typename sample_set_t::Ptr &s) override
     {
         auto now = []()
@@ -95,7 +96,7 @@ public:
             return time_t(ros::Time::now().toNSec());
         };
 
-        const id_t id = u->getModelId();
+        const id_t   id    = u->getModelId();
         const time_t stamp = u->getStamp();
 
         if(id == q_.top().id && stamp >= next_update_time_) {
@@ -150,6 +151,7 @@ public:
         };
         return resampling_time_ < stamp ? do_apply() : do_not_apply();
     }
+
 protected:
     time_t                  next_update_time_;
     time_t                  resampling_time_;
@@ -159,4 +161,5 @@ protected:
     queue_t                 q_;
 };
 }
+
 #endif // MUSE_SMC_CFS_RATE_HPP
