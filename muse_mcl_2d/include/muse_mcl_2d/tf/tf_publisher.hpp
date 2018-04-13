@@ -53,6 +53,10 @@ public:
         timeout_(timeout),
         running_(false),
         stop_(false),
+        w_T_o_( tf::Transform(tf::createIdentityQuaternion(),
+                              tf::Vector3(0,0,0)),
+                ros::Time::now(),
+                world_frame_, odom_frame_),
         w_T_b_(cslibs_math_2d::Transform2d::identity(), cslibs_time::Time(ros::Time::now().toNSec())),
         wait_for_transform_(true),
         tf_rate_(rate)
