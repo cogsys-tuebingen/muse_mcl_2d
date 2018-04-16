@@ -5,7 +5,6 @@
 #include <muse_mcl_2d_vectormaps/static_maps/vectormap.h>
 
 namespace muse_mcl_2d_vectormaps {
-
 class VectorMapProvider : public muse_mcl_2d::MapProvider2D {
 public:
     VectorMapProvider();
@@ -16,7 +15,6 @@ public:
 protected:
     static_maps::VectorMap::Ptr map_;
 };
-
 }
 
 #endif // DATA_PROVIDER_VECTORMAP_H
