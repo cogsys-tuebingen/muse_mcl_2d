@@ -8,10 +8,12 @@
 
 #include <cslibs_math_ros/tf/tf_listener_2d.hpp>
 
+#include <cslibs_plugins/plugin.hpp>
 #include <cslibs_plugins_data/data.hpp>
 
 namespace muse_mcl_2d {
-class UpdateModel2D : public muse_smc::UpdateModel<StateSpaceDescription2D, cslibs_plugins_data::Data>
+class UpdateModel2D : public muse_smc::UpdateModel<StateSpaceDescription2D, cslibs_plugins_data::Data>,
+                      public cslibs_plugins::Plugin
 {
 public:
     using Ptr    = std::shared_ptr<UpdateModel2D>;
@@ -28,6 +30,11 @@ public:
 
     virtual ~UpdateModel2D()
     {
+    }
+
+    virtual inline std::size_t getId() const override
+    {
+        return cslibs_plugins::Plugin::getId();
     }
 
     inline void setup(const cslibs_math_ros::tf::TFListener2d::Ptr &tf,
