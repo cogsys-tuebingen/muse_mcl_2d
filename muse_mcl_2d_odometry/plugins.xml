@@ -3,6 +3,9 @@
 <class type="muse_mcl_2d_odometry::DifferentialDrive" base_class_type="muse_mcl_2d::PredictionModel2D">
   <description>Differential drive propagation model.</description>
 </class>
+<class type="muse_mcl_2d_odometry::DifferentialDriveBoxMuller" base_class_type="muse_mcl_2d::PredictionModel2D">
+    <description>Differential drive propagation model using box muller transform for random generation.</description>
+</class>
 <class type="muse_mcl_2d_odometry::DifferentialDriveAbs" base_class_type="muse_mcl_2d::PredictionModel2D">
   <description>
      Differential drive propagation model using only absolute values in the terms,

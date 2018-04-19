@@ -73,7 +73,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
 
     for(cslibs_math_2d::Pose2d &sample : states) {
         const double delta_rot_hat1  = cslibs_math::common::angle::difference(delta_rot1, rng_delta_rot_hat1_->get());
-        const double delta_trans_hat = delta_trans - rng_delta_trans_hat_->get();
+        const double delta_trans_hat = (delta_trans - rng_delta_trans_hat_->get()) * sign_trans;
         const double delta_rot_hat2  = cslibs_math::common::angle::difference(delta_rot2, rng_delta_rot_hat2_->get());
         const double tx  = sample.tx() + delta_trans_hat * std::cos(sample.yaw() + delta_rot_hat1);
         const double ty  = sample.ty() + delta_trans_hat * std::sin(sample.yaw() + delta_rot_hat1);
