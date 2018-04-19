@@ -27,13 +27,12 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
 
     const double delta_trans = odometry.getDeltaLinear();
     double delta_rot1 = 0.0;
-    double sign_trans = 1.0;
+    double sign_trans = odometry.forward() ? 1.0 : -1.0;
     if(delta_trans >= translation_threshold_) {
        delta_rot1  = cslibs_math::common::angle::difference(odometry.getDeltaAngularAbs(),
                                                             odometry.getStartPose().yaw());
-    } else {
-        sign_trans = odometry.forward() ? 1.0 : -1.0;
     }
+
     const double delta_rot2 = cslibs_math::common::angle::difference(odometry.getDeltaAngular(), delta_rot1);
 
     if(delta_trans < eps_zero_linear_ &&
