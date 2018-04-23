@@ -31,6 +31,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
     if(delta_trans >= translation_threshold_) {
        delta_rot1  = cslibs_math::common::angle::difference(odometry.getDeltaAngularAbs(),
                                                             odometry.getStartPose().yaw());
+       sign_trans = 1.0;
     }
 
     const double delta_rot2 = cslibs_math::common::angle::difference(odometry.getDeltaAngular(), delta_rot1);
