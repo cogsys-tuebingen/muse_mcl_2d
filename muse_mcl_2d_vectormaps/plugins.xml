@@ -9,4 +9,10 @@
    <class type="muse_mcl_2d_vectormaps::LikelihoodFieldModelVector" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description>Vector likelihoodfield model update function.</description>
    </class>
+   <class type="muse_mcl_2d_vectormaps::BeamModelAMCLVector" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>AMCL vector beam model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_vectormaps::LikelihoodFieldModelAMCLVector" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>AMCL vector likelihoodfield model update function.</description>
+   </class>
 </library>

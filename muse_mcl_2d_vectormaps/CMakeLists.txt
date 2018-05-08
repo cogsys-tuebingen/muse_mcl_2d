@@ -24,7 +24,9 @@ include_directories(
 add_library(${PROJECT_NAME}
     src/providers/vectormap_provider.cpp
     src/models/beam_model_vector.cpp
+    src/models/beam_model_amcl_vector.cpp
     src/models/likelihood_field_model_vector.cpp
+    src/models/likelihood_field_model_amcl_vector.cpp
 )
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
