@@ -13,6 +13,37 @@
 namespace cis = cslibs_indexed_storage;
 
 namespace muse_mcl_2d {
+struct ClusterNeighbourhood2D {
+    static constexpr std::size_t dimensions = 3;
+    static constexpr std::size_t size       = 3;
+
+    static constexpr std::size_t count = 10;
+
+    using offset_value_t = typename boost::int_max_value_t<size>::fast;
+    using offset_t       = std::array<offset_value_t, dimensions>;
+    using offset_list_t  = std::array<offset_t, count>;
+
+    template<typename visitor_t>
+    static inline void visit(const visitor_t& visitor)
+    {
+        const static offset_list_t offsets = {{
+            {-1,-1, 0},
+            {-1, 0, 0},
+            {-1, 1, 0},
+            { 0,-1, 0},
+            { 0, 0,-1},
+            { 0, 0, 1},
+            { 0, 1, 0},
+            { 1,-1, 0},
+            { 1, 0, 0},
+            { 1, 1, 0} }};
+
+        for (const auto& offset : offsets)
+            visitor(offset);
+    }
+};
+
+
 struct SampleClustering2D {
     using indexation_t          = SampleIndexation2D;
     using index_t               = SampleIndexation2D::index_t;
@@ -22,15 +53,15 @@ struct SampleClustering2D {
 
     using allocator_t           = Eigen::aligned_allocator<std::pair<const int, distribution_t>>;
     using distribution_map_t    = std::unordered_map<int,
-                                                  distribution_t,
-                                                  std::hash<int>,
-                                                  std::equal_to<int>,
-                                                  allocator_t>;
+    distribution_t,
+    std::hash<int>,
+    std::equal_to<int>,
+    allocator_t>;
     using cluster_map_t         = std::unordered_map<int, sample_ptr_vector_t>;
     using angular_mean_map_t    = std::unordered_map<int, angular_mean_t>;
 
     /// required definitions -->
-    using neighborhood_t        = cis::operations::clustering::GridNeighborhoodStatic<std::tuple_size<index_t>::value, 3>;
+    using neighborhood_t        = ClusterNeighbourhood2D;
     using visitor_index_t       = neighborhood_t::offset_t;
 
     inline SampleClustering2D() = default;
