@@ -13,8 +13,6 @@ namespace muse_mcl_2d_gridmaps {
     ProbabilityGridmapProvider::state_space_t::ConstPtr ProbabilityGridmapProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
-        if(!map_)
-            notify_.wait(l);
         return map_;
     }
 

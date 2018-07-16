@@ -65,7 +65,7 @@ bool MuseMCL2DNode::requestPoseInitialization(muse_mcl_2d::PoseInitialization::R
         return  cslibs_math_ros::tf::conversion_2d::from(p);
     };
     auto convert_covariance = [&req]() {
-        cslibs_math_2d::Covariance2d cov;
+        cslibs_math_2d::Covariance3d cov;
         for(std::size_t i = 0 ; i < 2 ; ++i) {
             for(std::size_t j = 0 ; j < 2 ; ++j) {
                 cov(i,j) = req.pose.covariance[6*i+j];
@@ -87,7 +87,7 @@ void MuseMCL2DNode::poseInitialization(const geometry_msgs::PoseWithCovarianceSt
         return  cslibs_math_ros::tf::conversion_2d::from(p);
     };
     auto convert_covariance = [&msg]() {
-        cslibs_math_2d::Covariance2d cov;
+        cslibs_math_2d::Covariance3d cov;
         for(std::size_t i = 0 ; i < 2 ; ++i) {
             for(std::size_t j = 0 ; j < 2 ; ++j) {
                 cov(i,j) = msg->pose.covariance[6*i+j];
@@ -328,7 +328,7 @@ void MuseMCL2DNode::checkPoseInitialization()
             return;
         }
 
-        cslibs_math_2d::Covariance2d covariance;
+        cslibs_math_2d::Covariance3d covariance;
         auto get = [&c_v](std::size_t r, std::size_t c, std::size_t step)
         {
             return c_v[r * step + c];

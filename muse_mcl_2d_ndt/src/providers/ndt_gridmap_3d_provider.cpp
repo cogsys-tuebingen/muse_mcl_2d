@@ -17,9 +17,6 @@ NDTGridmap3dProvider::NDTGridmap3dProvider()
 NDTGridmap3dProvider::state_space_t::ConstPtr NDTGridmap3dProvider::getStateSpace() const
 {
     std::unique_lock<std::mutex> l(map_mutex_);
-    if (!map_)
-        map_notify_.wait(l);
-
     return map_;
 }
 
@@ -35,7 +32,7 @@ void NDTGridmap3dProvider::setup(ros::NodeHandle &nh)
 
 void NDTGridmap3dProvider::loadMap()
 {    
-    auto load_blocking = [this]() {
+    auto load = [this]() {
         std::unique_lock<std::mutex> l(map_mutex_);
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
         cslibs_ndt_3d::dynamic_maps::Gridmap::Ptr map;
@@ -43,11 +40,15 @@ void NDTGridmap3dProvider::loadMap()
             map_.reset(new Gridmap3d(map, frame_id_));
             ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
         } else
-            ROS_INFO_STREAM("Could not load file '" << path_ << "'!");
+            ROS_ERROR_STREAM("Could not load file '" << path_ << "'!");
 
         map_notify_.notify_one();
     };
 
-    worker_ = std::thread(load_blocking);
+    if(map_) {
+        worker_ = std::thread(load);
+    } else {
+        load();
+    }
 }
 }

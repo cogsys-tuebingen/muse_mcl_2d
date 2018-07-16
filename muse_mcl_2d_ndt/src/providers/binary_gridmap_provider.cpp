@@ -18,9 +18,6 @@ BinaryGridmapProvider::BinaryGridmapProvider()
 BinaryGridmapProvider::state_space_t::ConstPtr BinaryGridmapProvider::getStateSpace() const
 {
     std::unique_lock<std::mutex> l(map_mutex_);
-    if (!map_)
-        map_notify_.wait(l);
-
     return map_;
 }
 
@@ -39,8 +36,7 @@ void BinaryGridmapProvider::setup(ros::NodeHandle &nh)
 
 void BinaryGridmapProvider::loadMap()
 {
-    auto load_blocking = [this]() {
-        std::unique_lock<std::mutex> l(map_mutex_);
+    auto load = [this]() {
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
         cslibs_ndt_2d::dynamic_maps::Gridmap::Ptr map;
         if (cslibs_ndt_2d::dynamic_maps::loadBinary(path_, map)) {
@@ -48,16 +44,20 @@ void BinaryGridmapProvider::loadMap()
             cslibs_gridmaps::static_maps::BinaryGridmap::Ptr lf_map;
             cslibs_ndt_2d::conversion::from(map, lf_map, sampling_resolution_, threshold_);
             if (lf_map) {
+                std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new muse_mcl_2d_gridmaps::BinaryGridmap(lf_map, frame_id_));
                 ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
             } else
-                ROS_INFO_STREAM("Could not convert map to Likelihood Field map");
-        } else
-            ROS_INFO_STREAM("Could not load file '" << path_ << "'!");
-
-        map_notify_.notify_one();
+                ROS_ERROR_STREAM("Could not convert map to Likelihood Field map");
+        } else {
+            ROS_ERROR_STREAM("Could not load file '" << path_ << "'!");
+        }
     };
 
-    worker_ = std::thread(load_blocking);
+    if(map_) {
+        worker_ = std::thread(load);
+    } else {
+        load();
+    }
 }
 }

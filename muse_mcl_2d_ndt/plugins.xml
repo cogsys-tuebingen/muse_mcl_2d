@@ -85,4 +85,7 @@
    <class type="muse_mcl_2d_ndt::OccupancyGridmap3dLikelihoodFieldModel" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description></description>
    </class>
+   <class type="muse_mcl_2d_ndt::NDT2D" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description></description>
+   </class>
 </library>

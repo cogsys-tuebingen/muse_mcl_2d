@@ -48,7 +48,7 @@ public:
     }
 
     virtual void apply(const cslibs_math_2d::Pose2d       &pose,
-                       const cslibs_math_2d::Covariance2d &covariance,
+                       const cslibs_math_2d::Covariance3d &covariance,
                        sample_set_t &sample_set) override
     {
         update(sample_set.getFrame());

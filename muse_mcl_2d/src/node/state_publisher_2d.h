@@ -34,7 +34,7 @@ private:
     std::string                 base_frame_;
 
     stamped_t                             latest_w_T_b_;
-    cslibs_math_2d::Covariance2d          latest_w_T_b_covariance_;
+    cslibs_math_2d::Covariance3d          latest_w_T_b_covariance_;
 
     void publishState(const sample_set_t::ConstPtr &sample_set);
 };

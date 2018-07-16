@@ -35,7 +35,7 @@ public:
     void set(const sample_vector_t                   &sample_vector,
              const double                             weight_maximum,
              const cslibs_math_2d::Pose2d          &mean,
-             const cslibs_math_2d::Covariance2d    &covariance,
+             const cslibs_math_2d::Covariance3d    &covariance,
              const time_t                            &stamp);
 
 private:
@@ -49,7 +49,7 @@ private:
     sample_vector_t::Ptr                sample_;
     double                              maximum_weight_;
     cslibs_math_2d::Pose2d            mean_;
-    cslibs_math_2d::Covariance2d      covariance_;
+    cslibs_math_2d::Covariance3d      covariance_;
     time_t                              stamp_;
 
     ros::Publisher                      pub_markers_;

@@ -13,8 +13,6 @@ namespace muse_mcl_2d_gridmaps {
     LikelihoodFieldGridmapProvider::state_space_t::ConstPtr LikelihoodFieldGridmapProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
-        if(!map_)
-            notify_.wait(l);
         return map_;
     }
 
@@ -47,6 +45,7 @@ namespace muse_mcl_2d_gridmaps {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << msg->info.width << " x " << msg->info.height << "]");
                 cslibs_gridmaps::static_maps::LikelihoodFieldGridmap::Ptr map;
                 cslibs_gridmaps::static_maps::conversion::from(*msg, map, maximum_distance_, sigma_hit_, binarization_threshold_);
+
                 std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new LikelihoodFieldGridmap(map, msg->header.frame_id));
                 ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");

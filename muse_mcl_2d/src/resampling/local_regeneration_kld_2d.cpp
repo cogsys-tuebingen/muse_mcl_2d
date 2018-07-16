@@ -19,7 +19,7 @@ public:
 protected:
     double                       kld_error_;
     double                       kld_z_;
-    cslibs_math_2d::Covariance2d covariance_;
+    cslibs_math_2d::Covariance3d covariance_;
     double                       cov_x_;
     double                       cov_y_;
     double                       cov_yaw_;

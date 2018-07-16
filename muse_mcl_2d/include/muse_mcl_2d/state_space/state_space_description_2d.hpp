@@ -11,7 +11,7 @@ struct StateSpaceDescription2D
     using state_t                = cslibs_math_2d::Pose2d;
     using state_space_boundary_t = cslibs_math_2d::Point2d;
     using transform_t            = cslibs_math_2d::Transform2d;
-    using covariance_t           = cslibs_math_2d::Covariance2d;
+    using covariance_t           = cslibs_math_2d::Covariance3d;
 };
 }
 

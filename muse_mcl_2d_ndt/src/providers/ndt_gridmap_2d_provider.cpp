@@ -18,9 +18,6 @@ NDTGridmap2dProvider::NDTGridmap2dProvider()
 NDTGridmap2dProvider::state_space_t::ConstPtr NDTGridmap2dProvider::getStateSpace() const
 {
     std::unique_lock<std::mutex> l(map_mutex_);
-    if (!map_)
-        map_notify_.wait(l);
-
     return map_;
 }
 
@@ -36,7 +33,7 @@ void NDTGridmap2dProvider::setup(ros::NodeHandle &nh)
 
 void NDTGridmap2dProvider::loadMap()
 {
-    auto load_blocking = [this]() {
+    auto load = [this]() {
         std::unique_lock<std::mutex> l(map_mutex_);
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
         cslibs_ndt_2d::dynamic_maps::Gridmap::Ptr map;
@@ -44,11 +41,13 @@ void NDTGridmap2dProvider::loadMap()
             map_.reset(new Gridmap2d(map, frame_id_));
             ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
         } else
-            ROS_INFO_STREAM("Could not load file '" << path_ << "'!");
-
-        map_notify_.notify_one();
+            ROS_ERROR_STREAM("Could not load file '" << path_ << "'!");
     };
 
-    worker_ = std::thread(load_blocking);
+    if(map_) {
+        worker_ = std::thread(load);
+    } else {
+        load();
+    }
 }
 }

@@ -110,7 +110,7 @@ bool SampleSetPublisher2D::end()
 void SampleSetPublisher2D::set(const sample_vector_t &sample_vector,
                                const double maximum_weight,
                                const cslibs_math_2d::Pose2d &mean,
-                               const cslibs_math_2d::Covariance2d &covariance,
+                               const cslibs_math_2d::Covariance3d &covariance,
                                const time_t &stamp)
 {
     lock_t lock(data_mutex_);
@@ -182,7 +182,7 @@ void SampleSetPublisher2D::loop()
     time_t                         stamp;
     sample_vector_t::Ptr           samples;
     cslibs_math_2d::Pose2d         mean;
-    cslibs_math_2d::Covariance2d   covariance;
+    cslibs_math_2d::Covariance3d   covariance;
     double                         maximum_weight = 0.0;
 
     while(!stop_) {
