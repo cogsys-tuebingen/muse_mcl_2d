@@ -1,4 +1,7 @@
 <library path="libmuse_mcl_2d_ndt_providers">
+   <class type="muse_mcl_2d_ndt::NDTFlatGridmap2DProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+     <description></description>
+   </class>
    <class type="muse_mcl_2d_ndt::NDTGridmap2dProvider" base_class_type="muse_mcl_2d::MapProvider2D">
      <description></description>
    </class>

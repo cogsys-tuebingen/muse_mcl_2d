@@ -36,7 +36,7 @@ public:
             if(tf_->lookupTransform(map->getFrame(), frame, now, tf_map_T_w, tf_timeout_)) {
                 cslibs_math_2d::Transform2d map_T_w =  cslibs_math_ros::tf::conversion_2d::from(tf_map_T_w);
                 maps_[i] = map;
-                maps_T_w_[i] =map_T_w;
+                maps_T_w_[i] = map_T_w;
 
                 cslibs_math_2d::Transform2d w_T_map = map_T_w.inverse();
                 min = cslibs_math::linear::min(w_T_map * map->getMin(), min);

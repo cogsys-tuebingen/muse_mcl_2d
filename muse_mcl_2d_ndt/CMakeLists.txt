@@ -38,6 +38,7 @@ add_library(${PROJECT_NAME}_maps SHARED
   src/maps/occupancy_gridmap_2d.cpp
   src/maps/gridmap_3d.cpp
   src/maps/occupancy_gridmap_3d.cpp
+  src/maps/flat_gridmap_2d.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}_maps
@@ -69,6 +70,7 @@ add_library(${PROJECT_NAME}_providers SHARED
   src/providers/distance_occupancy_gridmap_provider.cpp
   src/providers/distance_gridmap_service_provider.cpp
   src/providers/distance_occupancy_gridmap_service_provider.cpp
+  src/providers/ndt_flat_gridmap_2d_provider.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}_providers

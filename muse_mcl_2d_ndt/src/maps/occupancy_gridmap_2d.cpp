@@ -25,7 +25,7 @@ OccupancyGridmap2d::state_space_transform_t OccupancyGridmap2d::getOrigin() cons
 
 bool OccupancyGridmap2d::validate(const cslibs_math_2d::Pose2d &p) const
 {
-    return true;
+  return data_->validate(p);
 }
 
 cslibs_ndt_2d::dynamic_maps::OccupancyGridmap::Ptr& OccupancyGridmap2d::data()

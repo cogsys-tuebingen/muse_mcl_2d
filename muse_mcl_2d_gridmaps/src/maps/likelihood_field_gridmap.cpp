@@ -24,9 +24,9 @@ LikelihoodFieldGridmap::state_space_transform_t LikelihoodFieldGridmap::getOrigi
     return data_->getOrigin();
 }
 
-bool LikelihoodFieldGridmap::validate(const cslibs_math_2d::Pose2d &) const
+bool LikelihoodFieldGridmap::validate(const cslibs_math_2d::Pose2d &p_w) const
 {
-    return true;
+    return data_->validate(p_w);
 }
 
 cslibs_gridmaps::static_maps::LikelihoodFieldGridmap::Ptr& LikelihoodFieldGridmap::data()

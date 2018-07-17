@@ -25,7 +25,7 @@ Gridmap2d::state_space_transform_t Gridmap2d::getOrigin() const
 
 bool Gridmap2d::validate(const cslibs_math_2d::Pose2d &p) const
 {
-    return true;
+  return data_->validate(p);
 }
 
 cslibs_ndt_2d::dynamic_maps::Gridmap::Ptr& Gridmap2d::data()

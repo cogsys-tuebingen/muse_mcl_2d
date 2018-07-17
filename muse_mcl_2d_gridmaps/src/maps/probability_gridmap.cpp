@@ -23,9 +23,9 @@ ProbabilityGridmap::state_space_transform_t ProbabilityGridmap::getOrigin() cons
     return data_->getOrigin();
 }
 
-bool ProbabilityGridmap::validate(const cslibs_math_2d::Pose2d &) const
+bool ProbabilityGridmap::validate(const cslibs_math_2d::Pose2d &p_w) const
 {
-    return true;
+    return data_->validate(p_w);
 }
 
 cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr& ProbabilityGridmap::data()

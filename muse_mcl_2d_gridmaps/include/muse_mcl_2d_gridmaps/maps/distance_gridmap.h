@@ -19,7 +19,7 @@ public:
     state_space_boundary_t getMin() const override;
     state_space_boundary_t getMax() const override;
     state_space_transform_t getOrigin() const override;
-    bool validate(const cslibs_math_2d::Pose2d &) const override;
+    bool validate(const cslibs_math_2d::Pose2d &p_w) const override;
     cslibs_gridmaps::static_maps::DistanceGridmap::Ptr& data();
     cslibs_gridmaps::static_maps::DistanceGridmap::Ptr const & data() const;
 
