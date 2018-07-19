@@ -15,6 +15,10 @@ using rng_t = muse_smc::state_space_samplers::Uniform<Metric, Metric, Radian>;
 class UniformAllMaps2D : public UniformSampling2D
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<UniformAllMaps2D>;
+
+
     virtual bool update(const std::string &frame) override
     {
         const ros::Time   now   = ros::Time::now();

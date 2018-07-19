@@ -16,6 +16,9 @@ using rng_t = muse_smc::state_space_samplers::Uniform<Metric, Metric, Radian>;
 class UniformPrimaryMap2D : public UniformSampling2D
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<UniformPrimaryMap2D>;
+
     UniformPrimaryMap2D() = default;
 
     virtual bool update(const std::string &frame) override

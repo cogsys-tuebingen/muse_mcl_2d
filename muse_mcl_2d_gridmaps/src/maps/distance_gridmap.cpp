@@ -25,7 +25,7 @@ DistanceGridmap::state_space_transform_t DistanceGridmap::getOrigin() const
 
 bool DistanceGridmap::validate(const cslibs_math_2d::Pose2d &p_w) const
 {
-    return data_->validate(p_w);
+    return true; // data_->validate(p_w);
 }
 
 cslibs_gridmaps::static_maps::DistanceGridmap::Ptr& DistanceGridmap::data()

@@ -10,6 +10,9 @@
 
 namespace muse_mcl_2d {
 struct SampleDensityData2D {
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<SampleDensityData2D>;
+
     using sample_ptr_vector_t = std::vector<const Sample2D *>;
 
     using distribution_t      = cslibs_math::statistics::WeightedDistribution<2,0>;

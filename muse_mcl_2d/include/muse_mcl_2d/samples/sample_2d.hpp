@@ -10,8 +10,9 @@
 namespace muse_mcl_2d {
 struct Sample2D {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<Sample2D>;
     using Ptr         = std::shared_ptr<Sample2D>;
-    using allocator_t = std::allocator<Sample2D>;
     using state_t     = cslibs_math_2d::Pose2d;
 
     double       weight;
@@ -52,7 +53,7 @@ public:
         }
         return *this;
     }
-} __attribute__ ((aligned (128)));
+};
 }
 
 #endif // SAMPLE_2D_HPP

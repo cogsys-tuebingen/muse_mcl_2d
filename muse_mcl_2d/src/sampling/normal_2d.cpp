@@ -16,6 +16,10 @@ using rng_t     = muse_smc::state_space_samplers::Normal<Metric, Metric, Radian>
 class Normal2D : public NormalSampling2D
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<Normal2D>;
+
+
     virtual void update(const std::string &frame) override
     {
         const ros::Time   now   = ros::Time::now();

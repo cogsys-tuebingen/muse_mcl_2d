@@ -18,6 +18,9 @@ namespace muse_mcl_2d {
 class SimpleSampleDensity2D : public muse_mcl_2d::SampleDensity2D
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+    using allocator_t = Eigen::aligned_allocator<SimpleSampleDensity2D>;
+
     using indexation_t              = SampleIndexation2D;
     using sample_data_t             = SampleDensityData2D;
     using clustering_t              = SampleClustering2D;
