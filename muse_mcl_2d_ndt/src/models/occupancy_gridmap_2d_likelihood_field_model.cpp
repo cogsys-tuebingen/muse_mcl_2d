@@ -1,8 +1,8 @@
 #include <muse_mcl_2d_ndt/models/occupancy_gridmap_2d_likelihood_field_model.h>
-
+#include <muse_mcl_2d_ndt/maps/occupancy_gridmap_2d.h>
+#include <muse_mcl_2d_ndt/utility/laser_histogram.hpp>
 
 #include <cslibs_plugins_data/types/laserscan.hpp>
-#include <muse_mcl_2d_ndt/maps/occupancy_gridmap_2d.h>
 
 #include <class_loader/class_loader_register_macro.h>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::OccupancyGridmap2dLikelihoodFieldModel, muse_mcl_2d::UpdateModel2D)
@@ -38,10 +38,6 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
                               tf_timeout_))
         return;
 
-    const cslibs_plugins_data::types::Laserscan::rays_t rays = laser_data.getRays();
-    const std::size_t rays_size = rays.size();
-    const std::size_t ray_step  = std::max(1ul, rays_size / max_points_);
-
     /// mixture distribution entries
     const double bundle_resolution_inv = 1.0 / gridmap.getBundleResolution();
     auto to_bundle_index = [&bundle_resolution_inv](const cslibs_math_2d::Vector2d &p) {
@@ -53,7 +49,7 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
                              const double &inv_occ) {
         auto apply = [&p, &d, &inv_occ, this](){
             const auto &q         = p.data() - d->getMean();
-            const double exponent = -0.5 * d2_ * inv_occ * double(q.transpose() * d->getInformationMatrix() * q);
+            const double exponent = -0.5 * inv_occ * d2_ * double(q.transpose() * d->getInformationMatrix() * q);
             const double e = d1_ * std::exp(exponent);
             return std::isnormal(e) ? e : 0.0;
         };
@@ -77,15 +73,47 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     auto pow3 = [](const double& x) {
         return x*x*x;
     };
-    for (auto it = set.begin() ; it != set.end() ; ++it) {
-        const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
-        double p = 1.0;
-        for (std::size_t i = 0 ; i < rays_size ;  i+= ray_step) {
-            const auto &ray = laser_rays[i];            
-            const cslibs_math_2d::Point2d map_point = m_T_l * ray.point;
-            p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+
+
+    const cslibs_plugins_data::types::Laserscan::rays_t &rays = laser_data.getRays();
+    const std::size_t rays_size = rays.size();
+
+    if(scan_histogram_resolution_ > 0.0) {
+        utilty::kd_tree_t   histogram;
+        utilty::Indexation  index(scan_histogram_resolution_);
+        const std::size_t size = rays.size();
+        for(std::size_t i = 0 ; i < size ; ++i) {
+           const auto &r = rays[i];
+           if(r.valid()) {
+              histogram.insert(index.create(r), utilty::Data(i, r));
+            }
         }
-        *it *= p;
+
+        std::vector<std::size_t> ray_indices;
+        utilty::getRepresentativeRays(histogram, rays, ray_indices);
+
+        for (auto it = set.begin() ; it != set.end() ; ++it) {
+            const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
+            double p = 1.0;
+            for(const std::size_t ri : ray_indices) {
+                const auto &ray = laser_rays[ri];
+                const cslibs_math_2d::Point2d map_point = m_T_l * ray.point;
+                p += ray.valid() && map_point.isNormal() ? bundle_likelihood(map_point) : 0.01;
+            }
+            *it *= p;
+        }
+    } else {
+        const std::size_t ray_step  = std::max(1ul, rays_size / max_points_);
+        for (auto it = set.begin() ; it != set.end() ; ++it) {
+            const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
+            double p = 1.0;
+            for (std::size_t i = 0 ; i < rays_size ;  i+= ray_step) {
+                const auto &ray = laser_rays[i];
+                const cslibs_math_2d::Point2d map_point = m_T_l * ray.point;
+                p += ray.valid() && map_point.isNormal() ? bundle_likelihood(map_point) : 0.01;
+            }
+            *it *= p;
+        }
     }
 }
 
@@ -101,5 +129,8 @@ void OccupancyGridmap2dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
     const double prob_free      = nh.param(param_name("prob_free"), 0.45);
     const double prob_occupied  = nh.param(param_name("prob_occupied"), 0.65);
     inverse_model_.reset(new cslibs_gridmaps::utility::InverseModel(prob_prior, prob_free, prob_occupied));
+
+    scan_histogram_resolution_  = nh.param(param_name("scan_histogram_resolution"), 0.0);
+
 }
 }

@@ -135,7 +135,7 @@ public:
             const duration_t dur = (now() - start);
 
             resampling_time_   = stamp + resampling_period_;
-            next_update_time_  = next_update_time_; // + dur;
+            next_update_time_  = next_update_time_ + dur;
 
             int64_t min_vtime = q_.top().vtime;
             queue_t q;
