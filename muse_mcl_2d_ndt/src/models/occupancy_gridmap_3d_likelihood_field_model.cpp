@@ -65,7 +65,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     auto occupancy_likelihood = [this, &likelihood](const cslibs_math_3d::Point3d &p,
                                                     const cslibs_ndt::OccupancyDistribution<3>* d) {
         double occ = d ? d->getOccupancy(inverse_model_) : 0.0;
-        double ndt = d ? likelihood(p, d->getDistribution(), 1.0 - occ) : 0.0;
+        double ndt = d ? occ * likelihood(p, d->getDistribution(), 1.0 - occ) : 0.0;
 
         return ndt;
     };
@@ -91,6 +91,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
         for (std::size_t i = 0 ; i < points_size ;  i+= points_step) {
             const auto &point = stereo_points->at(i);
             const cslibs_math_3d::Point3d map_point = m_T_s * point;
+            /// TODO: what if map origin is not identity?
             p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
         }
         *it *= p;
