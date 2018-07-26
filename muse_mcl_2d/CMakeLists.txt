@@ -19,7 +19,6 @@ find_package(catkin REQUIRED COMPONENTS
   cslibs_plugins
   cslibs_plugins_data
   visualization_msgs
-  pluginlib
   geometry_msgs
   message_generation
   std_msgs
