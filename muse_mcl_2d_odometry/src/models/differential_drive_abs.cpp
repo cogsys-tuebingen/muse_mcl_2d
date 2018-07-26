@@ -12,20 +12,28 @@ DifferentialDriveAbs::Result::Ptr DifferentialDriveAbs::apply(const cslibs_plugi
                                                               const cslibs_time::Time                   &until,
                                                               sample_set_t::state_iterator_t             states)
 {
-    cslibs_plugins_data::types::Odometry2D::ConstPtr apply;
+    /// t^O_0 ------------------ t^O_1
+    /// ---------- t^s
+    /// ----------------- t^u
+    ///
+
+    cslibs_plugins_data::types::Odometry2D::ConstPtr original =
+      std::dynamic_pointer_cast<cslibs_plugins_data::types::Odometry2D const>(data);
+
+    cslibs_plugins_data::types::Odometry2D::ConstPtr apply = original;
     cslibs_plugins_data::types::Odometry2D::ConstPtr leave;
-    if(until < data->getTimeFrame().end) {
-        cslibs_plugins_data::types::Odometry2D::ConstPtr original =
-            std::dynamic_pointer_cast<cslibs_plugins_data::types::Odometry2D const>(data);
-        if(!original->split(until, apply, leave)) {
-            apply = original;
-        }
-    } else {
-        apply = std::dynamic_pointer_cast<cslibs_plugins_data::types::Odometry2D const>(data);
+
+    const cslibs_time::Time       &s = states.getStamp();
+    const cslibs_time::TimeFrame &tf = data->getTimeFrame();
+
+    original = s > tf.start ? original->cutFront(s) : original;     /// try to cut of the front
+    original = original ? apply : original;                         /// if fails reset to original
+
+    if(until < tf.end && !original->split(until, apply, leave)) {   /// if message has to be split
+       apply = original;
     }
 
     const cslibs_plugins_data::types::Odometry2D &odometry = *apply;
-
 
     const double delta_trans = odometry.getDeltaLinear();
     double delta_rot1 = 0.0;
