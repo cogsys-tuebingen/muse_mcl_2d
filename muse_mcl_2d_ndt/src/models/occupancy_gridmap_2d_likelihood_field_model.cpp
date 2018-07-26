@@ -58,7 +58,7 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     auto occupancy_likelihood = [this, &likelihood](const cslibs_math_2d::Point2d &p,
                                                     const cslibs_ndt::OccupancyDistribution<2>* d) {
         double occ = d ? d->getOccupancy(inverse_model_) : 0.0;
-        double ndt = d ? likelihood(p, d->getDistribution(), 1.0 - occ) : 0.0;
+        double ndt = d ? occ * likelihood(p, d->getDistribution(), 1.0 - occ) : 0.0;
 
         return ndt;
     };
@@ -73,20 +73,17 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     auto pow3 = [](const double& x) {
         return x*x*x;
     };
-
-
     const cslibs_plugins_data::types::Laserscan::rays_t &rays = laser_data.getRays();
     const std::size_t rays_size = rays.size();
 
-    if(scan_histogram_resolution_ > 0.0) {
+    if (scan_histogram_resolution_ > 0.0) {
         utilty::kd_tree_t   histogram;
         utilty::Indexation  index(scan_histogram_resolution_);
         const std::size_t size = rays.size();
-        for(std::size_t i = 0 ; i < size ; ++i) {
+        for (std::size_t i = 0 ; i < size ; ++i) {
            const auto &r = rays[i];
-           if(r.valid()) {
+           if (r.valid())
               histogram.insert(index.create(r), utilty::Data(i, r));
-            }
         }
 
         std::vector<std::size_t> ray_indices;
@@ -95,10 +92,10 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
         for (auto it = set.begin() ; it != set.end() ; ++it) {
             const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
             double p = 1.0;
-            for(const std::size_t ri : ray_indices) {
+            for (const std::size_t ri : ray_indices) {
                 const auto &ray = laser_rays[ri];
                 const cslibs_math_2d::Point2d map_point = m_T_l * ray.point;
-                p += ray.valid() && map_point.isNormal() ? bundle_likelihood(map_point) : 0.01;
+                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
             }
             *it *= p;
         }
@@ -107,10 +104,10 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
         for (auto it = set.begin() ; it != set.end() ; ++it) {
             const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
             double p = 1.0;
-            for (std::size_t i = 0 ; i < rays_size ;  i+= ray_step) {
+            for (std::size_t i = 0 ; i < rays_size ; i+= ray_step) {
                 const auto &ray = laser_rays[i];
                 const cslibs_math_2d::Point2d map_point = m_T_l * ray.point;
-                p += ray.valid() && map_point.isNormal() ? bundle_likelihood(map_point) : 0.01;
+                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
             }
             *it *= p;
         }
