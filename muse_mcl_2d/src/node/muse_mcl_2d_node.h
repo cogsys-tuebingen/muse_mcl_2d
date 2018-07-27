@@ -16,7 +16,7 @@
 #include <muse_mcl_2d/resampling/resampling_2d.hpp>
 #include <muse_mcl_2d/density/sample_density_2d.hpp>
 #include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
-#include <muse_mcl_2d/scheduling/cfs_rate.hpp>
+#include <muse_mcl_2d/scheduling/scheduler_2d.hpp>
 
 #include "state_publisher_2d.h"
 
@@ -64,8 +64,6 @@ private:
     using smc_t                  = muse_smc::SMC<StateSpaceDescription2D, data_t>;
     using sample_set_t           = muse_smc::SampleSet<StateSpaceDescription2D>;
     using prediction_integrals_t = muse_smc::PredictionIntegrals<StateSpaceDescription2D, data_t>;
-    using scheduler_t            = muse_smc::Scheduler<StateSpaceDescription2D, data_t>;
-    using rate_scheduler_t       = muse_mcl_2d::CFSRate;
 
     using update_model_mapping_t = UpdateRelay2D::map_t;
 
@@ -97,7 +95,7 @@ private:
     UniformSampling2D::Ptr      uniform_sampling_;
     NormalSampling2D::Ptr       normal_sampling_;
     Resampling2D::Ptr           resampling_;
-    scheduler_t::Ptr            scheduler_;
+    Scheduler2D::Ptr            scheduler_;
 
     UpdateRelay2D::Ptr          update_forwarder_;
     PredictionRelay2D::Ptr      predicition_forwarder_;

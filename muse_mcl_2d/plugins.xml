@@ -51,3 +51,20 @@
     </description>
     </class>
 </library>
+<library path="libmuse_mcl_2d_scheduling">
+    <class type="muse_mcl_2d::CFS" base_class_type="muse_mcl_2d::Scheduler2D">
+    <description>Completely fair scheduling scheme.</description>
+    </class>
+    <class type="muse_mcl_2d::Rate" base_class_type="muse_mcl_2d::Scheduler2D">
+    <description>Scheme which executes update models with no regulation.</description>
+    </class>
+
+    <class type="muse_mcl_2d::CFSDropStatistic" base_class_type="muse_mcl_2d::Scheduler2D">
+    <description>Completely fair scheduling scheme with drop statistic.</description>
+    </class>
+    <class type="muse_mcl_2d::RateDropStatistic" base_class_type="muse_mcl_2d::Scheduler2D">
+    <description>Scheme which executes update models with no regulation with drop statistic.</description>
+    </class>
+
+</library>
+

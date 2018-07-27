@@ -188,7 +188,6 @@ bool MuseMCL2DNode::setup()
         ROS_INFO_STREAM("[" << resampling_->getName() << "]");
     }
     { /// density estimation
-
         loader.load<SampleDensity2D, ros::NodeHandle&>(sample_density_, nh_private_);
         if(!sample_density_) {
             ROS_ERROR_STREAM("No sample density estimation function was found!");
@@ -198,6 +197,17 @@ bool MuseMCL2DNode::setup()
 
         ROS_INFO_STREAM("Loaded density estimation function.");
         ROS_INFO_STREAM("[" << sample_density_->getName() << "]");
+    }
+    { /// scheduling
+        loader.load<Scheduler2D, const update_model_map_t&, ros::NodeHandle&>(scheduler_, update_models_, nh_private_);
+        if(!scheduler_) {
+            ROS_ERROR_STREAM("No scheduler was found!");
+            ROS_ERROR_STREAM("Setup is incomplete and is aborted!");
+            return false;
+        }
+
+        ROS_INFO_STREAM("Loaded scheduler.");
+        ROS_INFO_STREAM("[" << scheduler_->getName() << "]");
     }
 
     //// set up the necessary functions for the particle filter
@@ -241,37 +251,6 @@ bool MuseMCL2DNode::setup()
                                            reset_weights_to_one));
         state_publisher_.reset(new StatePublisher);
         state_publisher_->setup(nh_private_);
-
-        /// TEMPORARY TEST
-        ///
-        rate_scheduler_t::time_priority_map_t scheduler_priorities;
-        std::map<std::string, double> priorities;
-        nh_private_.getParam("scheduler/priorities", priorities);
-        for(const auto &p : priorities) {
-            if(update_models_.find(p.first) == update_models_.end()) {
-                ROS_ERROR_STREAM("Update model entered in priority weights not found.");
-                return false;
-            }
-            const std::size_t id = update_models_[p.first]->getId();
-            if(p.second < 0.0) {
-                ROS_ERROR_STREAM("Only priorities greater zero are allowed!");
-                return false;
-            }
-            scheduler_priorities[id] = p.second;
-        }
-        double preferred_rate = nh_private_.param<double>("particle_filter/preferred_rate", 0.5);
-        if(preferred_rate < 0.0) {
-            ROS_ERROR_STREAM("Cannot use a particle filter rate smaller 0.0!");
-            return false;
-        }
-
-        rate_scheduler_t::Ptr scheduler(new rate_scheduler_t);
-        scheduler->setup(rate_scheduler_t::rate_t(preferred_rate),
-                         scheduler_priorities);
-
-        scheduler_ = scheduler;
-        ///
-        /// TEMPORARY TEST
 
 
         particle_filter_.reset(new smc_t);

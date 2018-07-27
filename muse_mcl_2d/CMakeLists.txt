@@ -100,6 +100,19 @@ target_link_libraries(${PROJECT_NAME}_density
     ${catkin_LIBRARIES}
 )
 
+add_library(${PROJECT_NAME}_scheduling
+    src/scheduling/cfs.cpp
+    src/scheduling/rate.cpp
+    src/scheduling/cfs_drop_statistic.cpp
+    src/scheduling/rate_drop_statistic.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}_scheduling
+    ${catkin_LIBRARIES}
+)
+
+
+
 
 add_executable(${PROJECT_NAME}_node
     src/node/muse_mcl_2d_node.cpp
