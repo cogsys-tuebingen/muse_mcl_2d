@@ -65,17 +65,22 @@ public:
             return time_t(ros::Time::now().toNSec());
         };
 
-        if(last_update_time_.isZero())
-            last_update_time_ = now();
+        const time_t time_now = now();
+        if(last_update_time_.isZero()) {
+           last_update_time_ = time_now;
+        }
+
+        const duration_t resampling_prediction_duration = last_update_time_ - time_now;
 
         const time_t stamp = u->getStamp();
         if(stamp >= next_update_time_) {
             const time_t start = now();
             u->apply(s->getWeightIterator());
             const duration_t dur = (now() - start);
-            const duration_t dur_prediction_resampling = (now() - last_update_time_);
 
-            next_update_time_ = stamp + dur + dur_prediction_resampling;
+            next_update_time_ = stamp + dur + resampling_prediction_duration;
+            last_update_time_ = time_now;
+
             ++processed_[u->getModelId()];
 
             return true;

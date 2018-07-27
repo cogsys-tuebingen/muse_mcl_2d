@@ -97,27 +97,30 @@ public:
             return time_t(ros::Time::now().toNSec());
         };
 
-        if(last_update_time_.isZero())
-            last_update_time_ = now();
+
+        const time_t time_now = now();
+        if(last_update_time_.isZero()) {
+           last_update_time_ = time_now;
+        }
+
+        const duration_t resampling_prediction_duration = last_update_time_ - time_now;
 
         const id_t   id    = u->getModelId();
         const time_t stamp = u->getStamp();
 
-        if(id == q_.top().id && stamp >= next_update_time_) {
+        if(id == q_.top().id && next_update_time_ < stamp) {
             Entry entry = q_.top();
             q_.pop();
 
             const time_t start = now();
             u->apply(s->getWeightIterator());
             const duration_t dur = (now() - start);
-            const duration_t dur_prediction_resampling = (now() - last_update_time_);
-           //  std::cerr << dur_prediction_resampling << "\n";
 
             entry.vtime += static_cast<int64_t>(static_cast<double>(dur.nanoseconds()) * nice_values_[id]);
-            next_update_time_ = stamp + dur ; // ; dur_prediction_resampling;
+            next_update_time_ = stamp + dur + resampling_prediction_duration;
+            last_update_time_ = time_now;
 
             q_.push(entry);
-            last_update_time_ = now();
             return true;
         }
         return false;
@@ -158,8 +161,8 @@ public:
     }
 
 protected:
-    time_t              last_update_time_;
     time_t              next_update_time_;
+    time_t              last_update_time_;
     time_t              resampling_time_;
     duration_t          resampling_period_;
     nice_map_t          nice_values_;
