@@ -42,8 +42,8 @@ public:
                       ros::NodeHandle &nh) override
     {
         auto param_name = [this](const std::string &name){return name_ + "/" + name;};
-        double preferred_RateDropStatistic = nh.param<double>(param_name("preferred_RateDropStatistic"), 5.0);
-        resampling_period_ = duration_t(preferred_RateDropStatistic > 0.0 ? 1.0 / preferred_RateDropStatistic : 0.0);
+        double preferred_rate = nh.param<double>(param_name("preferred_rate"), 5.0);
+        resampling_period_ = duration_t(preferred_rate > 0.0 ? 1.0 / preferred_rate : 0.0);
 
         output_path_ = nh.param<std::string>("output_path", "/tmp/drop_statistic");
 
