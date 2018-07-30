@@ -125,12 +125,12 @@ public:
            last_update_time_ = time_now;
         }
 
-        const duration_t resampling_prediction_duration = last_update_time_ - time_now;
+        const time_t next_update_time = next_update_time_ + (last_update_time_ - time_now);
 
         const id_t   id    = u->getModelId();
         const time_t stamp = u->getStamp();
 
-        if(id == q_.top().id && next_update_time_ < stamp) {
+        if(id == q_.top().id && stamp > next_update_time) {
             Entry entry = q_.top();
             q_.pop();
 
@@ -139,7 +139,7 @@ public:
             const duration_t dur = (now() - start);
 
             entry.vtime += static_cast<int64_t>(static_cast<double>(dur.nanoseconds()) * nice_values_[id]);
-            next_update_time_ = stamp + dur + resampling_prediction_duration;
+            next_update_time_ = stamp + dur;
             last_update_time_ = time_now;
 
             q_.push(entry);
@@ -162,13 +162,15 @@ public:
             return time_t(ros::Time::now().toNSec());
         };
 
-        if(resampling_time_.isZero())
-            resampling_time_ = stamp;
+        const time_t time_now = now();
 
-        auto do_apply = [&stamp, &r, &s, &now, this] () {
+        if(resampling_time_.isZero())
+            resampling_time_ = time_now;
+
+        auto do_apply = [&stamp, &r, &s, &time_now, this] () {
             r->apply(*s);
 
-            resampling_time_   = stamp + resampling_period_;
+            resampling_time_   = time_now + resampling_period_;
 
             int64_t min_vtime = q_.top().vtime;
             queue_t q;
