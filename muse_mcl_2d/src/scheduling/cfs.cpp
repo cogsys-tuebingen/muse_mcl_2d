@@ -99,14 +99,15 @@ public:
 
 
         const time_t time_now = now();
+        const time_t stamp = u->getStamp();
+
         if(last_update_time_.isZero()) {
-           last_update_time_ = time_now;
+           last_update_time_ = stamp;
         }
 
-        const time_t next_update_time = next_update_time_ + (last_update_time_ - time_now);
+        const time_t next_update_time = next_update_time_ + (last_update_time_ - stamp);
 
         const id_t   id    = u->getModelId();
-        const time_t stamp = u->getStamp();
 
         if(id == q_.top().id && next_update_time < stamp) {
             Entry entry = q_.top();
@@ -117,8 +118,8 @@ public:
             const duration_t dur = (now() - start);
 
             entry.vtime += static_cast<int64_t>(static_cast<double>(dur.nanoseconds()) * nice_values_[id]);
-            next_update_time_ = time_now + dur;
-            last_update_time_ = time_now;
+            next_update_time_ = stamp + dur;
+            last_update_time_ = stamp + dur;
 
             q_.push(entry);
             return true;
@@ -145,7 +146,7 @@ public:
         auto do_apply = [&stamp, &r, &s, &time_now, this] () {
             r->apply(*s);
 
-            resampling_time_  = time_now + resampling_period_;
+            resampling_time_  = stamp + resampling_period_;
 
             int64_t min_vtime = q_.top().vtime;
             queue_t q;
