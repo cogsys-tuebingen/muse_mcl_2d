@@ -97,29 +97,22 @@ public:
             return time_t(ros::Time::now().toNSec());
         };
 
-
-        const time_t time_now = now();
         const time_t stamp = u->getStamp();
-
-        if(last_update_time_.isZero()) {
-           last_update_time_ = stamp;
+        if(next_update_time_.isZero()) {
+           next_update_time_ = stamp;
         }
 
-        const time_t next_update_time = next_update_time_ + (last_update_time_ - stamp);
-
         const id_t   id    = u->getModelId();
-
-        if(id == q_.top().id && next_update_time < stamp) {
+        const time_t start = now();
+        if(id == q_.top().id && next_update_time_ < stamp) {
             Entry entry = q_.top();
             q_.pop();
 
-            const time_t start = now();
             u->apply(s->getWeightIterator());
             const duration_t dur = (now() - start);
 
             entry.vtime += static_cast<int64_t>(static_cast<double>(dur.nanoseconds()) * nice_values_[id]);
-            next_update_time_ = stamp + dur;
-            last_update_time_ = stamp + dur;
+            next_update_time_ = stamp + dur + (stamp - next_update_time_);
 
             q_.push(entry);
             return true;
@@ -141,7 +134,7 @@ public:
         const time_t time_now = now();
 
         if(resampling_time_.isZero())
-            resampling_time_ = time_now;
+            resampling_time_ = stamp;
 
         auto do_apply = [&stamp, &r, &s, &time_now, this] () {
             r->apply(*s);
@@ -165,7 +158,6 @@ public:
 
 protected:
     time_t              next_update_time_;
-    time_t              last_update_time_;
     time_t              resampling_time_;
     duration_t          resampling_period_;
     nice_map_t          nice_values_;
