@@ -56,15 +56,12 @@ void BeamModelAMCL::apply(const data_t::ConstPtr          &data,
         return z_hit_ * std::exp(pow2(ray_range - map_range) * denominator_exponent_hit_);
     };
     auto p_short = [this](const double ray_range, const double map_range) {
-        return ray_range < map_range ? z_short_ * /*(1.0 / (1.0 - std::exp(-lambda_short_  * map_range))) **/ lambda_short_ * std::exp(-lambda_short_ * ray_range)
-                                       : 0.0;
+        return ray_range < map_range ? z_short_ * lambda_short_ * std::exp(-lambda_short_ * ray_range) : 0.0;
     };
-    auto p_max = [this, range_max](const double ray_range)
-    {
-        return ray_range >= range_max ? z_max_ : 0.0;
+    auto p_max = [this, range_max](const double ray_range) {
+        return ray_range == range_max ? z_max_ : 0.0;
     };
-    auto p_random = [this, range_max, p_rand](const double ray_range)
-    {
+    auto p_random = [this, range_max, p_rand](const double ray_range) {
         return ray_range < range_max ? p_rand : 0.0;
     };
     auto probability = [&gridmap, &p_hit, &p_short, &p_max, &p_random]
