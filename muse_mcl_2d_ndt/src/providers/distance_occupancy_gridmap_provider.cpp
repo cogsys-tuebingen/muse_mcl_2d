@@ -20,7 +20,6 @@ DistanceOccupancyGridmapProvider::state_space_t::ConstPtr DistanceOccupancyGridm
     std::unique_lock<std::mutex> l(map_mutex_);
     if (!map_)
         map_notify_.wait(l);
-
     return map_;
 }
 
@@ -61,8 +60,7 @@ void DistanceOccupancyGridmapProvider::loadMap()
                 ROS_INFO_STREAM("Could not convert map to Likelihood Field map");
         } else
             ROS_INFO_STREAM("Could not load file '" << path_ << "'!");
-
-        map_notify_.notify_one();
+        map_notify_.notify_all();
     };
 
     worker_ = std::thread(load_blocking);

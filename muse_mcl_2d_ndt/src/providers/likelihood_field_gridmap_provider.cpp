@@ -18,6 +18,8 @@ LikelihoodFieldGridmapProvider::LikelihoodFieldGridmapProvider()
 LikelihoodFieldGridmapProvider::state_space_t::ConstPtr LikelihoodFieldGridmapProvider::getStateSpace() const
 {
     std::unique_lock<std::mutex> l(map_mutex_);
+    if (!map_)
+        map_notify_.wait(l);
     return map_;
 }
 
@@ -54,6 +56,7 @@ void LikelihoodFieldGridmapProvider::loadMap()
                 ROS_ERROR_STREAM("Could not convert map to Likelihood Field map");
         } else
             ROS_ERROR_STREAM("Could not load file '" << path_ << "'!");
+        map_notify_.notify_all();
     };
     if(map_) {
         worker_ = std::thread(load);

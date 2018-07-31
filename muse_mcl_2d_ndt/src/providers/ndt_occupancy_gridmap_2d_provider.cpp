@@ -20,7 +20,6 @@ NDTOccupancyGridmap2dProvider::state_space_t::ConstPtr NDTOccupancyGridmap2dProv
     std::unique_lock<std::mutex> l(map_mutex_);
     if (!map_)
         map_notify_.wait(l);
-
     return map_;
 }
 
@@ -45,8 +44,7 @@ void NDTOccupancyGridmap2dProvider::loadMap()
             ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
         } else
             ROS_INFO_STREAM("Could not load file '" << path_ << "'!");
-
-        map_notify_.notify_one();
+        map_notify_.notify_all();
     };
 
     worker_ = std::thread(load_blocking);
