@@ -65,14 +65,25 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     };
     const cslibs_plugins_data::types::Laserscan::rays_t &rays = laser_data.getRays();
     const std::size_t rays_size = rays.size();
+    const double range_min = laser_data.getLinearMin();
+    const double range_max = laser_data.getLinearMax();
+    const double angle_min = laser_data.getAngularMin();
+    const double angle_max = laser_data.getAngularMax();
+
+    auto valid = [range_min, range_max, angle_min, angle_max](const cslibs_plugins_data::types::Laserscan::Ray &r){
+        return r.valid()
+            && r.angle >= angle_min && r.angle <= angle_max
+            && r.range >= range_min && r.range <= range_max;
+    };
 
     if (scan_histogram_resolution_ > 0.0) {
         utilty::kd_tree_t   histogram;
         utilty::Indexation  index(scan_histogram_resolution_);
+
         const std::size_t size = rays.size();
         for (std::size_t i = 0 ; i < size ; ++i) {
            const auto &r = rays[i];
-           if (r.valid())
+           if (valid(r))
               histogram.insert(index.create(r), utilty::Data(i, r));
         }
 
