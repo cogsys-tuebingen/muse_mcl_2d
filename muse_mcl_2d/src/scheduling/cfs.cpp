@@ -62,6 +62,10 @@ public:
     using duration_t          = cslibs_time::Duration;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
+    CFS() :
+      may_resample_(false)
+    {
+    }
 
     inline void setup(const update_model_map_t &update_models,
                       ros::NodeHandle &nh) override
@@ -115,6 +119,7 @@ public:
             next_update_time_ = stamp + dur + (stamp - next_update_time_);
 
             q_.push(entry);
+            may_resample_ = true;
             return true;
         }
         return false;
@@ -148,6 +153,7 @@ public:
                 q.push(e);
             }
             std::swap(q, q_);
+            may_resample_ = false;
             return true;
         };
         auto do_not_apply = [] () {
@@ -162,6 +168,7 @@ protected:
     duration_t          resampling_period_;
     nice_map_t          nice_values_;
     queue_t             q_;
+    bool                may_resample_;
 };
 }
 
