@@ -5,11 +5,17 @@
    <class type="muse_mcl_2d_gridmaps::BinaryGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
       <description>Provides binarized map versions given a destinct threshold by service.</description>
    </class>
+   <class type="muse_mcl_2d_gridmaps::BinaryGridmapLoadProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+     <description>Provides binarized map versions given a destinct threshold by direct load.</description>
+   </class>
    <class type="muse_mcl_2d_gridmaps::DistanceGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
       <description>Provides cspace map versions given a destinct threshold by topic.</description>
    </class>
    <class type="muse_mcl_2d_gridmaps::DistanceGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
       <description>Provides cspace map versions given a destinct threshold by Service.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::DistanceGridmapLoadProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+     <description>Provides cspace map versions given a destinct threshold by direct load.</description>
    </class>
    <class type="muse_mcl_2d_gridmaps::ProbabilityGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
       <description>Provides floating point probability map versions by topic.</description>
@@ -17,11 +23,17 @@
    <class type="muse_mcl_2d_gridmaps::ProbabilityGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
       <description>Provides floating point probability map versions by service.</description>
    </class>
+   <class type="muse_mcl_2d_gridmaps::ProbabilityGridmapLoadProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+     <description>Provides floating point probability map versions by direct load.</description>
+   </class>
    <class type="muse_mcl_2d_gridmaps::LikelihoodFieldGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
       <description>Provides floating point probability map versions by topic.</description>
    </class>
    <class type="muse_mcl_2d_gridmaps::LikelihoodFieldGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
       <description>Provides floating point probability map versions by service.</description>
+   </class>
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldGridmapLoadProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+     <description>Provides floating point probability map versions by direct load.</description>
    </class>
 </library>
 <library path="libmuse_mcl_2d_gridmaps_models">

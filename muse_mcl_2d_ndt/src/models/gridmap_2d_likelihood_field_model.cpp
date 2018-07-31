@@ -101,7 +101,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
             *it *= p;
         }
     } else {
-        const std::size_t ray_step  = std::max(1ul, rays_size / max_points_);
+        const std::size_t ray_step  = std::max(1ul, (rays_size - 1) / (max_points_ - 1));
         for (auto it = set.begin() ; it != set.end() ; ++it) {
             const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
             double p = 1.0;

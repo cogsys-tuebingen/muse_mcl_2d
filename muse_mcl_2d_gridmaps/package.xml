@@ -18,6 +18,7 @@
     <depend>cslibs_math_2d</depend>
     <depend>cslibs_gridmaps</depend>
     <depend>cslibs_plugins_data</depend>
+    <depend>map_server</depend>
 
     <export>
         <muse_mcl_2d plugin="${prefix}/plugins.xml" />

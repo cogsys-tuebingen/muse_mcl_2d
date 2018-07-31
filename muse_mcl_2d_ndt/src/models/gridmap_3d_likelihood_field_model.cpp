@@ -42,7 +42,7 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr          &data,
     cslibs_math_3d::Transform3d m_T_w_3d = cslibs_math_ros::tf::conversion_3d::from(m_T_w);
 
     const std::size_t points_size = stereo_points->size();
-    const std::size_t points_step = std::max(1ul, points_size / max_points_);
+    const std::size_t points_step = std::max(1ul, (points_size - 1) / (max_points_ - 1));
 
     // mixture distribution entries
     const double bundle_resolution_inv = 1.0 / gridmap.getBundleResolution();

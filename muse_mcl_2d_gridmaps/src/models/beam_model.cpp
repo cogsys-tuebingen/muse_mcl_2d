@@ -43,7 +43,7 @@ void BeamModel::apply(const data_t::ConstPtr          &data,
     const cslibs_plugins_data::types::Laserscan::rays_t rays = laser_data.getRays();
     const auto end = set.end();
     const std::size_t rays_size = rays.size();
-    const std::size_t ray_step  = std::max(1ul, rays_size / max_beams_);
+    const std::size_t ray_step  = std::max(1ul, (rays_size - 1) / (max_beams_ - 1));
     const double range_max = laser_data.getLinearMax();
     const double p_rand = z_rand_ * 1.0 / range_max;
 

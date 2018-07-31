@@ -115,7 +115,7 @@ public:
             const duration_t dur = (now() - start);
 
             entry.vtime += static_cast<int64_t>(static_cast<double>(dur.nanoseconds()) * nice_values_[id]);
-            next_update_time_ = now();
+            next_update_time_ = /*time_now;//*/now();
 
             q_.push(entry);
             may_resample_ = true;
