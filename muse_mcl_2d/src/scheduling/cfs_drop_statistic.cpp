@@ -66,6 +66,11 @@ public:
     using duration_t          = cslibs_time::Duration;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
+    CFSDropStatistic() :
+      may_resample_(false)
+    {
+    }
+
     virtual ~CFSDropStatistic()
     {
         std::ofstream out(output_path_);
@@ -144,6 +149,7 @@ public:
 
             q_.push(entry);
             ++processed_[id];
+            may_resample_ = true;
             return true;
       }
 
@@ -179,12 +185,13 @@ public:
                 q.push(e);
             }
             std::swap(q, q_);
+            may_resample_ = false;
             return true;
         };
         auto do_not_apply = [] () {
             return false;
         };
-        return resampling_time_ < stamp ? do_apply() : do_not_apply();
+        return (may_resample_ && resampling_time_ < stamp) ? do_apply() : do_not_apply();
     }
 
 protected:
@@ -194,6 +201,7 @@ protected:
     duration_t          resampling_period_;
     nice_map_t          nice_values_;
     queue_t             q_;
+    bool                may_resample_;
 
     /// drop statistic stuff
     std::string         output_path_;

@@ -18,6 +18,10 @@ public:
     using duration_t          = cslibs_time::Duration;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
+    Rate() :
+        may_resample_(false)
+    {
+    }
 
     inline void setup(const update_model_map_t &,
                       ros::NodeHandle &nh) override
@@ -50,6 +54,7 @@ public:
             next_update_time_ = stamp + dur;
             last_update_time_ = time_now;
 
+            may_resample_ = true;
             return true;
         }
         return false;
@@ -75,12 +80,13 @@ public:
             r->apply(*s);
 
             resampling_time_ = time_now + resampling_period_;
+            may_resample_ = false;
             return true;
         };
         auto do_not_apply = [] () {
             return false;
         };
-        return resampling_time_ < stamp ? do_apply() : do_not_apply();
+        return (may_resample_ && resampling_time_ < stamp) ? do_apply() : do_not_apply();
     }
 
 protected:
@@ -88,6 +94,7 @@ protected:
     time_t              last_update_time_;
     time_t              resampling_time_;
     duration_t          resampling_period_;
+    bool                may_resample_;
 };
 }
 

@@ -159,7 +159,7 @@ public:
         auto do_not_apply = [] () {
             return false;
         };
-        return resampling_time_ < stamp ? do_apply() : do_not_apply();
+        return (may_resample_ && resampling_time_ < stamp) ? do_apply() : do_not_apply();
     }
 
 protected:

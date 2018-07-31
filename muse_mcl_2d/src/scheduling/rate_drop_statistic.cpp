@@ -22,6 +22,10 @@ public:
     using duration_t          = cslibs_time::Duration;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
+    RateDropStatistic() :
+        may_resample_(false)
+    {
+    }
 
     virtual ~RateDropStatistic()
     {
@@ -36,7 +40,6 @@ public:
         out.flush();
         out.close();
     }
-
 
     inline void setup(const update_model_map_t &update_models,
                       ros::NodeHandle &nh) override
@@ -82,7 +85,7 @@ public:
             last_update_time_ = time_now;
 
             ++processed_[u->getModelId()];
-
+            may_resample_ = true;
             return true;
         }
 
@@ -110,12 +113,13 @@ public:
             r->apply(*s);
 
             resampling_time_   = time_now + resampling_period_;
+            may_resample_ = false;
             return true;
         };
         auto do_not_apply = [] () {
             return false;
         };
-        return resampling_time_ < stamp ? do_apply() : do_not_apply();
+        return (may_resample_ && resampling_time_ < stamp) ? do_apply() : do_not_apply();
     }
 
 protected:
@@ -123,6 +127,7 @@ protected:
     time_t              last_update_time_;
     time_t              resampling_time_;
     duration_t          resampling_period_;
+    bool                may_resample_;
 
     /// drop statistic stuff
     std::string         output_path_;
