@@ -75,17 +75,17 @@ public:
         std::map<std::string, double> nice_values;
         nh.getParam(param_name("nice_values"), nice_values);
 
-        for(const auto &um : update_models) {
+        for (const auto &um : update_models) {
             const UpdateModel2D::Ptr &u = um.second;
             const std::size_t id = u->getId();
             const std::string name = u->getName();
             double nice = 1.0;
 
-            if(nice_values.find(u->getName()) == nice_values.end()) {
+            if (nice_values.find(u->getName()) == nice_values.end())
               ROS_WARN_STREAM("Did not find nice value for update model '" << u->getName() << "', setting to 1.0.");
-            } else {
+            else
               nice = nice_values[name];
-            }
+
             nice_values_[id] = std::min(1.0, std::max(0.0, nice));
             q_.push(Entry(id));
         }
@@ -96,19 +96,17 @@ public:
     virtual bool apply(typename update_t::Ptr     &u,
                        typename sample_set_t::Ptr &s) override
     {
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
         const time_t stamp = u->getStamp();
-        if(next_update_time_.isZero()) {
+        if (next_update_time_.isZero())
            next_update_time_ = stamp;
-        }
 
         const id_t   id    = u->getModelId();
         const time_t start = now();
-        if(id == q_.top().id && next_update_time_ < stamp) {
+        if (id == q_.top().id && next_update_time_ < stamp) {
             Entry entry = q_.top();
             q_.pop();
 
@@ -131,14 +129,13 @@ public:
     {
         const cslibs_time::Time &stamp = s->getStamp();
 
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
         const time_t time_now = now();
 
-        if(resampling_time_.isZero())
+        if (resampling_time_.isZero())
             resampling_time_ = stamp;
 
         auto do_apply = [&stamp, &r, &s, &time_now, this] () {
@@ -148,7 +145,7 @@ public:
 
             int64_t min_vtime = q_.top().vtime;
             queue_t q;
-            for(auto e : q_) {
+            for (auto e : q_) {
                 e.vtime -= min_vtime;
                 q.push(e);
             }

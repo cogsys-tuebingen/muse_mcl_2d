@@ -34,20 +34,18 @@ public:
     virtual bool apply(typename update_t::Ptr     &u,
                        typename sample_set_t::Ptr &s) override
     {
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
         const time_t time_now = now();
-        if(last_update_time_.isZero()) {
+        if (last_update_time_.isZero())
            last_update_time_ = time_now;
-        }
 
         const time_t next_update_time = next_update_time_ + (last_update_time_ - time_now);
 
         const time_t stamp = u->getStamp();
-        if(stamp >= next_update_time) {
+        if (stamp >= next_update_time) {
             const time_t start = now();
             u->apply(s->getWeightIterator());
             const duration_t dur = (now() - start);
@@ -60,20 +58,18 @@ public:
         return false;
     }
 
-
     virtual bool apply(typename resampling_t::Ptr &r,
                        typename sample_set_t::Ptr &s) override
     {
         const cslibs_time::Time &stamp = s->getStamp();
 
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
        const time_t time_now = now();
 
-        if(resampling_time_.isZero())
+        if (resampling_time_.isZero())
             resampling_time_ = time_now;
 
         auto do_apply = [&stamp, &r, &s, &time_now, this] () {
