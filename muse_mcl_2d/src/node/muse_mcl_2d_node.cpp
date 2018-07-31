@@ -242,6 +242,7 @@ bool MuseMCL2DNode::setup()
             return false;
         }
 
+        while (ros::Time::now().toNSec() == 0) { }
         sample_set_.reset(new sample_set_t(world_frame,
                                            cslibs_time::Time(ros::Time::now().toNSec()),
                                            minimum_sample_size,
@@ -251,7 +252,6 @@ bool MuseMCL2DNode::setup()
                                            reset_weights_to_one));
         state_publisher_.reset(new StatePublisher);
         state_publisher_->setup(nh_private_);
-
 
         particle_filter_.reset(new smc_t);
         particle_filter_->setup(sample_set_,
