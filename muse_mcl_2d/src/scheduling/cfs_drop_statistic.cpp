@@ -125,15 +125,12 @@ public:
         };
 
         const time_t time_now = now();
-        if (last_update_time_.isZero())
-           last_update_time_ = time_now;
+        const time_t stamp    = u->getStamp();
+        if (next_update_time_.isZero())
+            next_update_time_ = time_now;
 
-        const time_t next_update_time = next_update_time_ + (last_update_time_ - time_now);
-
-        const id_t   id    = u->getModelId();
-        const time_t stamp = u->getStamp();
-
-        if (id == q_.top().id && stamp > next_update_time) {
+        const id_t id = u->getModelId();
+        if (id == q_.top().id && stamp >= next_update_time_) {
             Entry entry = q_.top();
             q_.pop();
 
@@ -142,19 +139,16 @@ public:
             const duration_t dur = (now() - start);
 
             entry.vtime += static_cast<int64_t>(static_cast<double>(dur.nanoseconds()) * nice_values_[id]);
-            next_update_time_ = stamp + dur;
-            last_update_time_ = time_now;
+            next_update_time_ = now();
 
             q_.push(entry);
             ++processed_[id];
             may_resample_ = true;
             return true;
-      }
-
-      ++drops_[id];
-      return false;
-  }
-
+        }
+        ++drops_[id];
+        return false;
+    }
 
     virtual bool apply(typename resampling_t::Ptr &r,
                        typename sample_set_t::Ptr &s) override
@@ -193,7 +187,6 @@ public:
 
 protected:
     time_t              next_update_time_;
-    time_t              last_update_time_;
     time_t              resampling_time_;
     duration_t          resampling_period_;
     nice_map_t          nice_values_;

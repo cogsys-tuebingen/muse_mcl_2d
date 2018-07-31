@@ -68,19 +68,14 @@ public:
         };
 
         const time_t time_now = now();
-        if (last_update_time_.isZero())
-           last_update_time_ = time_now;
-
-        const time_t next_update_time = next_update_time_ + (last_update_time_ - time_now);
+        if (next_update_time_.isZero())
+           next_update_time_ = time_now;
 
         const time_t stamp = u->getStamp();
-        if (stamp >= next_update_time) {
-            const time_t start = now();
+        if (stamp >= next_update_time_) {
             u->apply(s->getWeightIterator());
-            const duration_t dur = (now() - start);
 
-            next_update_time_ = time_now + dur;
-            last_update_time_ = time_now;
+            next_update_time_ = now();
 
             ++processed_[u->getModelId()];
             may_resample_ = true;
@@ -120,7 +115,6 @@ public:
 
 protected:
     time_t              next_update_time_;
-    time_t              last_update_time_;
     time_t              resampling_time_;
     duration_t          resampling_period_;
     bool                may_resample_;

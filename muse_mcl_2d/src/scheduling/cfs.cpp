@@ -100,21 +100,22 @@ public:
             return time_t(ros::Time::now().toNSec());
         };
 
-        const time_t stamp = u->getStamp();
+        const time_t time_now  = now();
+        const time_t stamp     = u->getStamp();
         if (next_update_time_.isZero())
-           next_update_time_ = stamp;
+            next_update_time_ = time_now;
 
-        const id_t   id    = u->getModelId();
-        const time_t start = now();
-        if (id == q_.top().id && next_update_time_ < stamp) {
+        const id_t id = u->getModelId();
+        if (id == q_.top().id && stamp >= next_update_time_) {
             Entry entry = q_.top();
             q_.pop();
 
+            const time_t start = now();
             u->apply(s->getWeightIterator());
             const duration_t dur = (now() - start);
 
             entry.vtime += static_cast<int64_t>(static_cast<double>(dur.nanoseconds()) * nice_values_[id]);
-            next_update_time_ = stamp + dur + (stamp - next_update_time_);
+            next_update_time_ = now();
 
             q_.push(entry);
             may_resample_ = true;
@@ -123,25 +124,18 @@ public:
         return false;
     }
 
-
     virtual bool apply(typename resampling_t::Ptr &r,
                        typename sample_set_t::Ptr &s) override
     {
         const cslibs_time::Time &stamp = s->getStamp();
 
-        auto now = []() {
-            return time_t(ros::Time::now().toNSec());
-        };
-
-        const time_t time_now = now();
-
         if (resampling_time_.isZero())
             resampling_time_ = stamp;
 
-        auto do_apply = [&stamp, &r, &s, &time_now, this] () {
+        auto do_apply = [&stamp, &r, &s, this] () {
             r->apply(*s);
 
-            resampling_time_  = stamp + resampling_period_;
+            resampling_time_ = stamp + resampling_period_;
 
             int64_t min_vtime = q_.top().vtime;
             queue_t q;
