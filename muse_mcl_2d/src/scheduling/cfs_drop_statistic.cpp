@@ -66,10 +66,15 @@ public:
     using duration_t          = cslibs_time::Duration;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
+    CFSDropStatistic() :
+      may_resample_(false)
+    {
+    }
+
     virtual ~CFSDropStatistic()
     {
         std::ofstream out(output_path_);
-        for(auto &name : names_) {
+        for (auto &name : names_) {
             out << name.second << ": \n";
             out << "\t dropped   : " << drops_[name.first] << "\n";
             out << "\t procesed  : " << processed_[name.first] << "\n";
@@ -88,17 +93,17 @@ public:
         std::map<std::string, double> nice_values;
         nh.getParam(param_name("nice_values"), nice_values);
 
-        for(const auto &um : update_models) {
+        for (const auto &um : update_models) {
             const UpdateModel2D::Ptr &u = um.second;
             const std::size_t id = u->getId();
             const std::string name = u->getName();
             double nice = 1.0;
 
-            if(nice_values.find(u->getName()) == nice_values.end()) {
+            if (nice_values.find(u->getName()) == nice_values.end())
               ROS_WARN_STREAM("Did not find nice value for update model '" << u->getName() << "', setting to 1.0.");
-            } else {
+            else
               nice = nice_values[name];
-            }
+
             nice_values_[id] = std::min(1.0, std::max(0.0, nice));
             drops_[id]      = 0;
             processed_[id]  = 0;
@@ -115,22 +120,20 @@ public:
     virtual bool apply(typename update_t::Ptr     &u,
                        typename sample_set_t::Ptr &s) override
     {
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
         const time_t time_now = now();
-        if(last_update_time_.isZero()) {
+        if (last_update_time_.isZero())
            last_update_time_ = time_now;
-        }
 
         const time_t next_update_time = next_update_time_ + (last_update_time_ - time_now);
 
         const id_t   id    = u->getModelId();
         const time_t stamp = u->getStamp();
 
-        if(id == q_.top().id && stamp > next_update_time) {
+        if (id == q_.top().id && stamp > next_update_time) {
             Entry entry = q_.top();
             q_.pop();
 
@@ -144,6 +147,7 @@ public:
 
             q_.push(entry);
             ++processed_[id];
+            may_resample_ = true;
             return true;
       }
 
@@ -157,14 +161,13 @@ public:
     {
         const cslibs_time::Time &stamp = s->getStamp();
 
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
         const time_t time_now = now();
 
-        if(resampling_time_.isZero())
+        if (resampling_time_.isZero())
             resampling_time_ = time_now;
 
         auto do_apply = [&stamp, &r, &s, &time_now, this] () {
@@ -174,17 +177,18 @@ public:
 
             int64_t min_vtime = q_.top().vtime;
             queue_t q;
-            for(auto e : q_) {
+            for (auto e : q_) {
                 e.vtime -= min_vtime;
                 q.push(e);
             }
             std::swap(q, q_);
+            may_resample_ = false;
             return true;
         };
         auto do_not_apply = [] () {
             return false;
         };
-        return resampling_time_ < stamp ? do_apply() : do_not_apply();
+        return (may_resample_ && resampling_time_ < stamp) ? do_apply() : do_not_apply();
     }
 
 protected:
@@ -194,6 +198,7 @@ protected:
     duration_t          resampling_period_;
     nice_map_t          nice_values_;
     queue_t             q_;
+    bool                may_resample_;
 
     /// drop statistic stuff
     std::string         output_path_;

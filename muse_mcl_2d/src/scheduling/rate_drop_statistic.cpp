@@ -22,11 +22,15 @@ public:
     using duration_t          = cslibs_time::Duration;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
+    RateDropStatistic() :
+        may_resample_(false)
+    {
+    }
 
     virtual ~RateDropStatistic()
     {
         std::ofstream out(output_path_);
-        for(auto &name : names_) {
+        for (auto &name : names_) {
             out << name.second << ": \n";
             out << "\t dropped   : " << drops_[name.first] << "\n";
             out << "\t procesed  : " << processed_[name.first] << "\n";
@@ -37,7 +41,6 @@ public:
         out.close();
     }
 
-
     inline void setup(const update_model_map_t &update_models,
                       ros::NodeHandle &nh) override
     {
@@ -47,7 +50,7 @@ public:
 
         output_path_ = nh.param<std::string>("output_path", "/tmp/drop_statistic");
 
-        for(const auto &um : update_models) {
+        for (const auto &um : update_models) {
             const UpdateModel2D::Ptr &u = um.second;
             const std::size_t id = u->getId();
             const std::string name = u->getName();
@@ -60,20 +63,18 @@ public:
     virtual bool apply(typename update_t::Ptr     &u,
                        typename sample_set_t::Ptr &s) override
     {
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
         const time_t time_now = now();
-        if(last_update_time_.isZero()) {
+        if (last_update_time_.isZero())
            last_update_time_ = time_now;
-        }
 
         const time_t next_update_time = next_update_time_ + (last_update_time_ - time_now);
 
         const time_t stamp = u->getStamp();
-        if(stamp >= next_update_time) {
+        if (stamp >= next_update_time) {
             const time_t start = now();
             u->apply(s->getWeightIterator());
             const duration_t dur = (now() - start);
@@ -82,7 +83,7 @@ public:
             last_update_time_ = time_now;
 
             ++processed_[u->getModelId()];
-
+            may_resample_ = true;
             return true;
         }
 
@@ -90,32 +91,31 @@ public:
         return false;
     }
 
-
     virtual bool apply(typename resampling_t::Ptr &r,
                        typename sample_set_t::Ptr &s) override
     {
         const cslibs_time::Time &stamp = s->getStamp();
 
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
         const time_t time_now = now();
 
-        if(resampling_time_.isZero())
+        if (resampling_time_.isZero())
             resampling_time_ = time_now;
 
         auto do_apply = [&stamp, &r, &s, &time_now, this] () {
             r->apply(*s);
 
             resampling_time_   = time_now + resampling_period_;
+            may_resample_ = false;
             return true;
         };
         auto do_not_apply = [] () {
             return false;
         };
-        return resampling_time_ < stamp ? do_apply() : do_not_apply();
+        return (may_resample_ && resampling_time_ < stamp) ? do_apply() : do_not_apply();
     }
 
 protected:
@@ -123,6 +123,7 @@ protected:
     time_t              last_update_time_;
     time_t              resampling_time_;
     duration_t          resampling_period_;
+    bool                may_resample_;
 
     /// drop statistic stuff
     std::string         output_path_;

@@ -18,6 +18,10 @@ public:
     using duration_t          = cslibs_time::Duration;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
+    Rate() :
+        may_resample_(false)
+    {
+    }
 
     inline void setup(const update_model_map_t &,
                       ros::NodeHandle &nh) override
@@ -30,57 +34,55 @@ public:
     virtual bool apply(typename update_t::Ptr     &u,
                        typename sample_set_t::Ptr &s) override
     {
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
         const time_t time_now = now();
-        if(last_update_time_.isZero()) {
+        if (last_update_time_.isZero())
            last_update_time_ = time_now;
-        }
 
         const time_t next_update_time = next_update_time_ + (last_update_time_ - time_now);
 
         const time_t stamp = u->getStamp();
-        if(stamp >= next_update_time) {
+        if (stamp >= next_update_time) {
             const time_t start = now();
             u->apply(s->getWeightIterator());
             const duration_t dur = (now() - start);
             next_update_time_ = stamp + dur;
             last_update_time_ = time_now;
 
+            may_resample_ = true;
             return true;
         }
         return false;
     }
-
 
     virtual bool apply(typename resampling_t::Ptr &r,
                        typename sample_set_t::Ptr &s) override
     {
         const cslibs_time::Time &stamp = s->getStamp();
 
-        auto now = []()
-        {
+        auto now = []() {
             return time_t(ros::Time::now().toNSec());
         };
 
        const time_t time_now = now();
 
-        if(resampling_time_.isZero())
+        if (resampling_time_.isZero())
             resampling_time_ = time_now;
 
         auto do_apply = [&stamp, &r, &s, &time_now, this] () {
             r->apply(*s);
 
             resampling_time_ = time_now + resampling_period_;
+            may_resample_ = false;
             return true;
         };
         auto do_not_apply = [] () {
             return false;
         };
-        return resampling_time_ < stamp ? do_apply() : do_not_apply();
+        return (may_resample_ && resampling_time_ < stamp) ? do_apply() : do_not_apply();
     }
 
 protected:
@@ -88,6 +90,7 @@ protected:
     time_t              last_update_time_;
     time_t              resampling_time_;
     duration_t          resampling_period_;
+    bool                may_resample_;
 };
 }
 
