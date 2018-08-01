@@ -32,6 +32,7 @@ public:
         for(auto &m : map_providers_) {
             tf::Transform tf_map_T_w;
             cslibs_math_2d::Transform2d map_t_w;
+            m->waitForStateSpace();
             Map2D::ConstPtr map = m->getStateSpace();
             if(!map) {
                 throw std::runtime_error("[Normal2D] : map was null!");

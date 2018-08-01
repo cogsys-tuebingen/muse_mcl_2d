@@ -6,16 +6,17 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::BinaryGridmapProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    BinaryGridmapProvider::BinaryGridmapProvider()
-    {
-    }
-
     BinaryGridmapProvider::state_space_t::ConstPtr BinaryGridmapProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
-        if (!map_)
-            notify_.wait(l);
         return map_;
+    }
+
+    void BinaryGridmapProvider::waitForStateSpace() const
+    {
+      std::unique_lock<std::mutex> l(map_mutex_);
+      while(!map_)
+          notify_.wait(l);
     }
 
     void BinaryGridmapProvider::setup(ros::NodeHandle &nh)
@@ -24,7 +25,6 @@ namespace muse_mcl_2d_gridmaps {
         topic_                  = nh.param<std::string>(param_name("topic"), "/map");
         binarization_threshold_ = nh.param<double>(param_name("threshold"), 0.5);
         source_                 = nh.subscribe(topic_, 1, &BinaryGridmapProvider::callback, this);
-        blocking_               = nh.param<bool>(param_name("blocking"), false);
     }
 
     void BinaryGridmapProvider::callback(const nav_msgs::OccupancyGridConstPtr &msg)
@@ -38,10 +38,14 @@ namespace muse_mcl_2d_gridmaps {
             return;
         }
 
-        /// conversion can take time
-        /// we allow concurrent loading, this way, the front end thread is not blocking.
         auto load = [this, msg]() {
-            if(!map_ || cslibs_time::Time(msg->info.map_load_time.toNSec()) > map_->getStamp()) {
+            bool update_map = false;
+            {
+                std::unique_lock<std::mutex> l(map_mutex_);
+                update_map = !map_ || cslibs_time::Time(msg->info.map_load_time.toNSec()) > map_->getStamp();
+            }
+
+            if(update_map) {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << msg->info.width << " x " << msg->info.height << "]");
                 cslibs_gridmaps::static_maps::BinaryGridmap::Ptr map;
                 cslibs_gridmaps::static_maps::conversion::from(*msg, map, binarization_threshold_);
@@ -49,16 +53,12 @@ namespace muse_mcl_2d_gridmaps {
                 std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new BinaryGridmap(map, msg->header.frame_id));
                 ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
+                l.unlock();
+
                 notify_.notify_all();
             }
         };
 
-        /// if this is the first time we load a map, we do it synchronously in the frontend.
-        /// otherwise we do it asynchronously
-        if(map_) {
-            worker_ = std::thread(load);
-        } else {
-            load();
-        }
+        worker_ = std::thread(load);
     }
 }

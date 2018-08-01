@@ -13,9 +13,11 @@ namespace muse_mcl_2d_ndt {
 class NDTGridmap2dProvider : public muse_mcl_2d::MapProvider2D
 {
 public:
-    NDTGridmap2dProvider();
+    NDTGridmap2dProvider() = default;
+    virtual ~NDTGridmap2dProvider() = default;
 
     state_space_t::ConstPtr getStateSpace() const override;
+    void waitForStateSpace() const override;
     void setup(ros::NodeHandle &nh) override;
 
 protected:
@@ -26,8 +28,6 @@ protected:
     mutable std::condition_variable map_notify_;
     Gridmap2d::Ptr                  map_;
     std::thread                     worker_;
-
-    void loadMap();
 };
 }
 

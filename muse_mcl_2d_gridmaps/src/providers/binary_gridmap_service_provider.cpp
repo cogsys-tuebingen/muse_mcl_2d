@@ -8,17 +8,12 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::BinaryGridmapServiceProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    BinaryGridmapServiceProvider::BinaryGridmapServiceProvider()
-    {
-    }
-
     void BinaryGridmapServiceProvider::setup(ros::NodeHandle &nh)
     {
         auto param_name         = [this](const std::string &name){return name_ + "/" + name;};
         service_name_           = nh.param<std::string>(param_name("service"), "/static_map");
         binarization_threshold_ = nh.param<double>(param_name("threshold"), 0.5);
         source_                 = nh.serviceClient<nav_msgs::GetMap>(service_name_);
-        blocking_               = nh.param<bool>(param_name("blocking"), false);
     }
 
 

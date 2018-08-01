@@ -17,6 +17,8 @@ public:
     using Ptr      = std::shared_ptr<MapProvider2D>;
     using ConstPtr = std::shared_ptr<MapProvider2D const>;
 
+    virtual ~MapProvider2D() = default;
+
     inline const static std::string Type()
     {
         return "muse_mcl_2d::MapProvider2D";

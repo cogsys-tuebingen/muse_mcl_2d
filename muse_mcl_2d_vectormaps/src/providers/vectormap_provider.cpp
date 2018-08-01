@@ -7,27 +7,37 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_vectormaps::VectorMapProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_vectormaps {
-VectorMapProvider::VectorMapProvider()
-{
-}
-
 VectorMapProvider::state_space_t::ConstPtr VectorMapProvider::getStateSpace() const
 {
+    std::unique_lock<std::mutex> l(map_mutex_);
     return map_;
+}
+
+void VectorMapProvider::waitForStateSpace() const
+{
+    std::unique_lock<std::mutex> l(map_mutex_);
+    while(!map_)
+        notify_.wait(l);
 }
 
 void VectorMapProvider::setup(ros::NodeHandle &nh)
 {
     auto param_name = [this](const std::string &name){return name_ + "/" + name;};
-    std::string map_file = nh.param<std::string>(param_name("map_file"), "");
-    cslibs_vectormaps::VectorMap::Ptr map;
+    map_file_ = nh.param<std::string>(param_name("map_file"), "");
 
-    if (!cslibs_vectormaps::MapLoader::load(map_file, map)) {
-        ROS_ERROR_STREAM("Cannot load map \"" << map_file << "\"!");
-        ros::shutdown();
-        return;
-    }
+    auto load = [this]()
+    {
+      cslibs_vectormaps::VectorMap::Ptr map;
+      if (cslibs_vectormaps::MapLoader::load(map_file_, map)) {
+         std::unique_lock<std::mutex> l(map_mutex_);
+         map_.reset(new static_maps::VectorMap(map));
+         l.unlock();
+      } else
+        throw std::runtime_error("Could not load file '" + map_file_ + "'!");
 
-    map_.reset(new static_maps::VectorMap(map));
+      notify_.notify_all();
+    };
+
+    worker_ = std::thread(load);
 }
 }

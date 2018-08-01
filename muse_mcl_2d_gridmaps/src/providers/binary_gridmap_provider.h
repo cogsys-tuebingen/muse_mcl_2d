@@ -15,20 +15,21 @@ namespace muse_mcl_2d_gridmaps {
 class BinaryGridmapProvider : public muse_mcl_2d::MapProvider2D
 {
 public:
-    BinaryGridmapProvider();
+    BinaryGridmapProvider() = default;
+    virtual ~BinaryGridmapProvider() = default;
 
     state_space_t::ConstPtr getStateSpace() const override;
+    void waitForStateSpace() const override;
+
     void setup(ros::NodeHandle &nh) override;
 
 protected:
     ros::Subscriber                                     source_;
     std::string                                         topic_;
     double                                              binarization_threshold_;
-    bool                                                blocking_;
 
     mutable std::mutex                                  map_mutex_;
     muse_mcl_2d_gridmaps::BinaryGridmap::Ptr            map_;
-    mutable std::mutex                                  map_load_mutex_;
     std::thread                                         worker_;
     mutable std::condition_variable                     notify_;
 

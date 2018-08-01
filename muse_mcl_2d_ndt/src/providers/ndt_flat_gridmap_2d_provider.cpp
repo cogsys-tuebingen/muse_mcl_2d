@@ -43,7 +43,7 @@ void NDTFlatGridmap2DProvider::loadMap()
 
             ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
         } else
-            ROS_ERROR_STREAM("Could not load file '" << path_ << "'!");
+            throw std::runtime_error("Could not load file '" + path_ + "'!");
         map_notify_.notify_all();
     };
 

@@ -32,7 +32,10 @@ public:
         maps_T_w_.resize(map_provider_count);
         maps_.resize(map_provider_count);
         for(std::size_t i = 0 ; i < map_provider_count ; ++i) {
-            Map2D::ConstPtr map = map_providers_[i]->getStateSpace();
+            const MapProvider2D::Ptr m = map_providers_[i];
+
+            m->waitForStateSpace();
+            Map2D::ConstPtr map = m->getStateSpace();
             if(!map) {
                 throw std::runtime_error("[UniformAllMaps2D] : map was null!");
             }

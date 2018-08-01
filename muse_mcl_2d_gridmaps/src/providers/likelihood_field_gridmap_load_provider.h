@@ -13,9 +13,11 @@ namespace muse_mcl_2d_gridmaps {
 class LikelihoodFieldGridmapLoadProvider : public muse_mcl_2d::MapProvider2D
 {
 public:
-    LikelihoodFieldGridmapLoadProvider();
+    LikelihoodFieldGridmapLoadProvider() = default;
+    virtual ~LikelihoodFieldGridmapLoadProvider() = default;
 
     state_space_t::ConstPtr getStateSpace() const override;
+    void waitForStateSpace() const override;
     void setup(ros::NodeHandle &nh) override;
 
 protected:
@@ -23,11 +25,9 @@ protected:
     double                                              maximum_distance_;
     double                                              z_hit_;
     double                                              sigma_hit_;
-    bool                                                blocking_;
 
     mutable std::mutex                                  map_mutex_;
     muse_mcl_2d_gridmaps::LikelihoodFieldGridmap::Ptr   map_;
-    mutable std::mutex                                  map_load_mutex_;
     std::thread                                         worker_;
     mutable std::condition_variable                     notify_;
 };

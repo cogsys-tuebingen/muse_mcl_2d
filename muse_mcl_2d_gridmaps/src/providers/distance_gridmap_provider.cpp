@@ -6,16 +6,17 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::DistanceGridmapProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    DistanceGridmapProvider::DistanceGridmapProvider()
-    {
-    }
-
     DistanceGridmapProvider::state_space_t::ConstPtr DistanceGridmapProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
-        if (!map_)
-            notify_.wait(l);
         return map_;
+    }
+
+    void DistanceGridmapProvider::waitForStateSpace() const
+    {
+      std::unique_lock<std::mutex> l(map_mutex_);
+      if (!map_)
+          notify_.wait(l);
     }
 
     void DistanceGridmapProvider::setup(ros::NodeHandle &nh_private)
@@ -24,9 +25,7 @@ namespace muse_mcl_2d_gridmaps {
         topic_                  = nh_private.param<std::string>(param_name("topic"), "/map");
         binarization_threshold_ = nh_private.param<double>(param_name("threshold"), 0.5);
         maximum_distance_       = nh_private.param<double>(param_name("maximum_distance"), 2.0);
-        blocking_               = nh_private.param<bool>(param_name("blocking"), false);
-
-        source_= nh_private.subscribe(topic_, 1, &DistanceGridmapProvider::callback, this);
+        source_                 = nh_private.subscribe(topic_, 1, &DistanceGridmapProvider::callback, this);
     }
 
     void DistanceGridmapProvider::callback(const nav_msgs::OccupancyGridConstPtr &msg)
@@ -49,16 +48,12 @@ namespace muse_mcl_2d_gridmaps {
                 std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new DistanceGridmap(map, msg->header.frame_id));
                 ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
+                l.unlock();
+
                 notify_.notify_all();
             }
         };
 
-        /// if this is the first time we load a map, we do it synchronously in the frontend.
-        /// otherwise we do it asynchronously
-        if(map_) {
-            worker_ = std::thread(load);
-        } else {
-            load();
-        }
+        worker_ = std::thread(load);
     }
 }

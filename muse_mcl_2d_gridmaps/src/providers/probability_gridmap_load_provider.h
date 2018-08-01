@@ -13,17 +13,16 @@ namespace muse_mcl_2d_gridmaps {
 class ProbabilityGridmapLoadProvider : public muse_mcl_2d::MapProvider2D
 {
 public:
-    ProbabilityGridmapLoadProvider();
+    ProbabilityGridmapLoadProvider() = default;
+    virtual ~ProbabilityGridmapLoadProvider() = default;
 
     state_space_t::ConstPtr getStateSpace() const override;
+    void waitForStateSpace() const override;
     void setup(ros::NodeHandle &nh) override;
 
 protected:
-    bool                                                blocking_;
-
     mutable std::mutex                                  map_mutex_;
     muse_mcl_2d_gridmaps::ProbabilityGridmap::Ptr       map_;
-    mutable std::mutex                                  map_load_mutex_;
     std::thread                                         worker_;
     mutable std::condition_variable                     notify_;
 };

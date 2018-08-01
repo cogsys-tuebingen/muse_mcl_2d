@@ -16,9 +16,11 @@ namespace muse_mcl_2d_gridmaps {
 class DistanceGridmapProvider : public muse_mcl_2d::MapProvider2D
 {
 public:
-    DistanceGridmapProvider();
+    DistanceGridmapProvider() = default;
+    virtual ~DistanceGridmapProvider() = default;
 
     state_space_t::ConstPtr getStateSpace() const override;
+    void waitForStateSpace() const override;
     void setup(ros::NodeHandle &nh) override;
 
 protected:
@@ -26,11 +28,9 @@ protected:
     std::string                         topic_;
     double                              binarization_threshold_;
     double                              maximum_distance_;
-    bool                                blocking_;
 
     mutable std::mutex                  map_mutex_;
     DistanceGridmap::Ptr                map_;
-    mutable std::mutex                  map_load_mutex_;
     std::thread                         worker_;
     mutable std::condition_variable     notify_;
 

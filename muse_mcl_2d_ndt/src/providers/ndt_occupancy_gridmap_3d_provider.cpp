@@ -10,16 +10,17 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::NDTOccupancyGridmap3dProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_ndt {
-NDTOccupancyGridmap3dProvider::NDTOccupancyGridmap3dProvider()
-{
-}
-
 NDTOccupancyGridmap3dProvider::state_space_t::ConstPtr NDTOccupancyGridmap3dProvider::getStateSpace() const
 {
     std::unique_lock<std::mutex> l(map_mutex_);
-    if (!map_)
-        map_notify_.wait(l);
     return map_;
+}
+
+void NDTOccupancyGridmap3dProvider::waitForStateSpace() const
+{
+  std::unique_lock<std::mutex> l(map_mutex_);
+  if (!map_)
+      map_notify_.wait(l);
 }
 
 void NDTOccupancyGridmap3dProvider::setup(ros::NodeHandle &nh)
@@ -29,22 +30,18 @@ void NDTOccupancyGridmap3dProvider::setup(ros::NodeHandle &nh)
     path_     = nh.param<std::string>(param_name("path"), "");
     frame_id_ = nh.param<std::string>(param_name("frame_id"), "/world");
 
-    loadMap();
-}
-
-void NDTOccupancyGridmap3dProvider::loadMap()
-{
-    auto load_blocking = [this]() {
-        std::unique_lock<std::mutex> l(map_mutex_);
+    auto load = [this]() {
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
         cslibs_ndt_3d::dynamic_maps::OccupancyGridmap::Ptr map;
         if (cslibs_ndt_3d::dynamic_maps::loadBinary(path_, map)) {
+            std::unique_lock<std::mutex> l(map_mutex_);
             map_.reset(new OccupancyGridmap3d(map, frame_id_));
             ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
+            l.unlock();
         } else
-            ROS_INFO_STREAM("Could not load file '" << path_ << "'!");
+            throw std::runtime_error("Could not load file '" + path_ + "'!");
         map_notify_.notify_all();
     };
-    worker_ = std::thread(load_blocking);
+    worker_ = std::thread(load);
 }
 }

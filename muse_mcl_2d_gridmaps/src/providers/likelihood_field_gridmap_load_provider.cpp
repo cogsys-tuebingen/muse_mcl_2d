@@ -7,16 +7,17 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::LikelihoodFieldGridmapLoadProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    LikelihoodFieldGridmapLoadProvider::LikelihoodFieldGridmapLoadProvider()
+    LikelihoodFieldGridmapLoadProvider::state_space_t::ConstPtr LikelihoodFieldGridmapLoadProvider::getStateSpace() const
     {
+        std::unique_lock<std::mutex> l(map_mutex_);
+        return map_;
     }
 
-    LikelihoodFieldGridmapLoadProvider::state_space_t::ConstPtr LikelihoodFieldGridmapLoadProvider::getStateSpace() const
+    void LikelihoodFieldGridmapLoadProvider::waitForStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
         if (!map_)
             notify_.wait(l);
-        return map_;
     }
 
     void LikelihoodFieldGridmapLoadProvider::setup(ros::NodeHandle &nh)
@@ -43,12 +44,14 @@ namespace muse_mcl_2d_gridmaps {
                     std::unique_lock<std::mutex> l(map_mutex_);
                     map_.reset(new LikelihoodFieldGridmap(map, msg->header.frame_id));
                     ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
+                    l.unlock();
+
                     notify_.notify_all();
                 } else
-                    ROS_INFO_STREAM("[" << name_ << "]: ERROR loading map.");
+                    throw std::runtime_error("[" + name_ + "]: ERROR loading map.");
             }
         };
 
-        load();
+        worker_ = std::thread(load);
     }
 }

@@ -46,6 +46,7 @@ target_link_libraries(${PROJECT_NAME}_maps
 )
 
 add_library(${PROJECT_NAME}_providers SHARED
+  src/providers/ndt_flat_gridmap_2d_provider.cpp
   src/providers/ndt_gridmap_2d_provider.cpp
   src/providers/ndt_occupancy_gridmap_2d_provider.cpp
   src/providers/ndt_gridmap_2d_service_provider.cpp
@@ -56,21 +57,6 @@ add_library(${PROJECT_NAME}_providers SHARED
   src/providers/ndt_occupancy_gridmap_3d_service_provider.cpp
   src/providers/probability_gridmap_provider.cpp
   src/providers/probability_occupancy_gridmap_provider.cpp
-  src/providers/probability_gridmap_service_provider.cpp
-  src/providers/probability_occupancy_gridmap_service_provider.cpp
-  src/providers/likelihood_field_gridmap_provider.cpp
-  src/providers/likelihood_field_occupancy_gridmap_provider.cpp
-  src/providers/likelihood_field_gridmap_service_provider.cpp
-  src/providers/likelihood_field_occupancy_gridmap_service_provider.cpp
-  src/providers/binary_gridmap_provider.cpp
-  src/providers/binary_occupancy_gridmap_provider.cpp
-  src/providers/binary_gridmap_service_provider.cpp
-  src/providers/binary_occupancy_gridmap_service_provider.cpp
-  src/providers/distance_gridmap_provider.cpp
-  src/providers/distance_occupancy_gridmap_provider.cpp
-  src/providers/distance_gridmap_service_provider.cpp
-  src/providers/distance_occupancy_gridmap_service_provider.cpp
-  src/providers/ndt_flat_gridmap_2d_provider.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}_providers

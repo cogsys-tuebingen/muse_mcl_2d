@@ -6,16 +6,17 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::ProbabilityGridmapProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    ProbabilityGridmapProvider::ProbabilityGridmapProvider()
+    ProbabilityGridmapProvider::state_space_t::ConstPtr ProbabilityGridmapProvider::getStateSpace() const
     {
+        std::unique_lock<std::mutex> l(map_mutex_);
+        return map_;
     }
 
-    ProbabilityGridmapProvider::state_space_t::ConstPtr ProbabilityGridmapProvider::getStateSpace() const
+    void ProbabilityGridmapProvider::waitForStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
         if (!map_)
             notify_.wait(l);
-        return map_;
     }
 
     void ProbabilityGridmapProvider::setup(ros::NodeHandle &nh)
@@ -23,7 +24,6 @@ namespace muse_mcl_2d_gridmaps {
         auto param_name = [this](const std::string &name){return name_ + "/" + name;};
         topic_          = nh.param<std::string>(param_name("topic"), "/map");
         source_         = nh.subscribe(topic_, 1, &ProbabilityGridmapProvider::callback, this);
-        blocking_       = nh.param<bool>(param_name("blocking"), false);
     }
 
     void ProbabilityGridmapProvider::callback(const nav_msgs::OccupancyGridConstPtr &msg)
@@ -46,16 +46,12 @@ namespace muse_mcl_2d_gridmaps {
                 std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new ProbabilityGridmap(map, msg->header.frame_id));
                 ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
+                l.unlock();
+
                 notify_.notify_all();
             }
         };
 
-        /// if this is the first time we load a map, we do it synchronously in the frontend.
-        /// otherwise we do it asynchronously
-        if(map_) {
-            worker_ = std::thread(load);
-        } else {
-            load();
-        }
+        worker_ = std::thread(load);
     }
 }

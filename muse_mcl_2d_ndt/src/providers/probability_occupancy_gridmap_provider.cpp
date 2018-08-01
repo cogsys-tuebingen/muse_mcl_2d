@@ -11,16 +11,17 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::ProbabilityOccupancyGridmapProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_ndt {
-ProbabilityOccupancyGridmapProvider::ProbabilityOccupancyGridmapProvider()
+ProbabilityOccupancyGridmapProvider::state_space_t::ConstPtr ProbabilityOccupancyGridmapProvider::getStateSpace() const
 {
+    std::unique_lock<std::mutex> l(map_mutex_);
+    return map_;
 }
 
-ProbabilityOccupancyGridmapProvider::state_space_t::ConstPtr ProbabilityOccupancyGridmapProvider::getStateSpace() const
+void ProbabilityOccupancyGridmapProvider::waitForStateSpace() const
 {
     std::unique_lock<std::mutex> l(map_mutex_);
     if (!map_)
         map_notify_.wait(l);
-    return map_;
 }
 
 void ProbabilityOccupancyGridmapProvider::setup(ros::NodeHandle &nh)
@@ -36,13 +37,7 @@ void ProbabilityOccupancyGridmapProvider::setup(ros::NodeHandle &nh)
     const double prob_occupied  = nh.param(param_name("prob_occupied"), 0.65);
     inverse_model_.reset(new cslibs_gridmaps::utility::InverseModel(prob_prior, prob_free, prob_occupied));
 
-    loadMap();
-}
-
-void ProbabilityOccupancyGridmapProvider::loadMap()
-{
     auto load_blocking = [this]() {
-        std::unique_lock<std::mutex> l(map_mutex_);
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
         cslibs_ndt_2d::dynamic_maps::OccupancyGridmap::Ptr map;
         if (cslibs_ndt_2d::dynamic_maps::loadBinary(path_, map)) {
@@ -50,8 +45,10 @@ void ProbabilityOccupancyGridmapProvider::loadMap()
             cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr lf_map;
             cslibs_ndt_2d::conversion::from(map, lf_map, sampling_resolution_, inverse_model_);
             if (lf_map) {
+                std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new muse_mcl_2d_gridmaps::ProbabilityGridmap(lf_map, frame_id_));
                 ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
+                l.unlock();
             } else
                 ROS_INFO_STREAM("Could not convert map to Likelihood Field map");
         } else

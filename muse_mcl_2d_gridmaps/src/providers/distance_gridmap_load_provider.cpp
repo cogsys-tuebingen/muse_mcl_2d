@@ -7,16 +7,17 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::DistanceGridmapLoadProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    DistanceGridmapLoadProvider::DistanceGridmapLoadProvider()
-    {
-    }
-
     DistanceGridmapLoadProvider::state_space_t::ConstPtr DistanceGridmapLoadProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
-        if (!map_)
-            notify_.wait(l);
         return map_;
+    }
+
+    void DistanceGridmapLoadProvider::waitForStateSpace() const
+    {
+      std::unique_lock<std::mutex> l(map_mutex_);
+      if (!map_)
+          notify_.wait(l);
     }
 
     void DistanceGridmapLoadProvider::setup(ros::NodeHandle &nh)
@@ -41,12 +42,14 @@ namespace muse_mcl_2d_gridmaps {
                     std::unique_lock<std::mutex> l(map_mutex_);
                     map_.reset(new DistanceGridmap(map, msg->header.frame_id));
                     ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
+                    l.unlock();
+
                     notify_.notify_all();
                 } else
-                    ROS_INFO_STREAM("[" << name_ << "]: ERROR loading map.");
+                    throw std::runtime_error("[" + name_ + "]: ERROR loading map.");
             }
         };
 
-        load();
+        worker_ = std::thread(load);
     }
 }

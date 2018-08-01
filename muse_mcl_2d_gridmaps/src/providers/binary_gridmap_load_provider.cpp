@@ -7,16 +7,17 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::BinaryGridmapLoadProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    BinaryGridmapLoadProvider::BinaryGridmapLoadProvider()
-    {
-    }
-
     BinaryGridmapLoadProvider::state_space_t::ConstPtr BinaryGridmapLoadProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
-        if (!map_)
-            notify_.wait(l);
         return map_;
+    }
+
+    void BinaryGridmapLoadProvider::waitForStateSpace() const
+    {
+      std::unique_lock<std::mutex> l(map_mutex_);
+      if (!map_)
+          notify_.wait(l);
     }
 
     void BinaryGridmapLoadProvider::setup(ros::NodeHandle &nh)
@@ -27,8 +28,6 @@ namespace muse_mcl_2d_gridmaps {
 
         binarization_threshold_ = nh.param<double>(param_name("threshold"), 0.5);
 
-        /// conversion can take time
-        /// we allow concurrent loading, this way, the front end thread is not blocking.
         auto load = [this, &path, &frame_id]() {
             if (!map_) {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << path << "]");
@@ -39,13 +38,15 @@ namespace muse_mcl_2d_gridmaps {
 
                     std::unique_lock<std::mutex> l(map_mutex_);
                     map_.reset(new BinaryGridmap(map, msg->header.frame_id));
+                    l.unlock();
                     ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
+
                     notify_.notify_all();
                 } else
-                    ROS_INFO_STREAM("[" << name_ << "]: ERROR loading map.");
+                    throw std::runtime_error("[" + name_ + "]: ERROR loading map.");
             }
         };
 
-        load();
+        worker_ = std::thread(load);
     }
 }

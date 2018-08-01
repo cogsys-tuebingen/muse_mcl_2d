@@ -25,6 +25,7 @@ public:
     {
         const ros::Time   now = ros::Time::now();
 
+        primary_map_provider_->waitForStateSpace();
         primary_map_  = primary_map_provider_->getStateSpace();
         if(!primary_map_) {
             throw std::runtime_error("[UniformPrimaryMap2D] : primary map was null!");
@@ -40,7 +41,9 @@ public:
 
         const std::size_t map_provider_count = map_providers_.size();
         for(std::size_t i = 0 ; i < map_provider_count ; ++i) {
-            Map2D::ConstPtr map = map_providers_[i]->getStateSpace();
+            const MapProvider2D::Ptr m = map_providers_[i];
+            m->waitForStateSpace();
+            Map2D::ConstPtr map = m->getStateSpace();
             if(!map) {
                 throw std::runtime_error("[UniformPrimaryMap2D] : a secondary map was null!");
             }
