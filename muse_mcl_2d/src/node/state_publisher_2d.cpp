@@ -49,7 +49,7 @@ void StatePublisher::publish(const sample_set_t::ConstPtr &sample_set)
     publishState(sample_set);
 }
 
-void StatePublisher::publishIntermidiate(const sample_set_t::ConstPtr &sample_set)
+void StatePublisher::publishIntermediate(const sample_set_t::ConstPtr &sample_set)
 {
     publishState(sample_set);
 }

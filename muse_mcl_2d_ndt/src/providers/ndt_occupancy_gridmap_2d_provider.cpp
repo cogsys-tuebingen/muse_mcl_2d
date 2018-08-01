@@ -41,6 +41,7 @@ void NDTOccupancyGridmap2dProvider::setup(ros::NodeHandle &nh)
             l.unlock();
         } else
             throw std::runtime_error("Could not load file '" + path_ + "'!");
+
         map_notify_.notify_all();
     };
 

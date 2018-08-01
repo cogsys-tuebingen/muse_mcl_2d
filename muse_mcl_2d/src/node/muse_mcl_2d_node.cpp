@@ -232,6 +232,7 @@ bool MuseMCL2DNode::setup()
         const std::size_t maximum_sample_size           = sample_size == 0 ? nh_private_.param<int>(param_name("maximum_sample_size"), 0) : sample_size;
         const bool        reset_weights_after_insertion = nh_private_.param<bool>(param_name("reset_weights_after_insertion"), true);
         const bool        reset_weights_to_one          = nh_private_.param<bool>(param_name("reset_weights_to_one"), true);
+        const bool        enable_lag_correction         = nh_private_.param<bool>(param_name("enable_lag_correction"), true);
 
         if(minimum_sample_size == 0) {
             ROS_ERROR_STREAM("Minimum sample size cannot be zero!");
@@ -259,7 +260,8 @@ bool MuseMCL2DNode::setup()
                                 resampling_,
                                 state_publisher_,
                                 prediction_integrals_,
-                                scheduler_);
+                                scheduler_,
+                                enable_lag_correction);
     }
 
     predicition_forwarder_.reset(new PredictionRelay2D(particle_filter_));
