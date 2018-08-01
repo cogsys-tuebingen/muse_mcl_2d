@@ -37,6 +37,11 @@ public:
         return cslibs_plugins::Plugin::getId();
     }
 
+    virtual inline const std::string getName() const override
+    {
+        return cslibs_plugins::Plugin::getName();
+    }
+
     inline void setup(const cslibs_math_ros::tf::TFListener2d::Ptr &tf,
                       ros::NodeHandle &nh)
     {

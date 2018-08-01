@@ -44,6 +44,7 @@ void NDTOccupancyGridmap2dProvider::loadMap()
             ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
         } else
             ROS_INFO_STREAM("Could not load file '" << path_ << "'!");
+        l.unlock();
         map_notify_.notify_all();
     };
 

@@ -67,18 +67,24 @@ public:
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
     CFSDropStatistic() :
-      may_resample_(false)
+        may_resample_(false)
     {
     }
 
-    virtual ~CFSDropStatistic()
+    virtual inline ~CFSDropStatistic()
+    {
+        print();
+    }
+
+    inline void print()
     {
         std::ofstream out(output_path_);
         for (auto &name : names_) {
             out << name.second << ": \n";
             out << "\t dropped   : " << drops_[name.first] << "\n";
-            out << "\t procesed  : " << processed_[name.first] << "\n";
+            out << "\t processed : " << processed_[name.first] << "\n";
             out << "\t all-in-all: " << drops_[name.first] + processed_[name.first] << "\n";
+            out << "\t drop rate : " << static_cast<double>(100 * drops_[name.first]) / static_cast<double>(drops_[name.first] + processed_[name.first]) << "\n";
             out << "\n";
         }
         out.flush();
@@ -113,8 +119,7 @@ public:
         double preferred_rate = nh.param<double>(param_name("preferred_rate"), 5.0);
         resampling_period_ = duration_t(preferred_rate > 0.0 ? 1.0 / preferred_rate : 0.0);
 
-        output_path_ = nh.param<std::string>("output_path", "/tmp/drop_statistic");
-
+        output_path_ = nh.param<std::string>(param_name("output_path"), "/tmp/drop_statistic");
     }
 
     virtual bool apply(typename update_t::Ptr     &u,
@@ -147,6 +152,7 @@ public:
             return true;
         }
         ++drops_[id];
+        print();
         return false;
     }
 
@@ -198,7 +204,6 @@ protected:
     count_map_t         drops_;
     count_map_t         processed_;
     name_map_t          names_;
-
 };
 }
 

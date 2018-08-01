@@ -21,6 +21,8 @@ public:
     using base_t              = muse_smc::Resampling<StateSpaceDescription2D, cslibs_plugins_data::Data>;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
+    virtual inline ~Scheduler2D() = default;
+
     inline const static std::string Type()
     {
         return "muse_mcl_2d::Scheduler2D";
