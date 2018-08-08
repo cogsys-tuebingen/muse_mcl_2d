@@ -10,13 +10,13 @@ OccupancyGridmap3d::OccupancyGridmap3d(const cslibs_ndt_3d::dynamic_maps::Occupa
 
 OccupancyGridmap3d::state_space_boundary_t OccupancyGridmap3d::getMin() const
 {
-    const typename cslibs_ndt_3d::dynamic_maps::OccupancyGridmap::point_t &min = data_->getMin();
+    const typename cslibs_ndt_3d::dynamic_maps::OccupancyGridmap::point_t &min = data_->getInitialOrigin() * data_->getMin();
     return cslibs_math_2d::Point2d(min(0), min(1));
 }
 
 OccupancyGridmap3d::state_space_boundary_t OccupancyGridmap3d::getMax() const
 {
-    const typename cslibs_ndt_3d::dynamic_maps::OccupancyGridmap::point_t &max = data_->getMax();
+    const typename cslibs_ndt_3d::dynamic_maps::OccupancyGridmap::point_t &max = data_->getInitialOrigin() * data_->getMax();
     return cslibs_math_2d::Point2d(max(0), max(1));
 }
 

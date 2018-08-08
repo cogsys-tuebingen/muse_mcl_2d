@@ -10,12 +10,12 @@ Gridmap2d::Gridmap2d(const cslibs_ndt_2d::dynamic_maps::Gridmap::Ptr &map,
 
 Gridmap2d::state_space_boundary_t Gridmap2d::getMin() const
 {
-    return data_->getMin();
+    return data_->getInitialOrigin() * data_->getMin();
 }
 
 Gridmap2d::state_space_boundary_t Gridmap2d::getMax() const
 {
-    return data_->getMax();
+    return data_->getInitialOrigin() * data_->getMax();
 }
 
 Gridmap2d::state_space_transform_t Gridmap2d::getOrigin() const

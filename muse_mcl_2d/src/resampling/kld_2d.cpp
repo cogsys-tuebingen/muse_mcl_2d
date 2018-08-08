@@ -30,7 +30,7 @@ protected:
 
         /// build the cumulative sums
         SampleDensity2D::ConstPtr density = std::dynamic_pointer_cast<SampleDensity2D const>(sample_set.getDensity());
-        if(!density)
+        if (!density)
             throw std::runtime_error("[KLD2D] : Can only use 'SampleDensity2D' for adaptive sample size estimation!");
 
         const std::size_t sample_size_minimum = std::max(sample_set.getMinimumSampleSize(), 2ul);
@@ -38,32 +38,33 @@ protected:
 
         auto kld = [this, &density, sample_size_maximum](const std::size_t current_size){
             const std::size_t k = density->histogramSize();
-            const double fraction = 2.0 / (9.0 * (k-1));
+            if (k <= 1)
+                return current_size > sample_size_maximum;
+            const double fraction = 2.0 / (9.0 * static_cast<double>(k-1));
             const double exponent = 1.0 - fraction + std::sqrt(fraction) * kld_z_;
-            const std::size_t n = std::ceil((k - 1) / (2.0 * kld_error_) * exponent * exponent * exponent);
+            const std::size_t n = static_cast<std::size_t>(std::ceil(static_cast<double>(k - 1) / (2.0 * kld_error_) *
+                                                                     exponent * exponent * exponent));
             return current_size > std::min(n, sample_size_maximum);
-
         };
 
         sample_set_t::sample_insertion_t i_p_t = sample_set.getInsertion();
         /// prepare ordered sequence of random numbers
-        std::vector<double> cumsum(size + 1, 0.0);
-        for(std::size_t i = 0 ; i < size ; ++i) {
+        std::vector<double> cumsum(size + 1);
+        cumsum[0] = 0.0;
+        for (std::size_t i = 0 ; i < size ; ++i)
             cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
-        }
 
         cslibs_math::random::Uniform<1> rng(0.0, 1.0);
-        for(std::size_t i = 0 ; i < sample_size_maximum ; ++i) {
+        for (std::size_t i = 0 ; i < sample_size_maximum ; ++i) {
             const double u = rng.get();
-            for(std::size_t j = 0 ; j < size ; ++j) {
-                if(cumsum[j] <= u && u < cumsum[j+1]) {
+            for (std::size_t j = 0 ; j < size ; ++j) {
+                if (cumsum[j] <= u && u < cumsum[j+1]) {
                     i_p_t.insert(p_t_1[j]);
                     break;
                 }
             }
-            if(i > sample_size_minimum && kld(i)) {
+            if (i > sample_size_minimum && kld(i))
                 break;
-            }
         }
     }
 
@@ -80,44 +81,45 @@ protected:
         const std::size_t sample_size_maximum = sample_set.getMaximumSampleSize();
 
         SampleDensity2D::ConstPtr density = std::dynamic_pointer_cast<SampleDensity2D const>(sample_set.getDensity());
-        if(!density)
+        if (!density)
             throw std::runtime_error("[KLD2D] : Can only use 'SampleDensity2D' for adaptive sample size estimation!");
 
-        auto kld = [this, &sample_set, &density, sample_size_maximum](const std::size_t current_size){
+        auto kld = [this, &density, sample_size_maximum](const std::size_t current_size){
             const std::size_t k = density->histogramSize();
-            const double fraction = 2.0 / (9.0 * (k-1));
+            if (k <= 1)
+                return current_size > sample_size_maximum;
+            const double fraction = 2.0 / (9.0 * static_cast<double>(k-1));
             const double exponent = 1.0 - fraction + std::sqrt(fraction) * kld_z_;
-            const std::size_t n = std::ceil((k - 1) / (2.0 * kld_error_) * exponent * exponent * exponent);
+            const std::size_t n = static_cast<std::size_t>(std::ceil(static_cast<double>(k - 1) / (2.0 * kld_error_) *
+                                                                     exponent * exponent * exponent));
             return current_size > std::min(n, sample_size_maximum);
-
         };
 
-        std::vector<double> cumsum(size + 1, 0.0);
-        for(std::size_t i = 0 ; i < size ; ++i) {
+        std::vector<double> cumsum(size + 1);
+        cumsum[0] = 0.0;
+        for (std::size_t i = 0 ; i < size ; ++i)
             cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
-        }
+
         cslibs_math::random::Uniform<1> rng_recovery(0.0, 1.0);
-        for(std::size_t i = 0 ; i < sample_size_maximum ; ++i) {
+        for (std::size_t i = 0 ; i < sample_size_maximum ; ++i) {
             const double recovery_probability = rng_recovery.get();
-            if(recovery_probability < recovery_random_pose_probability_) {
+            if (recovery_probability < recovery_random_pose_probability_) {
                 uniform_pose_sampler_->apply(sample);
                 i_p_t.insert(sample);
             } else {
                 const double u = rng.get();
-                for(std::size_t j = 0 ; j < size ; ++j) {
-                    if(cumsum[j] <= u && u < cumsum[j+1]) {
+                for (std::size_t j = 0 ; j < size ; ++j) {
+                    if (cumsum[j] <= u && u < cumsum[j+1]) {
                         i_p_t.insert(p_t_1[j]);
                         break;
                     }
                 }
             }
 
-            if(i > sample_size_minimum && kld(i)) {
+            if (i > sample_size_minimum && kld(i))
                 break;
-            }
         }
     }
-
 };
 }
 

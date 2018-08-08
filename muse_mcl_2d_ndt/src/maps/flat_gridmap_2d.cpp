@@ -10,12 +10,12 @@ FlatGridmap2D::FlatGridmap2D(const cslibs_ndt_2d::static_maps::flat::Gridmap::Pt
 
 FlatGridmap2D::state_space_boundary_t FlatGridmap2D::getMin() const
 {
-    return data_->getMin();
+    return data_->getInitialOrigin() * data_->getMin();
 }
 
 FlatGridmap2D::state_space_boundary_t FlatGridmap2D::getMax() const
 {
-    return data_->getMax();
+    return data_->getInitialOrigin() * data_->getMax();
 }
 
 FlatGridmap2D::state_space_transform_t FlatGridmap2D::getOrigin() const

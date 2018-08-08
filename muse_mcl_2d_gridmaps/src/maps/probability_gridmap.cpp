@@ -10,12 +10,12 @@ ProbabilityGridmap::ProbabilityGridmap(const cslibs_gridmaps::static_maps::Proba
 
 ProbabilityGridmap::state_space_boundary_t ProbabilityGridmap::getMin() const
 {
-    return data_->getMin();
+    return data_->getOrigin() * data_->getMin();
 }
 
 ProbabilityGridmap::state_space_boundary_t ProbabilityGridmap::getMax() const
 {
-    return data_->getMax();
+    return data_->getOrigin() * data_->getMax();
 }
 
 ProbabilityGridmap::state_space_transform_t ProbabilityGridmap::getOrigin() const

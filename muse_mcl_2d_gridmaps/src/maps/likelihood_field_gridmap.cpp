@@ -11,12 +11,12 @@ LikelihoodFieldGridmap::LikelihoodFieldGridmap(const cslibs_gridmaps::static_map
 
 LikelihoodFieldGridmap::state_space_boundary_t LikelihoodFieldGridmap::getMin() const
 {
-    return data_->getMin();
+    return data_->getOrigin() * data_->getMin();
 }
 
 LikelihoodFieldGridmap::state_space_boundary_t LikelihoodFieldGridmap::getMax() const
 {
-    return data_->getMax();
+    return data_->getOrigin() * data_->getMax();
 }
 
 LikelihoodFieldGridmap::state_space_transform_t LikelihoodFieldGridmap::getOrigin() const

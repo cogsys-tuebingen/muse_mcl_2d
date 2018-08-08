@@ -10,12 +10,12 @@ OccupancyGridmap2d::OccupancyGridmap2d(const cslibs_ndt_2d::dynamic_maps::Occupa
 
 OccupancyGridmap2d::state_space_boundary_t OccupancyGridmap2d::getMin() const
 {
-    return data_->getMin();
+    return data_->getInitialOrigin() * data_->getMin();
 }
 
 OccupancyGridmap2d::state_space_boundary_t OccupancyGridmap2d::getMax() const
 {
-    return data_->getMax();
+    return data_->getInitialOrigin() * data_->getMax();
 }
 
 OccupancyGridmap2d::state_space_transform_t OccupancyGridmap2d::getOrigin() const
