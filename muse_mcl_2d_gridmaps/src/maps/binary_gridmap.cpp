@@ -10,12 +10,12 @@ BinaryGridmap::BinaryGridmap(const cslibs_gridmaps::static_maps::BinaryGridmap::
 
 BinaryGridmap::state_space_boundary_t BinaryGridmap::getMin() const
 {
-    return data_->getMin();
+    return data_->getOrigin() * data_->getMin();
 }
 
 BinaryGridmap::state_space_boundary_t BinaryGridmap::getMax() const
 {
-    return data_->getMax();
+    return data_->getOrigin() * data_->getMax();
 }
 
 BinaryGridmap::state_space_transform_t BinaryGridmap::getOrigin() const

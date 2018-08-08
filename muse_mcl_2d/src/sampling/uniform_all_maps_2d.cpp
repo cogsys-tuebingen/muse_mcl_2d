@@ -18,10 +18,9 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     using allocator_t = Eigen::aligned_allocator<UniformAllMaps2D>;
 
-
     virtual bool update(const std::string &frame) override
     {
-        const ros::Time   now   = ros::Time::now();
+        const ros::Time now = ros::Time::now();
 
         cslibs_math_2d::Point2d min(std::numeric_limits<double>::max(),
                           std::numeric_limits<double>::max());
@@ -31,16 +30,17 @@ public:
         const std::size_t map_provider_count = map_providers_.size();
         maps_T_w_.resize(map_provider_count);
         maps_.resize(map_provider_count);
+
         for(std::size_t i = 0 ; i < map_provider_count ; ++i) {
             const MapProvider2D::Ptr m = map_providers_[i];
 
             m->waitForStateSpace();
             Map2D::ConstPtr map = m->getStateSpace();
-            if(!map) {
+            if(!map)
                 throw std::runtime_error("[UniformAllMaps2D] : map was null!");
-            }
+
             tf::Transform tf_map_T_w;
-            if(tf_->lookupTransform(map->getFrame(), frame, now, tf_map_T_w, tf_timeout_)) {
+            if (tf_->lookupTransform(map->getFrame(), frame, now, tf_map_T_w, tf_timeout_)) {
                 cslibs_math_2d::Transform2d map_T_w =  cslibs_math_ros::tf::conversion_2d::from(tf_map_T_w);
                 maps_[i] = map;
                 maps_T_w_[i] = map_T_w;
@@ -49,27 +49,26 @@ public:
                 min = cslibs_math::linear::min(w_T_map * map->getMin(), min);
                 max = cslibs_math::linear::max(w_T_map * map->getMax(), max);
             } else {
+                std::cout << "[UniformAllMaps2D] : tf not found!" << std::endl;
                 return false;
             }
         }
 
         rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}));
-        if(random_seed_ >= 0) {
+        if (random_seed_ >= 0)
             rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}, 0));
-        }
 
         return true;
     }
 
-    virtual void apply(sample_set_t &particle_set) override
+    virtual bool apply(sample_set_t &particle_set) override
     {
-        if(sample_size_ < particle_set.getMinimumSampleSize() ||
-                sample_size_ > particle_set.getMaximumSampleSize()) {
+        if (sample_size_ < particle_set.getMinimumSampleSize() ||
+                sample_size_ > particle_set.getMaximumSampleSize())
             throw std::runtime_error("Initialization sample size invalid!");
-        }
 
-        if(!update(particle_set.getFrame()))
-            return;
+        if (!update(particle_set.getFrame()))
+            return false;
 
         sample_set_t::sample_insertion_t insertion = particle_set.getInsertion();
         const ros::Time sampling_start = ros::Time::now();
@@ -77,41 +76,40 @@ public:
 
         Sample2D sample;
         sample.weight = 1.0 / static_cast<double>(sample_size_);
-        for(std::size_t i = 0 ; i < sample_size_ ; ++i) {
+        for (std::size_t i = 0 ; i < sample_size_ ; ++i) {
             bool valid = false;
-            while(!valid) {
+            while (!valid) {
                 ros::Time now = ros::Time::now();
-                if(sampling_start + sampling_timeout_ < now) {
-                    return;
-                }
-
+                if (sampling_start + sampling_timeout_ < now)
+                    return false;
 
                 sample.state.setFrom(rng_->get());
                 valid = true;
-                for(std::size_t i = 0 ; i < map_count ; ++i) {
+                for (std::size_t i = 0 ; i < map_count ; ++i)
                     valid &= maps_[i]->validate(maps_T_w_[i] * sample.state);
-                }
             }
             insertion.insert(sample);
         }
+        return true;
     }
 
     virtual void apply(Sample2D &sample) override
     {
+        if (!rng_)
+            return;
+
         const ros::Time sampling_start = ros::Time::now();
         const std::size_t map_count = maps_.size();
         bool valid = false;
-        while(!valid) {
+        while (!valid) {
             ros::Time now = ros::Time::now();
-            if(sampling_start + sampling_timeout_ < now) {
+            if (sampling_start + sampling_timeout_ < now)
                 break;
-            }
 
             sample.state.setFrom(rng_->get());
             valid = true;
-            for(std::size_t i = 0 ; i < map_count ; ++i) {
+            for (std::size_t i = 0 ; i < map_count ; ++i)
                 valid &= maps_[i]->validate(maps_T_w_[i] * sample.state);
-            }
         }
     }
 

@@ -30,10 +30,10 @@ public:
                       const cslibs_math_ros::tf::TFListener2d::Ptr &tf,
                       ros::NodeHandle &nh)
     {
-        auto param_name = [this](const std::string &name){return name_ + "/" + name;};
-        sample_size_ = static_cast<std::size_t>(nh.param(param_name("sample_size"), 500));
+        auto param_name   = [this](const std::string &name){return name_ + "/" + name;};
+        sample_size_      = static_cast<std::size_t>(nh.param(param_name("sample_size"), 500));
         sampling_timeout_ = ros::Duration(nh.param(param_name("sampling_timeout"), 10.0));
-        tf_timeout_ = ros::Duration(nh.param(param_name("tf_timeout"), 0.1));
+        tf_timeout_       = ros::Duration(nh.param(param_name("tf_timeout"), 0.1));
         tf_ = tf;
 
         doSetup(map_providers, nh);

@@ -10,12 +10,12 @@ DistanceGridmap::DistanceGridmap(const cslibs_gridmaps::static_maps::DistanceGri
 
 DistanceGridmap::state_space_boundary_t DistanceGridmap::getMin() const
 {
-    return data_->getMin();
+    return data_->getOrigin() * data_->getMin();
 }
 
 DistanceGridmap::state_space_boundary_t DistanceGridmap::getMax() const
 {
-    return data_->getMax();
+    return data_->getOrigin() * data_->getMax();
 }
 
 DistanceGridmap::state_space_transform_t DistanceGridmap::getOrigin() const

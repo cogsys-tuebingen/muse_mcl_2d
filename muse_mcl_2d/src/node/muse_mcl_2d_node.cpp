@@ -49,7 +49,7 @@ void MuseMCL2DNode::start()
 }
 
 bool MuseMCL2DNode::requestGlobalInitialization(muse_mcl_2d::GlobalInitialization::Request &req,
-                                              muse_mcl_2d::GlobalInitialization::Response &res)
+                                                muse_mcl_2d::GlobalInitialization::Response &res)
 {
     particle_filter_->requestUniformInitialization();
     res.success = true;
@@ -57,7 +57,7 @@ bool MuseMCL2DNode::requestGlobalInitialization(muse_mcl_2d::GlobalInitializatio
 }
 
 bool MuseMCL2DNode::requestPoseInitialization(muse_mcl_2d::PoseInitialization::Request &req,
-                                            muse_mcl_2d::PoseInitialization::Response &res)
+                                              muse_mcl_2d::PoseInitialization::Response &res)
 {
     auto convert_pose = [&req]() {
         tf::Pose p;

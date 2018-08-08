@@ -44,8 +44,11 @@ public:
 
         const time_t stamp = u->getStamp();
         if (stamp >= next_update_time_) {
+            const time_t start = now();
             u->apply(s->getWeightIterator());
-            next_update_time_ = now();
+            const duration_t dur = (now() - start);
+
+            next_update_time_ = time_now;
 
             may_resample_ = true;
             return true;

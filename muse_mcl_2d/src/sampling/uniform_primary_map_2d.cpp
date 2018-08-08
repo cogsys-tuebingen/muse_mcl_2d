@@ -63,48 +63,44 @@ public:
         cslibs_math_2d::Point2d min = primary_map_->getMin();
         cslibs_math_2d::Point2d max = primary_map_->getMax();
         rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}));
-        if(random_seed_ >= 0) {
+        if (random_seed_ >= 0)
             rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}, random_seed_));
-        }
 
         return true;
     }
 
-    virtual void apply(sample_set_t &sample_set) override
+    virtual bool apply(sample_set_t &sample_set) override
     {
-        if(sample_size_ < sample_set.getMinimumSampleSize() ||
-                sample_size_ > sample_set.getMaximumSampleSize()) {
+        if (sample_size_ < sample_set.getMinimumSampleSize() ||
+                sample_size_ > sample_set.getMaximumSampleSize())
             throw std::runtime_error("Initialization sample size invalid!");
-        }
 
-        if(!update(sample_set.getFrame()))
-            return;
-
+        if (!update(sample_set.getFrame()))
+            return false;
 
         sample_set_t::sample_insertion_t insertion = sample_set.getInsertion();
         const std::size_t          secondary_maps_count = secondary_maps_.size();
         const ros::Time sampling_start = ros::Time::now();
         Sample2D sample;
         sample.weight = 1.0 / static_cast<double>(sample_size_);
-        for(std::size_t i = 0 ; i < sample_size_; ++i) {
+        for (std::size_t i = 0 ; i < sample_size_; ++i) {
             bool valid = false;
-            while(!valid) {
+            while (!valid) {
                 ros::Time now = ros::Time::now();
-                if(sampling_start + sampling_timeout_ < now) {
-                    break;
-                }
+                if (sampling_start + sampling_timeout_ < now)
+                    return false;
 
                 sample.state.setFrom(rng_->get());
                 valid = primary_map_->validate(sample.state);
-                if(valid) {
+                if (valid) {
                     auto pose  = w_T_primary_ * sample.state;
-                    for(std::size_t i = 0 ; i < secondary_maps_count ; ++i) {
+                    for (std::size_t i = 0 ; i < secondary_maps_count ; ++i)
                         valid &= secondary_maps_[i]->validate(secondary_maps_T_w_[i] * pose);
-                    }
                 }
             }
             insertion.insert(sample);
         }
+        return true;
     }
 
     virtual void apply(Sample2D &sample) override
@@ -112,19 +108,17 @@ public:
         const std::size_t secondary_maps_count = secondary_maps_.size();
         const ros::Time   sampling_start = ros::Time::now();
         bool valid = false;
-        while(!valid) {
+        while (!valid) {
             ros::Time now = ros::Time::now();
-            if(sampling_start + sampling_timeout_ < now) {
-                break;
-            }
+            if (sampling_start + sampling_timeout_ < now)
+                return;
 
             sample.state.setFrom(rng_->get());
             valid = primary_map_->validate(sample.state);
-            if(valid) {
+            if (valid) {
                 cslibs_math_2d::Transform2d pose  = w_T_primary_ * sample.state;
-                for(std::size_t i = 0 ; i < secondary_maps_count ; ++i) {
+                for (std::size_t i = 0 ; i < secondary_maps_count ; ++i)
                     valid &= secondary_maps_[i]->validate(secondary_maps_T_w_[i] * pose);
-                }
             }
         }
     }

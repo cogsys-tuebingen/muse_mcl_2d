@@ -1,4 +1,3 @@
-
 #include <class_loader/class_loader_register_macro.h>
 
 #include <ros/time.h>
@@ -19,26 +18,24 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
     using allocator_t = Eigen::aligned_allocator<Normal2D>;
 
-
-    virtual void update(const std::string &frame) override
+    virtual bool update(const std::string &frame) override
     {
-        const ros::Time   now   = ros::Time::now();
+        const ros::Time now = ros::Time::now();
 
         cslibs_math_2d::Point2d min(std::numeric_limits<double>::max(),
                           std::numeric_limits<double>::max());
         cslibs_math_2d::Point2d max(std::numeric_limits<double>::lowest(),
                           std::numeric_limits<double>::lowest());
 
-        for(auto &m : map_providers_) {
+        for (auto &m : map_providers_) {
             tf::Transform tf_map_T_w;
             cslibs_math_2d::Transform2d map_t_w;
             m->waitForStateSpace();
             Map2D::ConstPtr map = m->getStateSpace();
-            if(!map) {
+            if (!map)
                 throw std::runtime_error("[Normal2D] : map was null!");
-            }
 
-            if(tf_->lookupTransform(map->getFrame(), frame, now, tf_map_T_w, tf_timeout_)) {
+            if (tf_->lookupTransform(map->getFrame(), frame, now, tf_map_T_w, tf_timeout_)) {
                 map_t_w =  cslibs_math_ros::tf::conversion_2d::from(tf_map_T_w);
 
                 maps_.emplace_back(map);
@@ -47,26 +44,25 @@ public:
                 cslibs_math_2d::Transform2d w_T_map = map_t_w.inverse();
                 min = cslibs_math::linear::min(w_T_map * map->getMin(), min);
                 max = cslibs_math::linear::max(w_T_map * map->getMax(), max);
-
             }
         }
+        return true;
     }
 
-    virtual void apply(const cslibs_math_2d::Pose2d       &pose,
+    virtual bool apply(const cslibs_math_2d::Pose2d       &pose,
                        const cslibs_math_2d::Covariance3d &covariance,
                        sample_set_t &sample_set) override
     {
-        update(sample_set.getFrame());
+        if (!update(sample_set.getFrame()))
+            return false;
 
         rng_t::Ptr rng(new rng_t(pose.toEigen(), covariance));
-        if(random_seed_ >= 0) {
+        if (random_seed_ >= 0)
             rng.reset(new rng_t(pose.toEigen(), covariance, random_seed_));
-        }
 
-        if(sample_size_ < sample_set.getMinimumSampleSize() &&
-                sample_size_ > sample_set.getMaximumSampleSize()) {
+        if (sample_size_ < sample_set.getMinimumSampleSize() &&
+                sample_size_ > sample_set.getMaximumSampleSize())
             throw std::runtime_error("Initialization sample size invalid!");
-        }
 
         sample_set_t::sample_insertion_t insertion = sample_set.getInsertion();
 
@@ -75,22 +71,21 @@ public:
 
         Sample2D sample;
         sample.weight = 1.0 / static_cast<double>(sample_size_);
-        for(std::size_t i = 0 ; i < sample_size_ ; ++i) {
+        for (std::size_t i = 0 ; i < sample_size_ ; ++i) {
             bool valid = false;
-            while(!valid) {
+            while (!valid) {
                 ros::Time now = ros::Time::now();
-                if(sampling_start + sampling_timeout_ < now) {
-                    return;
-                }
+                if (sampling_start + sampling_timeout_ < now)
+                    return false;
 
                 sample.state.setFrom(rng->get());
                 valid = true;
-                for(std::size_t i = 0 ; i < map_count ; ++i) {
+                for (std::size_t i = 0 ; i < map_count ; ++i)
                     valid &= maps_[i]->validate(maps_T_w_[i] * sample.state);
-                }
             }
             insertion.insert(sample);
         }
+        return true;
     }
 
 protected:
