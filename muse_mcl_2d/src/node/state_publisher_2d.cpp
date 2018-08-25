@@ -16,6 +16,8 @@ StatePublisher::~StatePublisher()
 void StatePublisher::setup(ros::NodeHandle &nh)
 {
     const double pub_rate_tf    = nh.param<double>("pub_rate_tf", 30.0);
+    const double tf_timeout     = nh.param<double>("tf_timeout", 0.1);
+    const double tf_keep_alive  = nh.param<double>("tf_keep_alive", 0.1);
 
     world_frame_ = nh.param<std::string>("world_frame", "/world");
     odom_frame_  = nh.param<std::string>("odom_frame", "/odom");
@@ -25,7 +27,7 @@ void StatePublisher::setup(ros::NodeHandle &nh)
     sample_publisher_->setup(nh);
     sample_publisher_->start();
 
-    tf_publisher_.reset(new TFPublisher(pub_rate_tf, odom_frame_, base_frame_, world_frame_/*, tf_timeout */));
+    tf_publisher_.reset(new TFPublisher(pub_rate_tf, odom_frame_, base_frame_, world_frame_, tf_timeout, tf_keep_alive));
     tf_publisher_->start();
 }
 

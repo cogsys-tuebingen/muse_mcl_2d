@@ -45,7 +45,8 @@ public:
                        const std::string &odom_frame,
                        const std::string &base_frame,
                        const std::string &world_frame,
-                       const double timeout = 0.1) :
+                       const double timeout = 0.1,
+                       const double tf_keep_alive_for = 0.0) :
         odom_frame_(odom_frame),
         base_frame_(base_frame),
         world_frame_(world_frame),
@@ -57,8 +58,9 @@ public:
                 ros::Time::now(),
                 world_frame_, odom_frame_),
         w_T_b_(cslibs_math_2d::Transform2d::identity(), cslibs_time::Time(ros::Time::now().toNSec())),
-        wait_for_transform_(true),
-        tf_rate_(rate)
+        tf_dirty_(false),
+        tf_rate_(rate),
+        tf_keep_alive_for_(tf_keep_alive_for)
     {
     }
 
@@ -89,22 +91,13 @@ public:
     {
         std::unique_lock<std::mutex> l(tf_mutex_);
         w_T_b_ = w_t_b;
-
-        cslibs_math_2d::Transform2d b_T_o = cslibs_math_2d::Transform2d::identity();
-        if(tf_listener_.lookupTransform(base_frame_, odom_frame_, ros::Time(w_T_b_.stamp().seconds()), b_T_o, timeout_)) {
-            cslibs_math_2d::Transform2d::identity();
-            cslibs_math_2d::Transform2d w_T_o = w_T_b_.data() * b_T_o;
-            w_T_o_ = tf::StampedTransform( cslibs_math_ros::tf::conversion_2d::from(w_T_o), ros::Time(w_T_b_.stamp().seconds()), world_frame_, odom_frame_);
-
-            tf_time_of_transform_ = w_T_o_.stamp_;
-        }
-
-        wait_for_transform_ = false;
+        tf_dirty_ = true;
     }
 
     inline void resetTransform()
     {
-        wait_for_transform_ = true;
+        std::unique_lock<std::mutex> l(tf_mutex_);
+        tf_last_update_time_ = ros::Time(0);
     }
 
 
@@ -123,18 +116,51 @@ private:
     cslibs_math_ros::tf::TFListener2d tf_listener_;
 
     tf::StampedTransform     w_T_o_;
+    ros::Time                time_w_T_o_;
     stamped_t                w_T_b_;
-    std::atomic_bool         wait_for_transform_;
+    bool                     tf_dirty_;
     ros::Rate                tf_rate_;
-    ros::Time                tf_time_of_transform_;
+    ros::Time                tf_last_update_time_;
+    ros::Duration            tf_keep_alive_for_;
+    ros::Time                tf_keep_alive_until_;
 
     inline void loop()
     {
+        auto get_updated_tf = [this] () {
+            std::unique_lock<std::mutex> l(tf_mutex_);
+            stamped_t w_t_b = w_T_b_;
+            l.unlock();
+
+            cslibs_math_2d::Transform2d b_T_o = cslibs_math_2d::Transform2d::identity();
+            if(tf_listener_.lookupTransform(base_frame_, odom_frame_, ros::Time(w_t_b.stamp().seconds()), b_T_o, timeout_)) {
+                cslibs_math_2d::Transform2d::identity();
+                cslibs_math_2d::Transform2d w_T_o = w_t_b.data() * b_T_o;
+                w_T_o_ = tf::StampedTransform( cslibs_math_ros::tf::conversion_2d::from(w_T_o), ros::Time(w_t_b.stamp().seconds()), world_frame_, odom_frame_);
+                time_w_T_o_ = w_T_o_.stamp_;
+                return true;
+            }
+            return false;
+        };
+
+#pragma message "Update to event-based publishing using a condition variable"
+
         running_ = true;
         while(!stop_) {
-            if(!wait_for_transform_) {
-                std::unique_lock<std::mutex> l(tf_mutex_);
-                w_T_o_.stamp_ = ros::Time::now();
+            const ros::Time now = ros::Time::now();
+            if(tf_dirty_) {
+                if(get_updated_tf()) {
+                    tf_last_update_time_ = now;
+                    tf_keep_alive_until_ = now + tf_keep_alive_for_;
+                }
+            }
+            if(tf_last_update_time_.isZero()) {
+                  /// for identity here!!!
+//                w_T_o_.stamp_ = ros::Time::now();
+//                tf_broadcaster_.sendTransform(w_T_o_);
+            } else if(now <= tf_keep_alive_until_) {
+                /// get time diff hiere
+                const ros::Duration dt = tf_keep_alive_until_ - now;
+                w_T_o_.stamp_ = time_w_T_o_ + dt;
                 tf_broadcaster_.sendTransform(w_T_o_);
             }
             tf_rate_.sleep();

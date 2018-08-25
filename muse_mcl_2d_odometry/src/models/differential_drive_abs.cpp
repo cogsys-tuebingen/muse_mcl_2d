@@ -99,5 +99,7 @@ void DifferentialDriveAbs::doSetup(ros::NodeHandle &nh_private)
     alpha_3_ = nh_private.param<double>(param_name("alpha3"), 0.1);
     alpha_4_ = nh_private.param<double>(param_name("alpha4"), 0.1);
     translation_threshold_ = nh_private.param<double>(param_name("translation_threshold"), 0.001);
+    eps_zero_angular_ = nh_private.param<double>(param_name("eps_linear"), 1e-6);
+    eps_zero_linear_  = nh_private.param<double>(param_name("eps_angular"), 1e-6);
 }
 }
