@@ -41,7 +41,7 @@ namespace muse_mcl_2d_ndt {
       if(r.valid()) {
         cslibs_math_2d::Point2d p(std::cos(r.angle) * r.range,
                                   std::sin(r.angle) * r.range);
-        local_gridmap->add(p);
+        local_gridmap->insert(p);
       }
     }
 
