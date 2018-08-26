@@ -51,7 +51,11 @@ void MuseMCL2DNode::start()
 bool MuseMCL2DNode::requestGlobalInitialization(muse_mcl_2d::GlobalInitialization::Request &req,
                                                 muse_mcl_2d::GlobalInitialization::Response &res)
 {
-    particle_filter_->requestUniformInitialization();
+    auto get_time = []() {
+        return cslibs_time::Time(ros::Time::now().toNSec());
+    };
+
+    particle_filter_->requestUniformInitialization(get_time());
     res.success = true;
     return true;
 }
