@@ -153,11 +153,7 @@ private:
                     tf_keep_alive_until_ = now + tf_keep_alive_for_;
                 }
             }
-            if(tf_last_update_time_.isZero()) {
-                  /// for identity here!!!
-//                w_T_o_.stamp_ = ros::Time::now();
-//                tf_broadcaster_.sendTransform(w_T_o_);
-            } else if(now <= tf_keep_alive_until_) {
+            if(! tf_last_update_time_.isZero() && now <= tf_keep_alive_until_) {
                 /// get time diff hiere
                 const ros::Duration dt = tf_keep_alive_until_ - now;
                 w_T_o_.stamp_ = time_w_T_o_ + dt;
