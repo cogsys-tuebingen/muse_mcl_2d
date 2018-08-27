@@ -16,6 +16,7 @@
 #include <tf/transform_listener.h>
 
 #include <cslibs_math_ros/tf/tf_listener_2d.hpp>
+#include <cslibs_time/rate.hpp>
 
 #include <ros/time.h>
 
@@ -97,7 +98,7 @@ public:
     inline void resetTransform()
     {
         std::unique_lock<std::mutex> l(tf_mutex_);
-        tf_last_update_time_ = ros::Time(0);
+        tf_last_update_time_ = cslibs_time::Time(0ul);
     }
 
 
@@ -119,10 +120,10 @@ private:
     ros::Time                time_w_T_o_;
     stamped_t                w_T_b_;
     bool                     tf_dirty_;
-    ros::Rate                tf_rate_;
-    ros::Time                tf_last_update_time_;
-    ros::Duration            tf_keep_alive_for_;
-    ros::Time                tf_keep_alive_until_;
+    cslibs_time::Rate        tf_rate_;
+    cslibs_time::Time        tf_last_update_time_;
+    cslibs_time::Duration    tf_keep_alive_for_;
+    cslibs_time::Time        tf_keep_alive_until_;
 
     inline void loop()
     {
@@ -132,11 +133,11 @@ private:
             l.unlock();
 
             cslibs_math_2d::Transform2d b_T_o = cslibs_math_2d::Transform2d::identity();
-            if(tf_listener_.lookupTransform(base_frame_, odom_frame_, ros::Time(w_t_b.stamp().seconds()), b_T_o, timeout_)) {
-                cslibs_math_2d::Transform2d::identity();
+            const ros::Time time = ros::Time(w_t_b.stamp().seconds());
+            if(tf_listener_.lookupTransform(base_frame_, odom_frame_, time, b_T_o, timeout_)) {
                 cslibs_math_2d::Transform2d w_T_o = w_t_b.data() * b_T_o;
-                w_T_o_ = tf::StampedTransform( cslibs_math_ros::tf::conversion_2d::from(w_T_o), ros::Time(w_t_b.stamp().seconds()), world_frame_, odom_frame_);
-                time_w_T_o_ = w_T_o_.stamp_;
+                w_T_o_ = tf::StampedTransform( cslibs_math_ros::tf::conversion_2d::from(w_T_o), time, world_frame_, odom_frame_);
+                time_w_T_o_ = time;
                 return true;
             }
             return false;
@@ -146,16 +147,17 @@ private:
 
         running_ = true;
         while(!stop_) {
-            const ros::Time now = ros::Time::now();
+            const cslibs_time::Time now = cslibs_time::Time::now();
             if(tf_dirty_) {
                 if(get_updated_tf()) {
                     tf_last_update_time_ = now;
                     tf_keep_alive_until_ = now + tf_keep_alive_for_;
+                    tf_dirty_ = false;
                 }
             }
             if(!tf_last_update_time_.isZero() && now <= tf_keep_alive_until_) {
-                /// get time diff hiere
-                const ros::Duration dt = tf_keep_alive_until_ - now;
+                /// get time diff here
+                const ros::Duration dt((tf_keep_alive_until_ - now).seconds());
                 w_T_o_.stamp_ = time_w_T_o_ + dt;
                 tf_broadcaster_.sendTransform(w_T_o_);
             }

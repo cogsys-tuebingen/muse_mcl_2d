@@ -25,10 +25,9 @@ namespace muse_mcl_2d_gridmaps {
         auto param_name            = [this](const std::string &name){return name_ + "/" + name;};
         const std::string path     = nh.param<std::string>(param_name("path"), "");
         const std::string frame_id = nh.param<std::string>(param_name("frame_id"), "map");
+        binarization_threshold_    = nh.param<double>(param_name("threshold"), 0.5);
 
-        binarization_threshold_ = nh.param<double>(param_name("threshold"), 0.5);
-
-        auto load = [this, &path, &frame_id]() {
+        auto load = [this, path, frame_id]() {
             if (!map_) {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << path << "]");
                 nav_msgs::OccupancyGrid::Ptr msg;
