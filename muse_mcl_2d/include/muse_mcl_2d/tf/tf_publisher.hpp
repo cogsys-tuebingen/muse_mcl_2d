@@ -157,7 +157,7 @@ private:
             }
             if(!tf_last_update_time_.isZero() && now <= tf_keep_alive_until_) {
                 /// get time diff here
-                const ros::Duration dt((tf_keep_alive_until_ - now).seconds());
+                const ros::Duration dt((now - tf_last_update_time_).seconds());
                 w_T_o_.stamp_ = time_w_T_o_ + dt;
                 tf_broadcaster_.sendTransform(w_T_o_);
             }
