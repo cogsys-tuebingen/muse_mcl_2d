@@ -24,6 +24,7 @@ public:
 
     virtual void publish(const typename sample_set_t::ConstPtr &sample_set) override;
     virtual void publishIntermediate(const typename sample_set_t::ConstPtr &sample_set) override;
+    virtual void publishConstant(const typename sample_set_t::ConstPtr &sample_set) override;
 
 private:
     TFPublisher::Ptr            tf_publisher_;

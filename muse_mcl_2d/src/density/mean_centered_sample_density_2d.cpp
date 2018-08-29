@@ -50,7 +50,7 @@ public:
         kdtree_->set<cis::option::tags::node_allocator_chunk_size>(2 * maximum_sample_size + 1);
 
         clustering_impl_                        = clustering_t(indexation_);
-        ignore_weight_                          = nh.param<double>(param_name("ignore_weight"), false);
+        ignore_weight_                          = nh.param<bool>(param_name("ignore_weight"), false);
     }
 
     virtual void clear() override

@@ -63,7 +63,7 @@ struct SampleDensityData2D {
     {
         samples.emplace_back(&sample);
         distribution.add(sample.state.translation(), ignore_weight ? 1.0 : sample.weight);
-        angular_mean.add(sample.state.yaw(), sample.weight);
+        angular_mean.add(sample.state.yaw(), ignore_weight ? 1.0 : sample.weight);
      }
 
     inline void merge(const SampleDensityData2D &other)

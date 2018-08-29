@@ -34,6 +34,7 @@ class TFPublisher {
 public:
     using Ptr = std::shared_ptr<TFPublisher>;
     using stamped_t = cslibs_time::Stamped<cslibs_math_2d::Transform2d>;
+    using time_t = cslibs_time::Time;
 
     /**
      * @brief TransformPublisherAnchored constructor.
@@ -91,8 +92,18 @@ public:
     inline void setTransform(const stamped_t &w_t_b)
     {
         std::unique_lock<std::mutex> l(tf_mutex_);
-        w_T_b_ = w_t_b;
-        tf_dirty_ = true;
+        if(w_t_b.stamp() > w_T_b_.stamp()) {
+            w_T_b_ = w_t_b;
+            tf_dirty_ = true;
+        }
+    }
+    inline void renewTimeStamp(const time_t &stamp)
+    {
+        std::unique_lock<std::mutex> l(tf_mutex_);
+        if(stamp > w_T_b_.stamp()) {
+            w_T_b_.stamp() = stamp;
+            tf_renew_time_ = true;
+        }
     }
 
     inline void resetTransform()
@@ -119,7 +130,8 @@ private:
     tf::StampedTransform     w_T_o_;
     ros::Time                time_w_T_o_;
     stamped_t                w_T_b_;
-    bool                     tf_dirty_;
+    std::atomic_bool         tf_dirty_;
+    std::atomic_bool         tf_renew_time_;
     cslibs_time::Rate        tf_rate_;
     cslibs_time::Time        tf_last_update_time_;
     cslibs_time::Duration    tf_keep_alive_for_;
@@ -143,6 +155,11 @@ private:
             return false;
         };
 
+        auto renew_time_tf = [this] () {
+            std::unique_lock<std::mutex> l(tf_mutex_);
+            time_w_T_o_ = ros::Time(w_T_b_.stamp().seconds());
+        };
+
 #pragma message "Update to event-based publishing using a condition variable"
 
         running_ = true;
@@ -152,9 +169,16 @@ private:
                 if(get_updated_tf()) {
                     tf_last_update_time_ = now;
                     tf_keep_alive_until_ = now + tf_keep_alive_for_;
-                    tf_dirty_ = false;
+                    tf_dirty_     = false;
+                    tf_renew_time_ = false;
                 }
+            } else if(tf_renew_time_) {
+                renew_time_tf();
+                tf_last_update_time_ = now;
+                tf_keep_alive_until_ = now + tf_keep_alive_for_;
+                tf_renew_time_ = false;
             }
+
             if(!tf_last_update_time_.isZero() && now <= tf_keep_alive_until_) {
                 /// get time diff here
                 const ros::Duration dt((now - tf_last_update_time_).seconds());
