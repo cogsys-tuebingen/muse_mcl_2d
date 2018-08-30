@@ -31,7 +31,7 @@ namespace muse_mcl_2d_gridmaps {
 
         /// conversion can take time
         /// we allow concurrent loading, this way, the front end thread is not blocking.
-        auto load = [this, &path, &frame_id]() {
+        auto load = [this, path, frame_id]() {
             if (!map_) {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << path << "]");
                 nav_msgs::OccupancyGrid::Ptr msg;

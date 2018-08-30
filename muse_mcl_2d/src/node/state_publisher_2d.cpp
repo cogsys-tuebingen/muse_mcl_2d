@@ -5,7 +5,7 @@
 namespace muse_mcl_2d {
 StatePublisher::StatePublisher() :
     latest_w_T_b_(cslibs_math_2d::Transform2d(),
-                  cslibs_time::Time(ros::Time::now().toNSec()))
+                  cslibs_time::Time(ros::Time::now().toNSec()).time())
 {
 }
 
@@ -17,7 +17,7 @@ void StatePublisher::setup(ros::NodeHandle &nh)
 {
     const double pub_rate_tf    = nh.param<double>("pub_rate_tf", 30.0);
     const double tf_timeout     = nh.param<double>("tf_timeout", 0.05);
-    const double tf_keep_alive  = nh.param<double>("tf_keep_alive", 0.0);
+    const double tf_keep_alive  = nh.param<double>("tf_tolerance", 0.0);
 
     world_frame_ = nh.param<std::string>("world_frame", "/world");
     odom_frame_  = nh.param<std::string>("odom_frame", "/odom");
@@ -43,7 +43,7 @@ void StatePublisher::publish(const sample_set_t::ConstPtr &sample_set)
     }
 
     if(density->maxClusterMean(latest_w_T_b_.data(), latest_w_T_b_covariance_)) {
-        latest_w_T_b_.stamp() = sample_set->getStamp();
+        latest_w_T_b_.stamp() = sample_set->getStamp().time();
         /// make sure that TF gets published first #most important
         tf_publisher_->setTransform(latest_w_T_b_);
     }
@@ -58,7 +58,7 @@ void StatePublisher::publishIntermediate(const sample_set_t::ConstPtr &sample_se
 
 void StatePublisher::publishConstant(const sample_set_t::ConstPtr &sample_set)
 {
-    tf_publisher_->renewTimeStamp(sample_set->getStamp());
+//    tf_publisher_->renewTimeStamp(sample_set->getStamp());
     publishState(sample_set);
 }
 

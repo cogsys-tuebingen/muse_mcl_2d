@@ -25,7 +25,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
     const cslibs_time::TimeFrame &tf = data->getTimeFrame();
 
     original = s > tf.start ? original->cutFront(s) : original;     /// try to cut of the front
-    original = original ? apply : original;                         /// if fails reset to original
+    original = original ? original : apply;                         /// if fails reset to original
 
     if(until < tf.end && !original->split(until, apply, leave)) {   /// if message has to be split
        apply = original;

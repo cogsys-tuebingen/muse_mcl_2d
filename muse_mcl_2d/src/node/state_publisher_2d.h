@@ -15,7 +15,7 @@ class StatePublisher : public muse_smc::SMCState<StateSpaceDescription2D>
 {
 public:
     using Ptr = std::shared_ptr<StatePublisher>;
-    using stamped_t = cslibs_time::Stamped<cslibs_math_2d::Transform2d>;
+    using stamped_t = cslibs_math::utility::Stamped<cslibs_math_2d::Transform2d>;
 
     StatePublisher();
     virtual ~StatePublisher();

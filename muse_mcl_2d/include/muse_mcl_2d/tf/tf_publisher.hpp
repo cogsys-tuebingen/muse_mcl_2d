@@ -17,6 +17,7 @@
 
 #include <cslibs_math_ros/tf/tf_listener_2d.hpp>
 #include <cslibs_time/rate.hpp>
+#include <cslibs_utility/synchronized/synchronized_queue.hpp>
 
 #include <ros/time.h>
 
@@ -33,8 +34,13 @@ namespace muse_mcl_2d {
 class TFPublisher {
 public:
     using Ptr = std::shared_ptr<TFPublisher>;
-    using stamped_t = cslibs_time::Stamped<cslibs_math_2d::Transform2d>;
-    using time_t = cslibs_time::Time;
+    using stamped_t = cslibs_math::utility::Stamped<cslibs_math_2d::Transform2d>;
+    using time_t  = cslibs_time::Time;
+    using queue_t = cslibs_utility::synchronized::queue<stamped_t, std::deque<stamped_t, stamped_t::allocator_t>>;
+    using mutex_t = std::mutex;
+    using lock_t  = std::unique_lock<mutex_t>;
+    using condition_variable_t  = std::condition_variable;
+
 
     /**
      * @brief TransformPublisherAnchored constructor.
@@ -48,7 +54,7 @@ public:
                        const std::string &base_frame,
                        const std::string &world_frame,
                        const double timeout = 0.1,
-                       const double tf_keep_alive_for = 0.0) :
+                       const double tolerance = 0.0) :
         odom_frame_(odom_frame),
         base_frame_(base_frame),
         world_frame_(world_frame),
@@ -57,12 +63,12 @@ public:
         stop_(false),
         w_T_o_( tf::Transform(tf::createIdentityQuaternion(),
                               tf::Vector3(0,0,0)),
-                ros::Time::now(),
+                ros::Time(0),
                 world_frame_, odom_frame_),
-        w_T_b_(cslibs_math_2d::Transform2d::identity(), cslibs_time::Time(ros::Time::now().toNSec())),
-        tf_dirty_(false),
-        tf_rate_(rate),
-        tf_keep_alive_for_(tf_keep_alive_for)
+        w_T_b_(cslibs_math_2d::Transform2d::identity(), cslibs_time::Time(0ul).time()),
+        tf_tolerance_(tolerance),
+        tf_last_update_(0),
+        tf_time_period_(rate > 0.0 ? rate : 0.0)
     {
     }
 
@@ -91,101 +97,97 @@ public:
 
     inline void setTransform(const stamped_t &w_t_b)
     {
-        std::unique_lock<std::mutex> l(tf_mutex_);
-        if(w_t_b.stamp() > w_T_b_.stamp()) {
-            w_T_b_ = w_t_b;
-            tf_dirty_ = true;
-        }
+        poses_.emplace(w_t_b);
+        notify_event_.notify_one();
     }
     inline void renewTimeStamp(const time_t &stamp)
     {
-        std::unique_lock<std::mutex> l(tf_mutex_);
-        if(stamp > w_T_b_.stamp()) {
-            w_T_b_.stamp() = stamp;
-            tf_renew_time_ = true;
-        }
+        lock_t l(tf_renew_time_stamp_mutex_);
+        tf_renew_time_stamp_ = stamp;
+        tf_renew_time_ = true;
+        notify_event_.notify_one();
     }
-
-    inline void resetTransform()
-    {
-        std::unique_lock<std::mutex> l(tf_mutex_);
-        tf_last_update_time_ = cslibs_time::Time(0ul);
-    }
-
 
 private:
-    const std::string        odom_frame_;
-    const std::string        base_frame_;
-    const std::string        world_frame_;
-    const ros::Duration      timeout_;
+    const std::string                   odom_frame_;
+    const std::string                   base_frame_;
+    const std::string                   world_frame_;
+    const ros::Duration                 timeout_;
 
-    std::atomic_bool         running_;
-    std::atomic_bool         stop_;
-    std::thread              worker_thread_;
-    std::mutex               tf_mutex_;
+    std::atomic_bool                    running_;
+    std::atomic_bool                    stop_;
+    std::thread                         worker_thread_;
+    condition_variable_t                notify_event_;
+    mutex_t                             notify_event_mutex_;
 
-    tf::TransformBroadcaster tf_broadcaster_;
-    cslibs_math_ros::tf::TFListener2d tf_listener_;
+    tf::TransformBroadcaster            tf_broadcaster_;
+    cslibs_math_ros::tf::TFListener2d   tf_listener_;
 
-    tf::StampedTransform     w_T_o_;
-    ros::Time                time_w_T_o_;
-    stamped_t                w_T_b_;
-    std::atomic_bool         tf_dirty_;
-    std::atomic_bool         tf_renew_time_;
-    cslibs_time::Rate        tf_rate_;
-    cslibs_time::Time        tf_last_update_time_;
-    cslibs_time::Duration    tf_keep_alive_for_;
-    cslibs_time::Time        tf_keep_alive_until_;
+    tf::StampedTransform                w_T_o_;
+    stamped_t                           w_T_b_;
+
+    queue_t                             poses_;
+
+    std::atomic_bool                    tf_renew_time_;
+    mutex_t                             tf_renew_time_stamp_mutex_;
+    cslibs_time::Time                   tf_renew_time_stamp_;
+    cslibs_time::Time                   tf_time_w_T_o_;
+    ros::Duration                       tf_tolerance_;
+    ros::Time                           tf_last_update_;
+    ros::Duration                       tf_time_period_;
 
     inline void loop()
     {
-        auto get_updated_tf = [this] () {
-            std::unique_lock<std::mutex> l(tf_mutex_);
-            stamped_t w_t_b = w_T_b_;
-            l.unlock();
-
+        auto update_tf = [this] (const stamped_t &w_t_b) {
             cslibs_math_2d::Transform2d b_T_o = cslibs_math_2d::Transform2d::identity();
-            const ros::Time time = ros::Time(w_t_b.stamp().seconds());
+            const ros::Time time = ros::Time(cslibs_math::utility::tiny_time::seconds(w_t_b.stamp()));
             if(tf_listener_.lookupTransform(base_frame_, odom_frame_, time, b_T_o, timeout_)) {
                 cslibs_math_2d::Transform2d w_T_o = w_t_b.data() * b_T_o;
                 w_T_o_ = tf::StampedTransform( cslibs_math_ros::tf::conversion_2d::from(w_T_o), time, world_frame_, odom_frame_);
-                time_w_T_o_ = time;
+                tf_time_w_T_o_ = cslibs_time::Time(w_t_b.stamp());
                 return true;
             }
             return false;
         };
 
         auto renew_time_tf = [this] () {
-            std::unique_lock<std::mutex> l(tf_mutex_);
-            time_w_T_o_ = ros::Time(w_T_b_.stamp().seconds());
+            tf_time_w_T_o_ = tf_renew_time_stamp_;
+            tf_renew_time_ = false;
         };
 
-#pragma message "Update to event-based publishing using a condition variable"
+        auto may_publish = [this] (const ros::Time &t)
+        {
+            return tf_time_period_.isZero() ||
+                    t >= tf_last_update_ + tf_time_period_;
+        };
+
 
         running_ = true;
+
+
+        lock_t notify_event_mutex_lock(notify_event_mutex_);
         while(!stop_) {
-            const cslibs_time::Time now = cslibs_time::Time::now();
-            if(tf_dirty_) {
-                if(get_updated_tf()) {
-                    tf_last_update_time_ = now;
-                    tf_keep_alive_until_ = now + tf_keep_alive_for_;
-                    tf_dirty_     = false;
-                    tf_renew_time_ = false;
+            notify_event_.wait(notify_event_mutex_lock);
+            ros::Time now = ros::Time::now();
+
+            while(!poses_.empty()) {
+                const stamped_t w_T_b = poses_.pop();
+                if(w_T_b.stamp() > tf_time_w_T_o_.time() && may_publish(now)) {
+                    update_tf(w_T_b);
+                    w_T_o_.stamp_ = ros::Time(tf_time_w_T_o_.seconds()) + tf_tolerance_;
+                    tf_broadcaster_.sendTransform(w_T_o_);
+                    tf_last_update_ = now;
                 }
-            } else if(tf_renew_time_) {
-                renew_time_tf();
-                tf_last_update_time_ = now;
-                tf_keep_alive_until_ = now + tf_keep_alive_for_;
-                tf_renew_time_ = false;
+            }
+            if(tf_renew_time_) {
+                if(tf_renew_time_stamp_ > tf_time_w_T_o_ && may_publish(now)) {
+                    renew_time_tf();
+                    w_T_o_.stamp_ = ros::Time(tf_time_w_T_o_.seconds()) + tf_tolerance_;
+                    tf_broadcaster_.sendTransform(w_T_o_);
+                    tf_last_update_ = now;
+                }
             }
 
-            if(!tf_last_update_time_.isZero() && now <= tf_keep_alive_until_) {
-                /// get time diff here
-                const ros::Duration dt((now - tf_last_update_time_).seconds());
-                w_T_o_.stamp_ = time_w_T_o_ + dt;
-                tf_broadcaster_.sendTransform(w_T_o_);
-            }
-            tf_rate_.sleep();
         }
         running_ = false;
     }
