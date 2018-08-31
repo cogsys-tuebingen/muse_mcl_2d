@@ -35,6 +35,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
 
 
     const double delta_trans = odometry.getDeltaLinear();
+    const double delta_angular = odometry.getDeltaAngular();
     double delta_rot1 = 0.0;
     double sign_trans = odometry.forward() ? 1.0 : -1.0;
     if(delta_trans >= translation_threshold_) {
@@ -46,7 +47,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
     const double delta_rot2 = cslibs_math::common::angle::difference(odometry.getDeltaAngular(), delta_rot1);
 
     if(delta_trans < eps_zero_linear_ &&
-            std::abs(delta_rot2) < eps_zero_angular_) {
+            std::abs(delta_angular) < eps_zero_angular_) {
         return DifferentialDrive::Result::Ptr(new Result2D(0.0, 0.0, apply, leave));
     }
 
@@ -90,7 +91,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
         const double yaw = cslibs_math::common::angle::normalize(sample.yaw() + delta_rot_hat1 + delta_rot_hat2);
         sample.setFrom(tx,ty,yaw);
     }
-    return DifferentialDrive::Result::Ptr(new Result2D(delta_trans, std::abs(delta_rot2), apply, leave));
+    return DifferentialDrive::Result::Ptr(new Result2D(delta_trans, std::abs(delta_angular), apply, leave));
 }
 
 void DifferentialDrive::doSetup(ros::NodeHandle &nh_private)
