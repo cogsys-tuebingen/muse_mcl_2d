@@ -49,8 +49,7 @@ public:
      * @param base_frame    - the base frame
      * @param world_frame   - the world fram
      */
-    inline TFPublisher(const double rate,
-                       const std::string &odom_frame,
+    inline TFPublisher(const std::string &odom_frame,
                        const std::string &base_frame,
                        const std::string &world_frame,
                        const double timeout = 0.1,
@@ -67,8 +66,7 @@ public:
                 world_frame_, odom_frame_),
         w_T_b_(cslibs_math_2d::Transform2d::identity(), cslibs_time::Time(0ul).time()),
         tf_tolerance_(tolerance),
-        tf_last_update_(0),
-        tf_time_period_(rate > 0.0 ? rate : 0.0)
+        tf_last_update_(0)
     {
     }
 
@@ -134,7 +132,6 @@ private:
     cslibs_time::Time                   tf_time_w_T_o_;
     ros::Duration                       tf_tolerance_;
     ros::Time                           tf_last_update_;
-    ros::Duration                       tf_time_period_;
 
     inline void loop()
     {
@@ -155,16 +152,7 @@ private:
             tf_renew_time_ = false;
         };
 
-        auto may_publish = [this] (const ros::Time &t)
-        {
-            return tf_time_period_.isZero() ||
-                    t >= tf_last_update_ + tf_time_period_;
-        };
-
-
         running_ = true;
-
-
         lock_t notify_event_mutex_lock(notify_event_mutex_);
         while(!stop_) {
             notify_event_.wait(notify_event_mutex_lock);
@@ -172,7 +160,7 @@ private:
 
             while(!poses_.empty()) {
                 const stamped_t w_T_b = poses_.pop();
-                if(w_T_b.stamp() > tf_time_w_T_o_.time() && may_publish(now)) {
+                if(w_T_b.stamp() > tf_time_w_T_o_.time()) {
                     update_tf(w_T_b);
                     w_T_o_.stamp_ = ros::Time(tf_time_w_T_o_.seconds()) + tf_tolerance_;
                     tf_broadcaster_.sendTransform(w_T_o_);
@@ -180,7 +168,7 @@ private:
                 }
             }
             if(tf_renew_time_) {
-                if(tf_renew_time_stamp_ > tf_time_w_T_o_ && may_publish(now)) {
+                if(tf_renew_time_stamp_ > tf_time_w_T_o_) {
                     renew_time_tf();
                     w_T_o_.stamp_ = ros::Time(tf_time_w_T_o_.seconds()) + tf_tolerance_;
                     tf_broadcaster_.sendTransform(w_T_o_);
