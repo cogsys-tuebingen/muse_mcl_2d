@@ -14,6 +14,8 @@ namespace muse_mcl_2d {
 class StatePublisher : public muse_smc::SMCState<StateSpaceDescription2D>
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     using Ptr = std::shared_ptr<StatePublisher>;
     using stamped_t = cslibs_math::utility::Stamped<cslibs_math_2d::Transform2d>;
 
