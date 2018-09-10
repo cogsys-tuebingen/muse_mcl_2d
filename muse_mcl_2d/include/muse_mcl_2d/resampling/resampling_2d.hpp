@@ -33,7 +33,8 @@ public:
         base_t::setup(uniform_pose_sampler,
                       normal_pose_sampler,
                       nh.param(param_name("recovery_alpha_fast"), 0.0),
-                      nh.param(param_name("recovery_alpha_slow"), 0.0));
+                      nh.param(param_name("recovery_alpha_slow"), 0.0),
+                      nh.param(param_name("variance_thresold"), 0.0));
         doSetup(nh);
     }
 

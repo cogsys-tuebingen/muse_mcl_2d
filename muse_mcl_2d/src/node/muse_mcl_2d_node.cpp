@@ -301,6 +301,10 @@ bool MuseMCL2DNode::setup()
 
 void MuseMCL2DNode::checkPoseInitialization()
 {
+    auto get_time = []() {
+        return cslibs_time::Time(ros::Time::now().toNSec());
+    };
+
     if(nh_private_.hasParam("initialization/pose") &&
             nh_private_.hasParam("initialization/covariance")) {
 
@@ -339,11 +343,9 @@ void MuseMCL2DNode::checkPoseInitialization()
         covariance(1,2) = get(1,2,3);
         covariance(2,2) = get(2,2,3);
 
-        auto get_time = []() {
-            return cslibs_time::Time(ros::Time::now().toNSec());
-        };
-
         particle_filter_->requestStateInitialization(pose, covariance, get_time());
+    } else {
+        particle_filter_->requestUniformInitialization(get_time());
     }
 }
 
