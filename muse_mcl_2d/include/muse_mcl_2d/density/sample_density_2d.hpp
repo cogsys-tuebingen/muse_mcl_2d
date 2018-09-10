@@ -20,6 +20,8 @@ class SampleDensity2D : public muse_smc::SampleDensity<Sample2D>,
                         public cslibs_plugins::Plugin
 {
 public:
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     using Ptr          = std::shared_ptr<SampleDensity2D>;
     using ConstPtr     = std::shared_ptr<SampleDensity2D const>;
     using state_t      = StateSpaceDescription2D::state_t;
