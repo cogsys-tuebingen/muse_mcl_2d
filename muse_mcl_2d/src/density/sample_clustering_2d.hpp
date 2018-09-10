@@ -53,12 +53,16 @@ struct SampleClustering2D {
 
     using allocator_t           = Eigen::aligned_allocator<std::pair<const int, distribution_t>>;
     using distribution_map_t    = std::unordered_map<int,
-    distribution_t,
-    std::hash<int>,
-    std::equal_to<int>,
-    allocator_t>;
+                                                     distribution_t,
+                                                     std::hash<int>,
+                                                     std::equal_to<int>,
+                                                     Eigen::aligned_allocator<std::pair<const int, distribution_t>>>;
     using cluster_map_t         = std::unordered_map<int, sample_ptr_vector_t>;
-    using angular_mean_map_t    = std::unordered_map<int, angular_mean_t>;
+    using angular_mean_map_t    = std::unordered_map<int,
+                                                     angular_mean_t,
+                                                     std::hash<int>,
+                                                     std::equal_to<int>,
+                                                     Eigen::aligned_allocator<std::pair<const int, angular_mean_t>>>;
 
     /// required definitions -->
     using neighborhood_t        = ClusterNeighbourhood2D;
