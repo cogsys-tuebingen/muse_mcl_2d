@@ -132,8 +132,7 @@ protected:
     Map2D::ConstPtr                 primary_map_;
     MapProvider2D::Ptr              primary_map_provider_;
     std::vector<Map2D::ConstPtr>    secondary_maps_;
-    std::vector<cslibs_math_2d::Transform2d>  secondary_maps_T_w_;
-
+    std::vector<cslibs_math_2d::Transform2d, cslibs_math_2d::Transform2d::allocator_t>  secondary_maps_T_w_;
 
     virtual void doSetup(const std::map<std::string, MapProvider2D::Ptr> &map_providers,
                          ros::NodeHandle &nh) override

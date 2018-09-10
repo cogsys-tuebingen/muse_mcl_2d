@@ -115,10 +115,10 @@ public:
 
 protected:
     int random_seed_;
-    std::vector<Map2D::ConstPtr>    maps_;
-    std::vector<cslibs_math_2d::Transform2d>  maps_T_w_;
-    std::vector<MapProvider2D::Ptr> map_providers_;
-    rng_t::Ptr        rng_;
+    std::vector<Map2D::ConstPtr>                                                       maps_;
+    std::vector<cslibs_math_2d::Transform2d, cslibs_math_2d::Transform2d::allocator_t> maps_T_w_;
+    std::vector<MapProvider2D::Ptr>                                                    map_providers_;
+    rng_t::Ptr                                                                         rng_;
 
     virtual void doSetup(const std::map<std::string, MapProvider2D::Ptr> &map_providers,
                          ros::NodeHandle &nh) override
