@@ -8,9 +8,9 @@
 #include <cslibs_math_ros/tf/conversion_2d.hpp>
 
 namespace muse_mcl_2d {
-using Metric    = muse_smc::state_space_samplers::Metric;
-using Radian    = muse_smc::state_space_samplers::Radian;
-using rng_t     = muse_smc::state_space_samplers::Normal<Metric, Metric, Radian>;
+using Metric = cslibs_math::sampling::Metric;
+using Radian = cslibs_math::sampling::Radian;
+using rng_t  = cslibs_math::sampling::Normal<Metric, Metric, Radian>;
 
 class Normal2D : public NormalSampling2D
 {
