@@ -16,7 +16,7 @@ using point_t        = cslibs_plugins_data::types::Laserscan::point_t;
 using distribution_t = cslibs_math::statistics::Distribution<2>;
 using index_t        = std::array<int, 2>;
 
-struct Data {
+struct EIGEN_ALIGN16 Data {
   std::vector<size_t> indices;
   distribution_t      distribution;
 

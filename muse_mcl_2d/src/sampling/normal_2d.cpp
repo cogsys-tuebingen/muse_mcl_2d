@@ -12,7 +12,7 @@ using Metric = cslibs_math::sampling::Metric;
 using Radian = cslibs_math::sampling::Radian;
 using rng_t  = cslibs_math::sampling::Normal<Metric, Metric, Radian>;
 
-class Normal2D : public NormalSampling2D
+class EIGEN_ALIGN16 Normal2D : public NormalSampling2D
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

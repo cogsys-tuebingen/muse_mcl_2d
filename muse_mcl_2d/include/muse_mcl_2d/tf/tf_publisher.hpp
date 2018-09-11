@@ -31,7 +31,7 @@ namespace muse_mcl_2d {
  *        world frame.
  *
  */
-class TFPublisher {
+class EIGEN_ALIGN16 TFPublisher {
 public:
     using Ptr = std::shared_ptr<TFPublisher>;
     using stamped_t = cslibs_math::utility::Stamped<cslibs_math_2d::Transform2d>;
@@ -41,6 +41,7 @@ public:
     using lock_t  = std::unique_lock<mutex_t>;
     using condition_variable_t  = std::condition_variable;
 
+    EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     /**
      * @brief TransformPublisherAnchored constructor.

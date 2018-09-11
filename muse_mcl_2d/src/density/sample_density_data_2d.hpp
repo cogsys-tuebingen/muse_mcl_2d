@@ -9,7 +9,8 @@
 #include <vector>
 
 namespace muse_mcl_2d {
-struct SampleDensityData2D {
+struct EIGEN_ALIGN16 SampleDensityData2D {
+
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     using allocator_t = Eigen::aligned_allocator<SampleDensityData2D>;

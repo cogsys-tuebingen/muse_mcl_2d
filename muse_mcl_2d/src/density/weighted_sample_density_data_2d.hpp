@@ -9,8 +9,10 @@
 #include <vector>
 
 namespace muse_mcl_2d {
-struct WeightedSampleDensityData2D {
+struct EIGEN_ALIGN16 WeightedSampleDensityData2D {
+
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
     using allocator_t = Eigen::aligned_allocator<WeightedSampleDensityData2D>;
 
     using sample_ptr_vector_t = std::vector<const Sample2D *>;

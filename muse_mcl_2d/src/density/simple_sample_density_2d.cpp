@@ -15,7 +15,7 @@
 namespace cis = cslibs_indexed_storage;
 
 namespace muse_mcl_2d {
-class SimpleSampleDensity2D : public muse_mcl_2d::SampleDensity2D
+class EIGEN_ALIGN16 SimpleSampleDensity2D : public muse_mcl_2d::SampleDensity2D
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

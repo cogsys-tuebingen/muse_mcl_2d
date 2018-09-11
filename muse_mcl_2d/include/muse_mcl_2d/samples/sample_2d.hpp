@@ -8,7 +8,7 @@
 #include <cslibs_math_2d/linear/covariance.hpp>
 
 namespace muse_mcl_2d {
-struct Sample2D {
+struct EIGEN_ALIGN16 Sample2D {
 public:
 
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

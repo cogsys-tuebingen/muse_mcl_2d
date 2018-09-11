@@ -12,7 +12,7 @@ using Metric = cslibs_math::sampling::Metric;
 using Radian = cslibs_math::sampling::Radian;
 using rng_t  = cslibs_math::sampling::Uniform<Metric, Metric, Radian>;
 
-class UniformAllMaps2D : public UniformSampling2D
+class EIGEN_ALIGN16 UniformAllMaps2D : public UniformSampling2D
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

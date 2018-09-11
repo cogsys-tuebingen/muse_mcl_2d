@@ -18,7 +18,7 @@ namespace muse_mcl_2d {
  * @brief The MCSampleDensity2D class is an extension to the simple density estimation using the last
  *        mean for the upcoming next iteration.
  */
-class MCSampleDensity2D : public muse_mcl_2d::SampleDensity2D
+class EIGEN_ALIGN16 MCSampleDensity2D : public muse_mcl_2d::SampleDensity2D
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

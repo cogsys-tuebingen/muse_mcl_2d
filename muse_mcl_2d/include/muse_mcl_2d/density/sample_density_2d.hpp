@@ -16,8 +16,8 @@
 #include <cslibs_plugins/plugin.hpp>
 
 namespace muse_mcl_2d {
-class SampleDensity2D : public muse_smc::SampleDensity<Sample2D>,
-                        public cslibs_plugins::Plugin
+class EIGEN_ALIGN16 SampleDensity2D : public muse_smc::SampleDensity<Sample2D>,
+                                      public cslibs_plugins::Plugin
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

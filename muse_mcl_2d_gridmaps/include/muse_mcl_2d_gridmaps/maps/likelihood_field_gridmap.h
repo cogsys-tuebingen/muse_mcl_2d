@@ -3,7 +3,6 @@
 #include <muse_mcl_2d/map/map_2d.hpp>
 
 #include <cslibs_time/stamped.hpp>
-#include <cslibs_math/common/framed.hpp>
 #include <cslibs_gridmaps/static_maps/likelihood_field_gridmap.h>
 
 namespace muse_mcl_2d_gridmaps {
