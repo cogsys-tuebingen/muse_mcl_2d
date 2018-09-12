@@ -2,7 +2,6 @@
 
 #include <cslibs_ndt_3d/serialization/dynamic_maps/gridmap.hpp>
 #include <pcl_conversions/pcl_conversions.h>
-#include <cslibs_ndt_3d/conversion/pointcloud.hpp>
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 

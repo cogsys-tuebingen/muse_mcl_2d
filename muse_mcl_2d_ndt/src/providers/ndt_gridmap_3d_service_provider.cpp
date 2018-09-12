@@ -1,8 +1,6 @@
 #include <muse_mcl_2d_ndt/providers/ndt_gridmap_3d_service_provider.h>
 
 #include <cslibs_ndt_3d/serialization/dynamic_maps/gridmap.hpp>
-#include <cslibs_ndt_3d/conversion/pointcloud.hpp>
-#include <pcl_conversions/pcl_conversions.h>
 #include <yaml-cpp/yaml.h>
 #include <fstream>
 #include <nav_msgs/GetMap.h>
