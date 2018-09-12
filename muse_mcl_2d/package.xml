@@ -28,7 +28,6 @@
   <depend>geometry_msgs</depend>
   <depend>message_runtime</depend>
   <depend>std_msgs</depend>
-  <depend>Eigen3</depend>
 
   <export>
     <muse_mcl_2d plugin="${prefix}/plugins.xml" />
