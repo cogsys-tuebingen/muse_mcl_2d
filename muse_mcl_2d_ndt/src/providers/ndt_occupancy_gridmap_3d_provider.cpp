@@ -1,7 +1,6 @@
 #include <muse_mcl_2d_ndt/providers/ndt_occupancy_gridmap_3d_provider.h>
 
 #include <cslibs_ndt_3d/serialization/dynamic_maps/occupancy_gridmap.hpp>
-#include <pcl_conversions/pcl_conversions.h>
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 
