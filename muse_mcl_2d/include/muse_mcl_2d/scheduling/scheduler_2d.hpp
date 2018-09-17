@@ -28,8 +28,8 @@ public:
         return "muse_mcl_2d::Scheduler2D";
     }
 
-    inline virtual void setup(const update_model_map_t &update_models,
-                              ros::NodeHandle &nh) = 0;
+    virtual void setup(const update_model_map_t &update_models,
+                       ros::NodeHandle &nh) = 0;
 
 };
 }
