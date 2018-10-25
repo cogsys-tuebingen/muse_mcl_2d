@@ -60,14 +60,14 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr          &data,
     };
     auto bundle_likelihood = [&gridmap, &to_bundle_index, &likelihood](const cslibs_math_3d::Point3d &p) {
         const auto &bundle = gridmap.getDistributionBundle(to_bundle_index(p));
-        return 0.125 * (likelihood(p, bundle->at(0)->getHandle()->data()) +
-                        likelihood(p, bundle->at(1)->getHandle()->data()) +
-                        likelihood(p, bundle->at(2)->getHandle()->data()) +
-                        likelihood(p, bundle->at(3)->getHandle()->data()) +
-                        likelihood(p, bundle->at(4)->getHandle()->data()) +
-                        likelihood(p, bundle->at(5)->getHandle()->data()) +
-                        likelihood(p, bundle->at(6)->getHandle()->data()) +
-                        likelihood(p, bundle->at(7)->getHandle()->data()));
+        return 0.125 * (likelihood(p, bundle->at(0)->data()) +
+                        likelihood(p, bundle->at(1)->data()) +
+                        likelihood(p, bundle->at(2)->data()) +
+                        likelihood(p, bundle->at(3)->data()) +
+                        likelihood(p, bundle->at(4)->data()) +
+                        likelihood(p, bundle->at(5)->data()) +
+                        likelihood(p, bundle->at(6)->data()) +
+                        likelihood(p, bundle->at(7)->data()));
     };
 
     auto pow3 = [](const double& x) {

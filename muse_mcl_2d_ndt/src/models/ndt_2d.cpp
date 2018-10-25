@@ -3,7 +3,7 @@
 #include <cslibs_plugins_data/types/laserscan.hpp>
 
 #include <cslibs_ndt_2d/dynamic_maps/gridmap.hpp>
-#include <cslibs_ndt_2d/conversion/flatten.hpp>
+#include <cslibs_ndt_2d/conversion/merge.hpp>
 
 #include <muse_mcl_2d_ndt/maps/flat_gridmap_2d.h>
 
@@ -18,7 +18,7 @@ namespace muse_mcl_2d_ndt {
     if (!map->isType<FlatGridmap2D>() || !data->isType<cslibs_plugins_data::types::Laserscan>())
       return;
 
-    const cslibs_ndt_2d::static_maps::flat::Gridmap &gridmap    = *(map->as<FlatGridmap2D>().data());
+    const cslibs_ndt_2d::static_maps::mono::Gridmap &gridmap    = *(map->as<FlatGridmap2D>().data());
     const cslibs_plugins_data::types::Laserscan     &laser_data = data->as<cslibs_plugins_data::types::Laserscan>();
 
     cslibs_math_2d::Transform2d b_T_l, m_T_w;
@@ -45,25 +45,23 @@ namespace muse_mcl_2d_ndt {
       }
     }
 
-    cslibs_ndt_2d::static_maps::flat::Gridmap::Ptr local_flattened_map(cslibs_ndt_2d::conversion::flatten(local_gridmap));
+    cslibs_ndt_2d::static_maps::mono::Gridmap::Ptr local_flattened_map(cslibs_ndt_2d::conversion::merge(local_gridmap));
 
     for(auto it = set.begin() ; it != set.end() ; ++it) {
-      auto update = [&it, &gridmap, &m_T_w, &b_T_l, this](const cslibs_ndt_2d::static_maps::flat::Gridmap::index_t&,
-          const cslibs_ndt_2d::static_maps::flat::Gridmap::distribution_t &data)
+      auto update = [&it, &gridmap, &m_T_w, &b_T_l, this](const cslibs_ndt_2d::static_maps::mono::Gridmap::index_t&,
+          const cslibs_ndt_2d::static_maps::mono::Gridmap::distribution_t &data)
       {
         const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l;
         const Eigen::Matrix2d rot = m_T_l.getEigenRotation();
         const Eigen::Matrix2d rot_t = rot.transpose();
         double p = 1.0;
 
-        const cslibs_ndt_2d::static_maps::flat::Gridmap::distribution_t::const_handle_t dhl = data.getHandle();
-        const cslibs_math::statistics::Distribution<2, 3> &dl = dhl->data();
+        const cslibs_math::statistics::Distribution<2, 3> &dl = data.data();
         if(dl.getN() >= 3) {
           const Eigen::Vector2d m = (m_T_l * cslibs_math_2d::Point2d(dl.getMean())).data();
-          const cslibs_ndt_2d::static_maps::flat::Gridmap::distribution_t *db = gridmap.get(cslibs_math_2d::Point2d(m));
+          const cslibs_ndt_2d::static_maps::mono::Gridmap::distribution_t *db = gridmap.get(cslibs_math_2d::Point2d(m));
           if(db) {
-            const cslibs_ndt_2d::static_maps::flat::Gridmap::distribution_t::const_handle_t dh = db->getHandle();
-            const cslibs_math::statistics::Distribution<2, 3> &d = dh->data();
+            const cslibs_math::statistics::Distribution<2, 3> &d = db->data();
 
             if(d.getN() >= 3) {
               const Eigen::Matrix2d c =  rot * dl.getCovariance() * rot_t;

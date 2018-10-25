@@ -1,7 +1,7 @@
 #include "ndt_flat_gridmap_2d_provider.h"
 
 #include <cslibs_ndt_2d/serialization/dynamic_maps/gridmap.hpp>
-#include <cslibs_ndt_2d/conversion/flatten.hpp>
+#include <cslibs_ndt_2d/conversion/merge.hpp>
 
 #include <fstream>
 #include <yaml-cpp/yaml.h>
@@ -39,7 +39,7 @@ void NDTFlatGridmap2DProvider::loadMap()
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
         cslibs_ndt_2d::dynamic_maps::Gridmap::Ptr map;
         if (cslibs_ndt_2d::dynamic_maps::loadBinary(path_, map)) {
-            map_.reset(new FlatGridmap2D(cslibs_ndt_2d::conversion::flatten(map), frame_id_));
+            map_.reset(new FlatGridmap2D(cslibs_ndt_2d::conversion::merge(map), frame_id_));
 
             ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
         } else

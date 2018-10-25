@@ -54,10 +54,10 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     };
     auto bundle_likelihood = [&gridmap, &to_bundle_index, &likelihood](const cslibs_math_2d::Point2d &p) {
         const auto &bundle = gridmap.getDistributionBundle(to_bundle_index(p));
-        return 0.25 * (likelihood(p, bundle->at(0)->getHandle()->data()) +
-                       likelihood(p, bundle->at(1)->getHandle()->data()) +
-                       likelihood(p, bundle->at(2)->getHandle()->data()) +
-                       likelihood(p, bundle->at(3)->getHandle()->data()));
+        return 0.25 * (likelihood(p, bundle->at(0)->data()) +
+                       likelihood(p, bundle->at(1)->data()) +
+                       likelihood(p, bundle->at(2)->data()) +
+                       likelihood(p, bundle->at(3)->data()));
     };
 
     auto pow3 = [](const double& x) {
