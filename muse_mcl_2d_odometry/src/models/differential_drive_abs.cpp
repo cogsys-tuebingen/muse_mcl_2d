@@ -1,4 +1,4 @@
-#include "differential_drive_abs.h"
+#include <muse_mcl_2d_odometry/models/differential_drive_abs.h>
 
 #include <cslibs_plugins_data/types/odometry_2d.hpp>
 

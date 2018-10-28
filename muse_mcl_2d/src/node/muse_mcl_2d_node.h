@@ -11,8 +11,8 @@
 #include <muse_mcl_2d/map/map_provider_2d.hpp>
 #include <muse_mcl_2d/update/update_model_2d.hpp>
 #include <muse_mcl_2d/prediction/prediction_model_2d.hpp>
-#include <muse_mcl_2d/sampling/uniform_2d.hpp>
-#include <muse_mcl_2d/sampling/normal_2d.hpp>
+#include <muse_mcl_2d/sampling/uniform_sampling_2d.hpp>
+#include <muse_mcl_2d/sampling/normal_sampling_2d.hpp>
 #include <muse_mcl_2d/resampling/resampling_2d.hpp>
 #include <muse_mcl_2d/density/sample_density_2d.hpp>
 #include <muse_mcl_2d/state_space/state_space_description_2d.hpp>

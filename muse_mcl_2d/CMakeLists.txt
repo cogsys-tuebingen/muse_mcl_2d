@@ -46,7 +46,7 @@ generate_messages(
 
 catkin_package(
     INCLUDE_DIRS    include
-    LIBRARIES       ${PROJECT_NAME}_resampling ${PROJECT_NAME}_sampling
+    LIBRARIES       ${PROJECT_NAME}_resampling ${PROJECT_NAME}_sampling ${PROJECT_NAME}_scheduling ${PROJECT_NAME}_density
     CATKIN_DEPENDS  muse_smc cslibs_math_ros cslibs_math_2d cslibs_plugins cslibs_plugins_data
 )
 
@@ -82,7 +82,7 @@ target_link_libraries(${PROJECT_NAME}_resampling
 )
 
 add_library(${PROJECT_NAME}_sampling
-    src/sampling/normal_2d.cpp
+  src/sampling/normal_sampling_2d.cpp
     src/sampling/uniform_primary_map_2d.cpp
     src/sampling/uniform_all_maps_2d.cpp
 )
