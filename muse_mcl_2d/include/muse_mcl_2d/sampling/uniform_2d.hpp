@@ -8,7 +8,7 @@
 #include <muse_mcl_2d/map/map_provider_2d.hpp>
 #include <muse_mcl_2d/map/map_2d.hpp>
 
-#include <cslibs_math_ros/tf/tf_listener_2d.hpp>
+#include <cslibs_math_ros/tf/tf_provider.hpp>
 #include <cslibs_plugins/plugin.hpp>
 
 namespace muse_mcl_2d {
@@ -27,7 +27,7 @@ public:
     virtual ~UniformSampling2D() = default;
 
     inline void setup(const std::map<std::string, MapProvider2D::Ptr> &map_providers,
-                      const cslibs_math_ros::tf::TFListener2d::Ptr &tf,
+                      const cslibs_math_ros::tf::TFProvider::Ptr &tf,
                       ros::NodeHandle &nh)
     {
         auto param_name   = [this](const std::string &name){return name_ + "/" + name;};
@@ -43,7 +43,7 @@ protected:
     std::size_t                            sample_size_;
     ros::Duration                          sampling_timeout_;
     ros::Duration                          tf_timeout_;
-    cslibs_math_ros::tf::TFListener2d::Ptr tf_;
+    cslibs_math_ros::tf::TFProvider::Ptr   tf_;
 
     virtual void doSetup(const std::map<std::string, MapProvider2D::Ptr> &map_providers,
                          ros::NodeHandle &nh) = 0 ;

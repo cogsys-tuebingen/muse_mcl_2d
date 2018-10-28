@@ -6,10 +6,11 @@
 
 #include <muse_smc/update/update_model.hpp>
 
-#include <cslibs_math_ros/tf/tf_listener_2d.hpp>
+#include <cslibs_math_ros/tf/tf_provider.hpp>
 
 #include <cslibs_plugins/plugin.hpp>
 #include <cslibs_plugins_data/data.hpp>
+#include <ros/node_handle.h>
 
 namespace muse_mcl_2d {
 class UpdateModel2D : public muse_smc::UpdateModel<StateSpaceDescription2D, cslibs_plugins_data::Data>,
@@ -42,7 +43,7 @@ public:
         return cslibs_plugins::Plugin::getName();
     }
 
-    inline void setup(const cslibs_math_ros::tf::TFListener2d::Ptr &tf,
+    inline void setup(const cslibs_math_ros::tf::TFProvider::Ptr &tf,
                       ros::NodeHandle &nh)
     {
         auto param_name = [this](const std::string &name){return name_ + "/" + name;};
@@ -55,7 +56,7 @@ public:
     }
 
 protected:
-    cslibs_math_ros::tf::TFListener2d::Ptr tf_;
+    cslibs_math_ros::tf::TFProvider::Ptr tf_;
     ros::Duration tf_timeout_;
     std::string   world_frame_;
     std::string   robot_base_frame_;

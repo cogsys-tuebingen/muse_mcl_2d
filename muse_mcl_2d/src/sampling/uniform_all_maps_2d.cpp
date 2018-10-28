@@ -39,9 +39,8 @@ public:
             if(!map)
                 throw std::runtime_error("[UniformAllMaps2D] : map was null!");
 
-            tf::Transform tf_map_T_w;
-            if (tf_->lookupTransform(map->getFrame(), frame, now, tf_map_T_w, tf_timeout_)) {
-                cslibs_math_2d::Transform2d map_T_w =  cslibs_math_ros::tf::conversion_2d::from(tf_map_T_w);
+            cslibs_math_2d::Transform2d map_T_w;
+            if (tf_->lookupTransform(map->getFrame(), frame, now, map_T_w, tf_timeout_)) {
                 maps_[i] = map;
                 maps_T_w_[i] = map_T_w;
 

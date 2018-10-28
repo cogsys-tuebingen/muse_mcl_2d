@@ -6,7 +6,7 @@
 #include <muse_mcl_2d/PoseInitialization.h>
 
 #include <muse_mcl_2d/prediction/prediction_integral_2d.hpp>
-#include <cslibs_math_ros/tf/tf_listener_2d.hpp>
+#include <cslibs_math_ros/tf/tf_listener.hpp>
 #include <cslibs_plugins_data/data_provider_2d.hpp>
 #include <muse_mcl_2d/map/map_provider_2d.hpp>
 #include <muse_mcl_2d/update/update_model_2d.hpp>
@@ -74,8 +74,8 @@ private:
     ros::Subscriber             initialization_subscriber_pose_;
 
     //// data providers
-    cslibs_math_ros::tf::TFListener2d::Ptr  tf_provider_frontend_;  /// for data providers and data conversion
-    cslibs_math_ros::tf::TFListener2d::Ptr  tf_provider_backend_;   /// for the backend (the particle filter and the sensor updates)
+    cslibs_math_ros::tf::TFListener::Ptr    tf_provider_frontend_;  /// for data providers and data conversion
+    cslibs_math_ros::tf::TFListener::Ptr    tf_provider_backend_;   /// for the backend (the particle filter and the sensor updates)
     map_provider_map_t                      map_providers_;
     data_provider_map_t                     data_providers_;
 

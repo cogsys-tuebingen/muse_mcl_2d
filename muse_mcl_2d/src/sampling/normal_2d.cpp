@@ -28,16 +28,13 @@ public:
                           std::numeric_limits<double>::lowest());
 
         for (auto &m : map_providers_) {
-            tf::Transform tf_map_T_w;
             cslibs_math_2d::Transform2d map_t_w;
             m->waitForStateSpace();
             Map2D::ConstPtr map = m->getStateSpace();
             if (!map)
                 throw std::runtime_error("[Normal2D] : map was null!");
 
-            if (tf_->lookupTransform(map->getFrame(), frame, now, tf_map_T_w, tf_timeout_)) {
-                map_t_w =  cslibs_math_ros::tf::conversion_2d::from(tf_map_T_w);
-
+            if (tf_->lookupTransform(map->getFrame(), frame, now, map_t_w, tf_timeout_)) {
                 maps_.emplace_back(map);
                 maps_T_w_.emplace_back(map_t_w);
 

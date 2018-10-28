@@ -25,7 +25,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     const cslibs_math_3d::Pointcloud3d::Ptr             &stereo_points = stereo_data.getPoints();
 
     /// stereo to base transform
-    tf::Transform b_T_s, m_T_w;
+    cslibs_math_3d::Transform3d b_T_s, m_T_w;
     if (!tf_->lookupTransform(robot_base_frame_,
                               stereo_data.getFrame(),
                               ros::Time(stereo_data.getTimeFrame().end.seconds()),
@@ -38,8 +38,6 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
                               m_T_w,
                               tf_timeout_))
         return;
-    cslibs_math_3d::Transform3d b_T_s_3d = cslibs_math_ros::tf::conversion_3d::from(b_T_s);
-    cslibs_math_3d::Transform3d m_T_w_3d = cslibs_math_ros::tf::conversion_3d::from(m_T_w);
 
     const std::size_t points_size = stereo_points->size();
     const std::size_t points_step = std::max(1ul, (points_size - 1) / (max_points_ - 1));
@@ -86,7 +84,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     };
     for (auto it = set.begin() ; it != set.end() ; ++it) {
         cslibs_math_3d::Transform3d it_s(it.state().tx(), it.state().ty(), 0, it.state().yaw()); /// stereo camera pose in map coordinates
-        cslibs_math_3d::Transform3d m_T_s = m_T_w_3d * it_s * b_T_s_3d;
+        cslibs_math_3d::Transform3d m_T_s = m_T_w * it_s * b_T_s;
         double p = 1.0;
         for (std::size_t i = 0 ; i < points_size ;  i+= points_step) {
             const auto &point = stereo_points->at(i);

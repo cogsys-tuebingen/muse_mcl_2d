@@ -32,12 +32,9 @@ public:
             return false;
         }
 
-        tf::Transform tf_w_T_primary;
-        if(!tf_->lookupTransform(frame, primary_map_->getFrame(), now, tf_w_T_primary, tf_timeout_)) {
+        if(!tf_->lookupTransform(frame, primary_map_->getFrame(), now, w_T_primary_, tf_timeout_)) {
             return false;
         }
-
-        w_T_primary_ = cslibs_math_ros::tf::conversion_2d::from(tf_w_T_primary);
 
         const std::size_t map_provider_count = map_providers_.size();
         for(std::size_t i = 0 ; i < map_provider_count ; ++i) {
@@ -48,9 +45,9 @@ public:
                 throw std::runtime_error("[UniformPrimaryMap2D] : a secondary map was null!");
             }
 
-            tf::Transform tf_secondary_map_T_w;
-            if(tf_->lookupTransform(map->getFrame(), frame, now, tf_secondary_map_T_w, tf_timeout_)) {
-                secondary_maps_T_w_[i] = cslibs_math_ros::tf::conversion_2d::from(tf_secondary_map_T_w);
+            cslibs_math_2d::Transform2d secondary_map_T_w;
+            if(tf_->lookupTransform(map->getFrame(), frame, now, secondary_map_T_w, tf_timeout_)) {
+                secondary_maps_T_w_[i] = secondary_map_T_w;
                 secondary_maps_[i] = map;
             } else {
                 return false;

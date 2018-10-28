@@ -7,15 +7,15 @@
 #include <atomic>
 #include <condition_variable>
 
+#include <cslibs_math/utility/stamped.hpp>
 #include <cslibs_math_2d/linear/transform.hpp>
-#include <cslibs_math_ros/tf/tf_listener_2d.hpp>
+#include <cslibs_math_ros/tf/tf_listener.hpp>
 #include <cslibs_math_ros/tf/conversion_2d.hpp>
 
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
 
-#include <cslibs_math_ros/tf/tf_listener_2d.hpp>
 #include <cslibs_time/rate.hpp>
 #include <cslibs_utility/synchronized/synchronized_queue.hpp>
 
@@ -120,7 +120,7 @@ private:
     mutex_t                             notify_event_mutex_;
 
     tf::TransformBroadcaster            tf_broadcaster_;
-    cslibs_math_ros::tf::TFListener2d   tf_listener_;
+    cslibs_math_ros::tf::TFListener     tf_listener_;
 
     tf::StampedTransform                w_T_o_;
     stamped_t                           w_T_b_;
