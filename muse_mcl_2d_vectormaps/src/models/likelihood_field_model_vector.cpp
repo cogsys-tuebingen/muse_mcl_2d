@@ -70,7 +70,7 @@ void LikelihoodFieldModelVector::apply(const data_t::ConstPtr          &data,
             if(!ray.valid())
                 continue;
 
-            const cslibs_math_2d::Pose2d ray_end_point = m_T_l * ray.point;
+            const cslibs_math_2d::Pose2d ray_end_point = m_T_l * ray.end_point;
 
             /// <--- vectormap specific
             const double ray_angle = m_T_l.yaw() + ray.angle; // ray angle in map coordinates

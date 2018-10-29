@@ -61,7 +61,7 @@ void LikelihoodFieldModelPCLog::apply(const data_t::ConstPtr       &data,
         double p = 0.0;
         for(std::size_t i = 0 ; i < rays_size ;  i+= ray_step) {
             const auto &ray = laser_rays[i];
-            const cslibs_math_2d::Point2d ray_end_point = m_T_l * ray.point;
+            const cslibs_math_2d::Point2d ray_end_point = m_T_l * ray.end_point;
             const double pz = ray.valid() ? z_hit_ * gridmap.at(ray_end_point) + p_rand : 1.0;
             p += std::log(pz);
         }

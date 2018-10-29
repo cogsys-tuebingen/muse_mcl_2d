@@ -65,7 +65,7 @@ inline void convexHull(const laserscan_t& scan,
     for(std::size_t i = 0 ; i < size ; ++i) {
         const auto &r = rays[i];
         if(valid(r)) {
-            scan_polygon.outer().emplace_back(Point(r.point(), i));
+            scan_polygon.outer().emplace_back(Point(r.end_point(), i));
         }
     }
     boost::geometry::convex_hull(scan_poly, hull_poly);

@@ -28,7 +28,7 @@ struct EIGEN_ALIGN16 Data {
               const ray_t &r) :
     indices(1, ri)
   {
-    distribution += r.point;
+    distribution += r.end_point;
   }
 
   inline void merge (const Data &other)
@@ -48,8 +48,8 @@ struct Indexation {
 
     inline index_t create(const ray_t &r)
     {
-        return {{static_cast<int>(r.point(0) / resolution),
-                 static_cast<int>(r.point(1) / resolution)}};
+        return {{static_cast<int>(r.end_point(0) / resolution),
+                 static_cast<int>(r.end_point(1) / resolution)}};
     }
 };
 
@@ -75,7 +75,7 @@ inline void getRepresentativeRays(const kd_tree_t &histogram,
         std::size_t index = 0;
         const point_t m = point_t(d.distribution.getMean());
         for(const std::size_t i : d.indices) {
-          const double distance = cslibs_math::linear::distance2(rays.at(i).point, m);
+          const double distance = cslibs_math::linear::distance2(rays.at(i).end_point, m);
           if(distance < min_distance) {
               min_distance = distance;
               index = i;

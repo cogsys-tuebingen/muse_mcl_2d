@@ -72,7 +72,7 @@ void LikelihoodFieldProbModelAMCL::apply(const data_t::ConstPtr          &data,
                 if(!ray.valid())
                     continue;
 
-                const cslibs_math_2d::Point2d ray_end_point = m_T_l * ray.point;
+                const cslibs_math_2d::Point2d ray_end_point = m_T_l * ray.end_point;
                 const double distance = gridmap.at(ray_end_point);
                 const double pz = p_hit(distance) + p_rand;
 

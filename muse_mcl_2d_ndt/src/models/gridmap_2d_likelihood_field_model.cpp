@@ -95,7 +95,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
             double p = 1.0;
             for (const std::size_t ri : ray_indices) {
                 const auto &ray = laser_rays[ri];
-                const cslibs_math_2d::Point2d map_point = m_T_l * ray.point;
+                const cslibs_math_2d::Point2d map_point = m_T_l * ray.end_point;
                 p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
             }
             *it *= p;
@@ -107,7 +107,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
             double p = 1.0;
             for (std::size_t i = 0 ; i < rays_size ; i+= ray_step) {
                 const auto &ray = laser_rays[i];
-                const cslibs_math_2d::Point2d map_point = m_T_l * ray.point;
+                const cslibs_math_2d::Point2d map_point = m_T_l * ray.end_point;
                 p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
             }
             *it *= p;

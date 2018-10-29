@@ -73,7 +73,7 @@ void BeamModelMLE::apply(const data_t::ConstPtr          &data,
     auto probability = [this, &gridmap, &p_hit, &p_short, &p_max, &p_random, &range_max]
             (const cslibs_plugins_data::types::Laserscan::Ray &ray, const cslibs_math_2d::Pose2d &m_T_l, double &map_range) {
         const double ray_range = ray.range;
-        auto         ray_end_point = m_T_l * ray.point;
+        auto         ray_end_point = m_T_l * ray.end_point;
         map_range = std::min(range_max, gridmap.getRange(m_T_l.translation(), ray_end_point));
         return p_hit(ray_range, map_range) + p_short(ray_range, map_range) + p_max(ray_range) + p_random(ray_range);
     };
