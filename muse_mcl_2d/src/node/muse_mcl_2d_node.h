@@ -7,7 +7,7 @@
 
 #include <muse_mcl_2d/prediction/prediction_integral_2d.hpp>
 #include <cslibs_math_ros/tf/tf_listener.hpp>
-#include <cslibs_plugins_data/data_provider_2d.hpp>
+#include <cslibs_plugins_data/data_provider.hpp>
 #include <muse_mcl_2d/map/map_provider_2d.hpp>
 #include <muse_mcl_2d/update/update_model_2d.hpp>
 #include <muse_mcl_2d/prediction/prediction_model_2d.hpp>
@@ -53,7 +53,7 @@ public:
 
 private:
     using data_t                 = cslibs_plugins_data::Data;
-    using data_provider_t        = cslibs_plugins_data::DataProvider2D;
+    using data_provider_t        = cslibs_plugins_data::DataProvider;
 
     using map_provider_map_t     = std::map<std::string, MapProvider2D::Ptr>;
     using data_provider_map_t    = std::map<std::string, typename data_provider_t::Ptr>;
@@ -102,7 +102,7 @@ private:
 
     void checkPoseInitialization();
     bool getUpdateModelProviderMapping(update_model_mapping_t &update_mapping);
-    bool getPredictionProvider(cslibs_plugins_data::DataProvider2D::Ptr &prediction_provider);
+    bool getPredictionProvider(cslibs_plugins_data::DataProvider::Ptr &prediction_provider);
 };
 }
 
