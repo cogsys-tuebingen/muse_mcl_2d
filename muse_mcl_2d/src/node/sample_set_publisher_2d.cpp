@@ -1,4 +1,4 @@
-#include "sample_set_publisher_2d.h"
+#include <muse_mcl_2d/node/sample_set_publisher_2d.h>
 
 #include <tf/tf.h>
 #include <geometry_msgs/PoseArray.h>

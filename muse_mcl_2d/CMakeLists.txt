@@ -46,7 +46,7 @@ generate_messages(
 
 catkin_package(
     INCLUDE_DIRS    include
-    LIBRARIES       ${PROJECT_NAME}_resampling ${PROJECT_NAME}_sampling ${PROJECT_NAME}_scheduling ${PROJECT_NAME}_density
+    LIBRARIES       ${PROJECT_NAME}_resampling ${PROJECT_NAME}_sampling ${PROJECT_NAME}_scheduling ${PROJECT_NAME}_density ${PROJECT_NAME}_helper
     CATKIN_DEPENDS  muse_smc cslibs_math_ros cslibs_math_2d cslibs_plugins cslibs_plugins_data
 )
 
@@ -112,15 +112,18 @@ target_link_libraries(${PROJECT_NAME}_scheduling
 )
 
 
-
-
-add_executable(${PROJECT_NAME}_node
-    src/node/muse_mcl_2d_node.cpp
+add_library(${PROJECT_NAME}_helper
     src/node/state_publisher_2d.cpp
     src/node/sample_set_publisher_2d.cpp
 )
+target_link_libraries(${PROJECT_NAME}_helper
+    ${catkin_LIBRARIES}
+)
+add_dependencies(${PROJECT_NAME}_helper ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_executable(${PROJECT_NAME}_node
+    src/node/muse_mcl_2d_node.cpp
+)
 
 target_link_libraries(${PROJECT_NAME}_node
     ${catkin_LIBRARIES}

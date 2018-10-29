@@ -1,4 +1,4 @@
-#include "state_publisher_2d.h"
+#include <muse_mcl_2d/node/state_publisher_2d.h>
 
 #include <muse_mcl_2d/density/sample_density_2d.hpp>
 
