@@ -18,7 +18,7 @@
 #include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 #include <muse_mcl_2d/scheduling/scheduler_2d.hpp>
 
-#include "state_publisher_2d.h"
+#include <muse_mcl_2d/node/state_publisher_2d.h>
 
 #include <muse_smc/smc/smc.hpp>
 #include <muse_smc/update/update_relay.hpp>
