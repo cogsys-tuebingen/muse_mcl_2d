@@ -29,14 +29,14 @@ void BeamModelAMCL::apply(const data_t::ConstPtr          &data,
     cslibs_math_2d::Transform2d b_T_l;
     cslibs_math_2d::Transform2d m_T_w;
     if(!tf_->lookupTransform(robot_base_frame_,
-                             laser_data.getFrame(),
-                             ros::Time(laser_data.getTimeFrame().end.seconds()),
+                             laser_data.frame(),
+                             ros::Time(laser_data.timeFrame().end.seconds()),
                              b_T_l,
                              tf_timeout_))
         return;
     if(!tf_->lookupTransform(world_frame_,
                              map->getFrame(),
-                             ros::Time(laser_data.getTimeFrame().end.seconds()),
+                             ros::Time(laser_data.timeFrame().end.seconds()),
                              m_T_w,
                              tf_timeout_))
         return;
@@ -69,7 +69,8 @@ void BeamModelAMCL::apply(const data_t::ConstPtr          &data,
     {
         const double ray_range = ray.range;
         auto         ray_end_point = m_T_l * ray.end_point;
-        const double map_range = std::min(range_max, gridmap.getRange(m_T_l.translation(), ray_end_point));
+        auto         ray_start_point = m_T_l * ray.start_point;
+        const double map_range = std::min(range_max, gridmap.getRange(ray_start_point, ray_end_point));
         return p_hit(ray_range, map_range) + p_short(ray_range, map_range) + p_max(ray_range) + p_random(ray_range);
     };
 

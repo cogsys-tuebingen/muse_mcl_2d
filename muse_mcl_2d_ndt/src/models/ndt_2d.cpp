@@ -23,14 +23,14 @@ namespace muse_mcl_2d_ndt {
 
     cslibs_math_2d::Transform2d b_T_l, m_T_w;
     if (!tf_->lookupTransform(robot_base_frame_,
-                              laser_data.getFrame(),
-                              ros::Time(laser_data.getTimeFrame().end.seconds()),
+                              laser_data.frame(),
+                              ros::Time(laser_data.timeFrame().end.seconds()),
                               b_T_l,
                               tf_timeout_))
       return;
     if (!tf_->lookupTransform(world_frame_,
                               map->getFrame(),
-                              ros::Time(laser_data.getTimeFrame().end.seconds()),
+                              ros::Time(laser_data.timeFrame().end.seconds()),
                               m_T_w,
                               tf_timeout_))
       return;

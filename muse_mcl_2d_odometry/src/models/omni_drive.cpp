@@ -12,7 +12,7 @@ OmniDrive::Result::Ptr OmniDrive::apply(const cslibs_plugins_data::Data::ConstPt
 {
     cslibs_plugins_data::types::Odometry2D::ConstPtr apply;
     cslibs_plugins_data::types::Odometry2D::ConstPtr leave;
-    if(until < data->getTimeFrame().end) {
+    if(until < data->timeFrame().end) {
         cslibs_plugins_data::types::Odometry2D::ConstPtr original =
             std::dynamic_pointer_cast<cslibs_plugins_data::types::Odometry2D const>(data);
         if(!original->split(until, apply, leave)) {

@@ -27,14 +27,14 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     /// stereo to base transform
     cslibs_math_3d::Transform3d b_T_s, m_T_w;
     if (!tf_->lookupTransform(robot_base_frame_,
-                              stereo_data.getFrame(),
-                              ros::Time(stereo_data.getTimeFrame().end.seconds()),
+                              stereo_data.frame(),
+                              ros::Time(stereo_data.timeFrame().end.seconds()),
                               b_T_s,
                               tf_timeout_))
         return;
     if (!tf_->lookupTransform(world_frame_,
                               map->getFrame(),
-                              ros::Time(stereo_data.getTimeFrame().end.seconds()),
+                              ros::Time(stereo_data.timeFrame().end.seconds()),
                               m_T_w,
                               tf_timeout_))
         return;

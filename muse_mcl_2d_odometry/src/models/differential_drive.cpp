@@ -22,7 +22,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
     cslibs_plugins_data::types::Odometry2D::ConstPtr leave;
 
     const cslibs_time::Time       &s = states.getStamp();
-    const cslibs_time::TimeFrame &tf = data->getTimeFrame();
+    const cslibs_time::TimeFrame &tf = data->timeFrame();
 
     original = s > tf.start ? original->cutFront(s) : original;     /// try to cut of the front
     original = original ? original : apply;                         /// if fails reset to original
