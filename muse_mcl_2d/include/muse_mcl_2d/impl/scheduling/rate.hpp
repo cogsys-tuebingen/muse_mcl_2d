@@ -14,7 +14,7 @@ public:
     using rate_t              = cslibs_time::Rate;
     using update_t            = muse_smc::Update<StateSpaceDescription2D, cslibs_plugins_data::Data>;
     using time_priority_map_t = std::unordered_map<id_t, double>;
-    using resampling_t        = muse_smc::Resampling<StateSpaceDescription2D, cslibs_plugins_data::Data>;
+    using resampling_t        = muse_smc::Resampling<StateSpaceDescription2D>;
     using sample_set_t        = muse_smc::SampleSet<StateSpaceDescription2D>;
     using time_t              = cslibs_time::Time;
     using duration_t          = cslibs_time::Duration;

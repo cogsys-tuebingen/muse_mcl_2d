@@ -6,7 +6,6 @@
 namespace muse_mcl_2d {
 struct StateSpaceDescription2D
 {
-    using sample_allocator_t     = std::allocator<Sample2D>;
     using sample_t               = Sample2D;
     using state_t                = cslibs_math_2d::Pose2d;
     using state_space_boundary_t = cslibs_math_2d::Point2d;

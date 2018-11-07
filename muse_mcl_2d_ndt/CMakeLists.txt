@@ -71,7 +71,7 @@ add_library(${PROJECT_NAME}_models SHARED
   src/models/occupancy_gridmap_2d_likelihood_field_model.cpp
   src/models/gridmap_3d_likelihood_field_model.cpp
   src/models/occupancy_gridmap_3d_likelihood_field_model.cpp
-  src/models/ndt_2d.cpp
+#  src/models/ndt_2d.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}_models

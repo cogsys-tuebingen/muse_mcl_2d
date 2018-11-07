@@ -18,7 +18,6 @@ class Scheduler2D : public muse_smc::Scheduler<StateSpaceDescription2D, cslibs_p
 {
 public:
     using Ptr                 = std::shared_ptr<Scheduler2D>;
-    using base_t              = muse_smc::Resampling<StateSpaceDescription2D, cslibs_plugins_data::Data>;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
     virtual inline ~Scheduler2D() = default;

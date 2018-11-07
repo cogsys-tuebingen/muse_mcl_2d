@@ -59,7 +59,7 @@ public:
     using update_t            = muse_smc::Update<StateSpaceDescription2D, cslibs_plugins_data::Data>;
     using queue_t             = __gnu_pbds::priority_queue<Entry, typename Entry::Greater, __gnu_pbds::rc_binomial_heap_tag>;
     using time_priority_map_t = std::unordered_map<id_t, double>;
-    using resampling_t        = muse_smc::Resampling<StateSpaceDescription2D, cslibs_plugins_data::Data>;
+    using resampling_t        = muse_smc::Resampling<StateSpaceDescription2D>;
     using sample_set_t        = muse_smc::SampleSet<StateSpaceDescription2D>;
     using nice_map_t          = std::unordered_map<id_t, double>;
     using count_map_t          = std::unordered_map<id_t, std::size_t>;
