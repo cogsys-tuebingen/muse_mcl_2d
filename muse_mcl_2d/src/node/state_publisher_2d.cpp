@@ -17,6 +17,7 @@ void StatePublisher::setup(ros::NodeHandle &nh)
 {
     const double tf_timeout     = nh.param<double>("tf_timeout", 0.05);
     const double tf_keep_alive  = nh.param<double>("tf_tolerance", 0.0);
+    const bool   tf_publish     = nh.param<bool>("tf_publish", true);
 
     world_frame_ = nh.param<std::string>("world_frame", "/world");
     odom_frame_  = nh.param<std::string>("odom_frame", "/odom");
@@ -26,8 +27,11 @@ void StatePublisher::setup(ros::NodeHandle &nh)
     sample_publisher_->setup(nh);
     sample_publisher_->start();
 
-    tf_publisher_.reset(new TFPublisher(odom_frame_, base_frame_, world_frame_, tf_timeout, tf_keep_alive));
-    tf_publisher_->start();
+    if (tf_publish)
+    {
+        tf_publisher_.reset(new TFPublisher(odom_frame_, base_frame_, world_frame_, tf_timeout, tf_keep_alive));
+        tf_publisher_->start();
+    }
 }
 
 void StatePublisher::publish(const sample_set_t::ConstPtr &sample_set)
@@ -44,7 +48,8 @@ void StatePublisher::publish(const sample_set_t::ConstPtr &sample_set)
     if(density->maxClusterMean(latest_w_T_b_.data(), latest_w_T_b_covariance_)) {
         latest_w_T_b_.stamp() = sample_set->getStamp().time();
         /// make sure that TF gets published first #most important
-        tf_publisher_->setTransform(latest_w_T_b_);
+        if (tf_publisher_)
+            tf_publisher_->setTransform(latest_w_T_b_);
     }
     /// publish the particle set state
     publishState(sample_set);
@@ -57,7 +62,8 @@ void StatePublisher::publishIntermediate(const sample_set_t::ConstPtr &sample_se
 
 void StatePublisher::publishConstant(const sample_set_t::ConstPtr &sample_set)
 {
-    tf_publisher_->renewTimeStamp(sample_set->getStamp());
+    if (tf_publisher_)
+        tf_publisher_->renewTimeStamp(sample_set->getStamp());
     publishState(sample_set);
 }
 
