@@ -55,6 +55,9 @@
     <class type="muse_mcl_2d::CFS" base_class_type="muse_mcl_2d::Scheduler2D">
     <description>Completely fair scheduling scheme.</description>
     </class>
+    <class type="muse_mcl_2d::CFSRate" base_class_type="muse_mcl_2d::Scheduler2D">
+    <description>Alternative completely fair scheduling scheme.</description>
+    </class>
     <class type="muse_mcl_2d::Rate" base_class_type="muse_mcl_2d::Scheduler2D">
     <description>Scheme which executes update models with no regulation.</description>
     </class>
@@ -64,6 +67,9 @@
     </class>
     <class type="muse_mcl_2d::RateDropStatistic" base_class_type="muse_mcl_2d::Scheduler2D">
     <description>Scheme which executes update models with no regulation with drop statistic.</description>
+    </class>
+    <class type="muse_mcl_2d::Dummy" base_class_type="muse_mcl_2d::Scheduler2D">
+    <description>...</description>
     </class>
 
 </library>

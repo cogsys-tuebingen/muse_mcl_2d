@@ -12,9 +12,9 @@ OccupancyGridmap2dLikelihoodFieldModel::OccupancyGridmap2dLikelihoodFieldModel()
 {
 }
 
-void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
-                                      const state_space_t::ConstPtr       &map,
-                                      sample_set_t::weight_iterator_t     set)
+void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
+                                                   const state_space_t::ConstPtr  &map,
+                                                   sample_set_t::weight_iterator_t set)
 {
     if (!map->isType<OccupancyGridmap2d>() || !data->isType<cslibs_plugins_data::types::Laserscan>() || !inverse_model_)
         return;
@@ -77,8 +77,8 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     const std::size_t rays_size = rays.size();
 
     if (scan_histogram_resolution_ > 0.0) {
-        utilty::kd_tree_t   histogram;
-        utilty::Indexation  index(scan_histogram_resolution_);
+        utility_ray::kd_tree_t   histogram;
+        utility_ray::Indexation  index(scan_histogram_resolution_);
         const std::size_t size = rays.size();
         const double range_min = laser_data.getLinearMin();
         const double range_max = laser_data.getLinearMax();
@@ -94,11 +94,11 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
         for (std::size_t i = 0 ; i < size ; ++i) {
            const auto &r = rays[i];
            if (valid(r))
-              histogram.insert(index.create(r), utilty::Data(i, r));
+              histogram.insert(index.create(r), utility_ray::Data(i, r));
         }
 
         std::vector<std::size_t> ray_indices;
-        utilty::getRepresentativeRays(histogram, rays, ray_indices);
+        utility_ray::getRepresentativeRays(histogram, rays, ray_indices);
 
         for (auto it = set.begin() ; it != set.end() ; ++it) {
             const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates

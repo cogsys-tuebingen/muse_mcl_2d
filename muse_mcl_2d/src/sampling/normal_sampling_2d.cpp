@@ -6,6 +6,7 @@ namespace muse_mcl_2d {
 
 bool Normal2D::update(const std::string& frame)
 {
+    maps_.clear();
     const ros::Time now = ros::Time::now();
 
     cslibs_math_2d::Point2d min(std::numeric_limits<double>::max(),

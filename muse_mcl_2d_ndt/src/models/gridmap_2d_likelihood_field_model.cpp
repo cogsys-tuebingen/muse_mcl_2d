@@ -12,14 +12,14 @@ Gridmap2dLikelihoodFieldModel::Gridmap2dLikelihoodFieldModel()
 {
 }
 
-void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
-                             const state_space_t::ConstPtr       &map,
-                             sample_set_t::weight_iterator_t     set)
+void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
+                                          const state_space_t::ConstPtr  &map,
+                                          sample_set_t::weight_iterator_t set)
 {
     if (!map->isType<Gridmap2d>() || !data->isType<cslibs_plugins_data::types::Laserscan>())
         return;
 
-    const cslibs_ndt_2d::dynamic_maps::Gridmap   &gridmap    = *(map->as<Gridmap2d>().data());
+    const cslibs_ndt_2d::dynamic_maps::Gridmap          &gridmap    = *(map->as<Gridmap2d>().data());
     const cslibs_plugins_data::types::Laserscan         &laser_data = data->as<cslibs_plugins_data::types::Laserscan>();
     const cslibs_plugins_data::types::Laserscan::rays_t &laser_rays = laser_data.getRays();
 
@@ -77,18 +77,18 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr &data,
     };
 
     if (scan_histogram_resolution_ > 0.0) {
-        utilty::kd_tree_t   histogram;
-        utilty::Indexation  index(scan_histogram_resolution_);
+        utility_ray::kd_tree_t  histogram;
+        utility_ray::Indexation index(scan_histogram_resolution_);
 
         const std::size_t size = rays.size();
         for (std::size_t i = 0 ; i < size ; ++i) {
            const auto &r = rays[i];
            if (valid(r))
-              histogram.insert(index.create(r), utilty::Data(i, r));
+              histogram.insert(index.create(r), utility_ray::Data(i, r));
         }
 
         std::vector<std::size_t> ray_indices;
-        utilty::getRepresentativeRays(histogram, rays, ray_indices);
+        utility_ray::getRepresentativeRays(histogram, rays, ray_indices);
 
         for (auto it = set.begin() ; it != set.end() ; ++it) {
             const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
