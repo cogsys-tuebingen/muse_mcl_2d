@@ -19,7 +19,7 @@ protected:
     double      d1_;
     double      d2_;
     double      occupied_threshold_;
-    double      scan_histogram_resolution_;
+    double      histogram_resolution_;
     cslibs_gridmaps::utility::InverseModel::Ptr inverse_model_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;

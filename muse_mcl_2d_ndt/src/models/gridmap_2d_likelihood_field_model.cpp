@@ -76,9 +76,9 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
             && r.range >= range_min && r.range <= range_max;
     };
 
-    if (scan_histogram_resolution_ > 0.0) {
+    if (histogram_resolution_ > 0.0) {
         utility_ray::kd_tree_t  histogram;
-        utility_ray::Indexation index(scan_histogram_resolution_);
+        utility_ray::Indexation index(histogram_resolution_);
 
         const std::size_t size = rays.size();
         for (std::size_t i = 0 ; i < size ; ++i) {
@@ -119,9 +119,9 @@ void Gridmap2dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
 {
     auto param_name = [this](const std::string &name){return name_ + "/" + name;};
 
-    max_points_                 = nh.param(param_name("max_points"), 100);
-    d1_                         = nh.param(param_name("d1"), 0.95);
-    d2_                         = nh.param(param_name("d2"), 0.05);
-    scan_histogram_resolution_  = nh.param(param_name("scan_histogram_resolution"), 0.0);
+    max_points_            = nh.param(param_name("max_points"), 100);
+    d1_                    = nh.param(param_name("d1"), 0.95);
+    d2_                    = nh.param(param_name("d2"), 0.05);
+    histogram_resolution_  = nh.param(param_name("histogram_resolution"), 0.0);
 }
 }

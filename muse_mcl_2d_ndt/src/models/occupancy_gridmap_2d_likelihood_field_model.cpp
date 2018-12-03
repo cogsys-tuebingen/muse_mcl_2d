@@ -76,9 +76,9 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr       
     const cslibs_plugins_data::types::Laserscan::rays_t &rays = laser_data.getRays();
     const std::size_t rays_size = rays.size();
 
-    if (scan_histogram_resolution_ > 0.0) {
+    if (histogram_resolution_ > 0.0) {
         utility_ray::kd_tree_t   histogram;
-        utility_ray::Indexation  index(scan_histogram_resolution_);
+        utility_ray::Indexation  index(histogram_resolution_);
         const std::size_t size = rays.size();
         const double range_min = laser_data.getLinearMin();
         const double range_max = laser_data.getLinearMax();
@@ -138,7 +138,7 @@ void OccupancyGridmap2dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
     const double prob_occupied  = nh.param(param_name("prob_occupied"), 0.65);
     inverse_model_.reset(new cslibs_gridmaps::utility::InverseModel(prob_prior, prob_free, prob_occupied));
 
-    scan_histogram_resolution_  = nh.param(param_name("scan_histogram_resolution"), 0.0);
+    histogram_resolution_  = nh.param(param_name("histogram_resolution"), 0.0);
 
 }
 }

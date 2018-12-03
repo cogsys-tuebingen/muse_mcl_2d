@@ -70,9 +70,9 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
         return x*x*x;
     };
 
-    if (scan_histogram_resolution_ > 0.0) {
+    if (histogram_resolution_ > 0.0) {
         utility_pcl::kd_tree_t  histogram;
-        utility_pcl::Indexation index(scan_histogram_resolution_);
+        utility_pcl::Indexation index(histogram_resolution_);
 
         const std::size_t points_size = cloud_points->size();
         for (std::size_t i = 0; i < points_size; ++i) {
@@ -116,9 +116,9 @@ void Gridmap3dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
 {
     auto param_name = [this](const std::string &name){return name_ + "/" + name;};
 
-    max_points_                 = nh.param(param_name("max_points"), 100);
-    d1_                         = nh.param(param_name("d1"), 0.95);
-    d2_                         = nh.param(param_name("d2"), 0.05);
-    scan_histogram_resolution_  = nh.param(param_name("scan_histogram_resolution"), 0.0);
+    max_points_            = nh.param(param_name("max_points"), 100);
+    d1_                    = nh.param(param_name("d1"), 0.95);
+    d2_                    = nh.param(param_name("d2"), 0.05);
+    histogram_resolution_  = nh.param(param_name("histogram_resolution"), 0.0);
 }
 }

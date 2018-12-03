@@ -81,9 +81,9 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
         return x*x*x;
     };
 
-    if (scan_histogram_resolution_ > 0.0) {
+    if (histogram_resolution_ > 0.0) {
         utility_pcl::kd_tree_t  histogram;
-        utility_pcl::Indexation index(scan_histogram_resolution_);
+        utility_pcl::Indexation index(histogram_resolution_);
 
         const std::size_t points_size = cloud_points->size();
         for (std::size_t i = 0; i < points_size; ++i) {
@@ -139,6 +139,6 @@ void OccupancyGridmap3dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
     const double prob_occupied  = nh.param(param_name("prob_occupied"), 0.65);
     inverse_model_.reset(new cslibs_gridmaps::utility::InverseModel(prob_prior, prob_free, prob_occupied));
 
-    scan_histogram_resolution_  = nh.param(param_name("scan_histogram_resolution"), 0.0);
+    histogram_resolution_  = nh.param(param_name("histogram_resolution"), 0.0);
 }
 }

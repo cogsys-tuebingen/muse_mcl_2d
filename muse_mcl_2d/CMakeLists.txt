@@ -106,7 +106,7 @@ add_library(${PROJECT_NAME}_scheduling
     src/scheduling/cfs_drop_statistic.cpp
     src/scheduling/rate_drop_statistic.cpp
     src/scheduling/dummy.cpp
-    src/scheduling/cfs_rate.cpp
+    src/scheduling/cfs_laggy.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}_scheduling

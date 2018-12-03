@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 namespace muse_mcl_2d {
-class CFSRate : public muse_mcl_2d::Scheduler2D
+class CFSLaggy : public muse_mcl_2d::Scheduler2D
 {
 public:
     struct Entry {
@@ -49,7 +49,7 @@ public:
         };
     };
 
-    using Ptr                 = std::shared_ptr<CFSRate>;
+    using Ptr                 = std::shared_ptr<CFSLaggy>;
     using rate_t              = cslibs_time::Rate;
     using update_t            = muse_smc::Update<StateSpaceDescription2D, cslibs_plugins_data::Data>;
     using queue_t             = __gnu_pbds::priority_queue<Entry, typename Entry::Greater, __gnu_pbds::rc_binomial_heap_tag>;
@@ -61,7 +61,7 @@ public:
     using duration_t          = cslibs_time::Duration;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
 
-    CFSRate() :
+    CFSLaggy() :
         may_resample_(false)
     {
     }
@@ -165,4 +165,4 @@ protected:
 };
 }
 
-CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d::CFSRate, muse_mcl_2d::Scheduler2D)
+CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d::CFSLaggy, muse_mcl_2d::Scheduler2D)
