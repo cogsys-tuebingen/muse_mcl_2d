@@ -5,6 +5,7 @@
 
 #include <muse_mcl_2d_vectormaps/static_maps/vectormap.h>
 #include <cslibs_vectormaps/maps/vector_map.h>
+#include <cslibs_vectormaps/maps/oriented_grid_vector_map.h>
 #include <cmath>
 
 #include <class_loader/class_loader_register_macro.h>
@@ -48,7 +49,7 @@ void BeamModelAMCLVector::apply(const data_t::ConstPtr          &data,
     const cslibs_plugins_data::types::Laserscan::rays_t rays = laser_data.getRays();
     const auto end = set.end();
     const std::size_t rays_size = rays.size();
-    const std::size_t ray_step  = std::max(1ul, rays_size / max_beams_);
+    const std::size_t ray_step  = std::max(1ul, (rays_size - 1) / (max_beams_ - 1));
     const double range_max = laser_data.getLinearMax();
     const double p_rand = z_rand_ * 1.0 / range_max;
     auto pow3   = [](const double x) {return x*x*x;};
@@ -56,11 +57,11 @@ void BeamModelAMCLVector::apply(const data_t::ConstPtr          &data,
     /// mixture distribution entries
     auto p_hit = [this](const double ray_range, const double map_range) {
         const double dz = ray_range - map_range;
-        return z_hit_ * std::exp(dz * dz * denominator_exponent_hit_);
+        return z_hit_ * hit_sq_inv_ * std::exp(dz * dz * denominator_exponent_hit_);/// hit_sq_inv added
     };
     auto p_short = [this](const double ray_range, const double map_range) {
-        return ray_range < map_range
-            ? z_short_ * /*(1.0 / (1.0 - std::exp(-lambda_short_ * map_range))) **/ lambda_short_ * std::exp(-lambda_short_ * ray_range)
+        return ray_range <= map_range
+            ? z_short_ * /*(1.0 / (1.0 - std::exp(-lambda_short_ * map_range))) * lambda_short_ **/ std::exp(-lambda_short_ * ray_range) / std::exp(-lambda_short_ * map_range)
             : 0.0;
     };
     auto p_max = [this, range_max](const double ray_range)
@@ -81,7 +82,7 @@ void BeamModelAMCLVector::apply(const data_t::ConstPtr          &data,
         vectormap_ray.second.y(m_T_l.ty() + std::sin(ray_angle) * range_max);
         /// default range calculation
         const double map_range = cslibs_vectormap.intersectScanRay(
-            vectormap_ray, cell, ray_angle, range_max);
+                    vectormap_ray, cell, ray_angle, range_max);
         /// <--- vectormap specific
 
         const double ray_range = ray.range;
@@ -118,6 +119,7 @@ void BeamModelAMCLVector::doSetup(ros::NodeHandle &nh)
     z_rand_       = nh.param(param_name("z_rand"), 0.05);
     sigma_hit_    = nh.param(param_name("sigma_hit"), 0.15);
     denominator_exponent_hit_ = -0.5 * 1.0 / (sigma_hit_ * sigma_hit_);
+    hit_sq_inv_   = 1.0 / (std::sqrt(2.0 * M_PI) * sigma_hit_);
     lambda_short_ = nh.param(param_name("lambda_short"), 0.01);
     chi_outlier_  = nh.param(param_name("chi_outlier"), 0.05);
 }

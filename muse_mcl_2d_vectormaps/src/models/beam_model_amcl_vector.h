@@ -22,6 +22,7 @@ protected:
     double      denominator_exponent_hit_;
     double      lambda_short_;
     double      chi_outlier_;
+    double      hit_sq_inv_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;
 };

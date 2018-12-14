@@ -47,12 +47,12 @@ void LikelihoodFieldModelAMCLVector::apply(const data_t::ConstPtr          &data
     const cslibs_plugins_data::types::Laserscan::rays_t rays = laser_data.getRays();
     const auto end = set.end();
     const std::size_t rays_size = rays.size();
-    const std::size_t ray_step  = std::max(1ul, rays_size / max_beams_);
+    const std::size_t ray_step  = std::max(1ul, (rays_size - 1) / (max_beams_ - 1));
     const double range_max = laser_data.getLinearMax();
     const double p_rand = z_rand_ * 1.0 / range_max;
 
     auto p_hit = [this](const double zz) {
-        return z_hit_ * std::exp(zz * denominator_hit_);
+        return z_hit_ * hit_sq_inv_ *std::exp(zz * denominator_hit_);/// hit_sq_inv added
     };
 
     for(auto it = set.begin(); it != end; ++it) {
@@ -91,6 +91,7 @@ void LikelihoodFieldModelAMCLVector::doSetup(ros::NodeHandle &nh)
     z_hit_     = nh.param(param_name("z_hit"), 0.8);
     z_rand_    = nh.param(param_name("z_rand"), 0.2);
     sigma_hit_ = nh.param(param_name("sigma_hit"), 0.15);
-    denominator_hit_          = -0.5 * 1.0 / (sigma_hit_ * sigma_hit_);
+    denominator_hit_ = -0.5 * 1.0 / (sigma_hit_ * sigma_hit_);
+    hit_sq_inv_   = 1.0 / (std::sqrt(2.0 * M_PI) * sigma_hit_);
 }
 }
