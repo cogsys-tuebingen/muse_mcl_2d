@@ -19,7 +19,6 @@ protected:
     double      sigma_hit_;
     double      denominator_exponent_hit_;
     double      denominator_hit_;
-    double      hit_sq_inv_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;
 };
