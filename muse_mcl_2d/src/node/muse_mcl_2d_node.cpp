@@ -232,8 +232,13 @@ bool MuseMCL2DNode::setup()
         const double resampling_threshold_linear    = nh_private_.param<double>(param_name("resampling_threshold_linear"), 0.1);
         const double resampling_threshold_angular   = cslibs_math::common::angle::toRad(nh_private_.param<double>(param_name("resampling_threshold_angular"), 5.0));
 
+        const double update_threshold_linear    = nh_private_.param<double>(param_name("update_threshold_linear"), 0.0);
+        const double update_threshold_angular   = cslibs_math::common::angle::toRad(nh_private_.param<double>(param_name("update_threshold_angular"), 0.0));
+
         prediction_integrals_.reset(new prediction_integrals_t(PredictionIntegral2D::Ptr(new PredictionIntegral2D(resampling_threshold_linear,
-                                                                                                                  resampling_threshold_angular))));
+                                                                                                                  resampling_threshold_angular,
+                                                                                                                  update_threshold_linear,
+                                                                                                                  update_threshold_angular))));
         for(const auto &u : update_models_) {
             prediction_integrals_->set(PredictionIntegral2D::Ptr(new PredictionIntegral2D),
                                        u.second->getId());
