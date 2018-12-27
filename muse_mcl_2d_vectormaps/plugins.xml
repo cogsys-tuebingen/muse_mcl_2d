@@ -2,6 +2,9 @@
    <class type="muse_mcl_2d_vectormaps::VectorMapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
      <description>Provides vector map given a vector map filename.</description>
    </class>
+   <class type="muse_mcl_2d_vectormaps::OrientedGridVectorMapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
+     <description>Provides vector map given a vector map filename.</description>
+   </class>
 
    <class type="muse_mcl_2d_vectormaps::BeamModelVector" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description>Vector beam model update function.</description>
@@ -13,6 +16,12 @@
      <description>AMCL vector beam model update function.</description>
    </class>
    <class type="muse_mcl_2d_vectormaps::LikelihoodFieldModelAMCLVector" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>AMCL vector likelihoodfield model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_vectormaps::BeamModelAMCLOrientedGridVector" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>AMCL vector beam model update function.</description>
+   </class>
+   <class type="muse_mcl_2d_vectormaps::LikelihoodFieldModelAMCLOrientedGridVector" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description>AMCL vector likelihoodfield model update function.</description>
    </class>
 </library>
