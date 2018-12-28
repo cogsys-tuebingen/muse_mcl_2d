@@ -2,6 +2,8 @@
 #define BEAM_MODEL_AMCL_ORIENTED_GRID_VECTOR_H
 
 #include <muse_mcl_2d/update/update_model_2d.hpp>
+#include <visualization_msgs/MarkerArray.h>
+#include <ros/ros.h>
 
 namespace muse_mcl_2d_vectormaps {
 class BeamModelAMCLOrientedGridVector : public muse_mcl_2d::UpdateModel2D {
@@ -23,6 +25,8 @@ protected:
     double      denominator_exponent_hit_;
     double      lambda_short_;
     double      chi_outlier_;
+
+    ros::Publisher pub_lines_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;
 };

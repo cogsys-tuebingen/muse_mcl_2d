@@ -42,10 +42,11 @@ bool UniformAllMaps2D::update(const std::string& frame)
         }
     }
 
-    rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}));
-    if (random_seed_ >= 0)
-        rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}, 0));
-
+    if(!rng_) {
+        rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}));
+        if (random_seed_ >= 0)
+            rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}, 0));
+    }
     return true;
 }
 

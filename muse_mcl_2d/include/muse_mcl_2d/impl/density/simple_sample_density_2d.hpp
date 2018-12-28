@@ -10,11 +10,32 @@
 
 #include <cslibs_indexed_storage/storage.hpp>
 #include <cslibs_indexed_storage/backend/kdtree/kdtree_buffered.hpp>
+#include <cslibs_indexed_storage/backend/simple/unordered_map.hpp>
+#include <cslibs_indexed_storage/backend/simple/unordered_component_map.hpp>
 
 #include <cslibs_math/statistics/distribution.hpp>
 #include <cslibs_math/statistics/angular_mean.hpp>
 
 namespace cis = cslibs_indexed_storage;
+
+namespace std
+{
+//! needed for simple::UnorderedMap
+template<>
+struct hash<std::array<int, 3>>
+{
+    typedef std::array<int, 3> argument_type;
+    typedef std::size_t result_type;
+    result_type operator()(argument_type const& s) const
+    {
+        result_type const h1 ( std::hash<int>{}(s[0]) );
+        result_type const h2 ( std::hash<int>{}(s[1]) );
+        result_type const h3 ( std::hash<int>{}(s[2]) );
+
+        return h1 ^ (h2 << 1) | h3;
+    }
+};
+}
 
 namespace muse_mcl_2d {
 class EIGEN_ALIGN16 SimpleSampleDensity2D : public muse_mcl_2d::SampleDensity2D

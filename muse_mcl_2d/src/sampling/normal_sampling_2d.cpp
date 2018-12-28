@@ -67,6 +67,9 @@ bool Normal2D::apply(const cslibs_math_2d::Pose2d& pose, const cslibs_math_2d::C
         }
         insertion.insert(sample);
     }
+
+    ++random_seed_;
+
     return true;
 }
 
