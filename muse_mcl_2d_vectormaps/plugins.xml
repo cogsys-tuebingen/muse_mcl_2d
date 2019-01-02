@@ -21,6 +21,9 @@
    <class type="muse_mcl_2d_vectormaps::BeamModelAMCLOrientedGridVector" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description>AMCL vector beam model update function.</description>
    </class>
+   <class type="muse_mcl_2d_vectormaps::BeamModelAMCLOrientedGridParallel" base_class_type="muse_mcl_2d::UpdateModel2D">
+     <description>AMCL vector beam model update function.</description>
+   </class>
    <class type="muse_mcl_2d_vectormaps::LikelihoodFieldModelAMCLOrientedGridVector" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description>AMCL vector likelihoodfield model update function.</description>
    </class>
