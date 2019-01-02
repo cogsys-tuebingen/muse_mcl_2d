@@ -58,7 +58,7 @@ namespace muse_mcl_2d_vectormaps {
         /// mixture distribution entries
         auto p_hit = [this](const double ray_range, const double map_range) {
             const double dz = ray_range - map_range;
-            return z_hit_ * denominator_hit_ * std::exp(dz * dz * denominator_exponent_hit_);/// hit_sq_inv added
+            return z_hit_  * std::exp(dz * dz * denominator_exponent_hit_);/// hit_sq_inv added
         };
         auto p_short = [this](const double ray_range, const double map_range) {
             return ray_range <= map_range
@@ -136,8 +136,6 @@ namespace muse_mcl_2d_vectormaps {
             mean.add(m_T_l.translation().data());
 
         }
-
-        ROS_ERROR_STREAM(min_angle << " " << max_angle);
 
         cslibs_vectormaps::VectorMap::Vectors vs;
         cslibs_vectormap.retrieve(cslibs_vectormaps::VectorMap::Point(mean.get()(0), mean.get()(1)),
