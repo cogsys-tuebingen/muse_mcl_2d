@@ -229,18 +229,22 @@ bool MuseMCL2DNode::setup()
 
         auto param_name = [](const std::string &param){return "particle_filter/" + param;};
 
-        const double resampling_threshold_linear    = nh_private_.param<double>(param_name("resampling_threshold_linear"), 0.1);
-        const double resampling_threshold_angular   = cslibs_math::common::angle::toRad(nh_private_.param<double>(param_name("resampling_threshold_angular"), 5.0));
+        const double resampling_threshold_linear      = nh_private_.param<double>(param_name("resampling_threshold_linear"), 0.1);
+        const double resampling_threshold_angular     = cslibs_math::common::angle::toRad(nh_private_.param<double>(param_name("resampling_threshold_angular"), 5.0));
+        const bool   resampling_threshold_exceed_both = nh_private_.param<bool>(param_name("resampling_threshold_exceed_both"), false);
 
-        const double update_threshold_linear    = nh_private_.param<double>(param_name("update_threshold_linear"), 0.0);
-        const double update_threshold_angular   = cslibs_math::common::angle::toRad(nh_private_.param<double>(param_name("update_threshold_angular"), 0.0));
+        const double update_threshold_linear          = nh_private_.param<double>(param_name("update_threshold_linear"), 0.0);
+        const double update_threshold_angular         = cslibs_math::common::angle::toRad(nh_private_.param<double>(param_name("update_threshold_angular"), 0.0));
+        const bool   update_threshold_exceed_both     = nh_private_.param<bool>(param_name("update_threshold_exceed_both"), false);
+
 
         prediction_integrals_.reset(new prediction_integrals_t(PredictionIntegral2D::Ptr(new PredictionIntegral2D(resampling_threshold_linear,
                                                                                                                   resampling_threshold_angular,
-                                                                                                                  update_threshold_linear,
-                                                                                                                  update_threshold_angular))));
+                                                                                                                  resampling_threshold_exceed_both))));
         for(const auto &u : update_models_) {
-            prediction_integrals_->set(PredictionIntegral2D::Ptr(new PredictionIntegral2D),
+            prediction_integrals_->set(PredictionIntegral2D::Ptr(new PredictionIntegral2D(update_threshold_linear,
+                                                                                          update_threshold_angular,
+                                                                                          update_threshold_exceed_both)),
                                        u.second->getId());
         }
 
@@ -250,6 +254,7 @@ bool MuseMCL2DNode::setup()
         const bool        reset_weights_after_insertion = nh_private_.param<bool>(param_name("reset_weights_after_insertion"), true);
         const bool        reset_weights_to_one          = nh_private_.param<bool>(param_name("reset_weights_to_one"), true);
         const bool        enable_lag_correction         = nh_private_.param<bool>(param_name("enable_lag_correction"), true);
+        const bool        reset_all_integrals_on_update = nh_private_.param<bool>(param_name("reset_all_integrals_on_update"), true);
 
         if(minimum_sample_size == 0) {
             ROS_ERROR_STREAM("Minimum sample size cannot be zero!");
@@ -278,6 +283,7 @@ bool MuseMCL2DNode::setup()
                                 state_publisher_,
                                 prediction_integrals_,
                                 scheduler_,
+                                reset_all_integrals_on_update,
                                 enable_lag_correction);
     }
 
