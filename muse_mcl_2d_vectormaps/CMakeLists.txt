@@ -30,7 +30,9 @@ add_library(${PROJECT_NAME}
     src/models/likelihood_field_model_vector.cpp
     src/models/likelihood_field_model_amcl_vector.cpp
     src/models/likelihood_field_model_amcl_oriented_grid_vector.cpp
+    src/models/beam_model_amcl_oriented_grid_parallel.cpp
 )
+
 target_link_libraries(${PROJECT_NAME}
     ${catkin_LIBRARIES}
 )
