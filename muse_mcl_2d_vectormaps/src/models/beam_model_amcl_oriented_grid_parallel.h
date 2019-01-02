@@ -6,6 +6,9 @@
 #include <cslibs_plugins_data/types/laserscan.hpp>
 #include <muse_mcl_2d_vectormaps/static_maps/oriented_grid_vectormap.h>
 
+#include <cslibs_utility/synchronized/synchronized_queue.hpp>
+
+#include <deque>
 
 namespace muse_mcl_2d_vectormaps {
 class BeamModelAMCLOrientedGridParallel : public muse_mcl_2d::UpdateModel2D {
@@ -32,6 +35,13 @@ protected:
     double      range_max_;
     std::size_t rays_size_;
     std::size_t rays_step_;
+
+    data_t::ConstPtr                                                data_;
+    state_space_t::ConstPtr                                         map_;
+
+    std::array<std::queue<std::pair<cslibs_math_2d::Pose2d const*, std::size_t>>, 4> samples_;
+
+    std::vector<double>                                             results_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;
 

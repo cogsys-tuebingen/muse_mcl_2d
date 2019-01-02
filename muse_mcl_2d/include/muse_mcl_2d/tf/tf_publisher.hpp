@@ -96,7 +96,7 @@ public:
 
     inline void setTransform(const stamped_t &w_t_b)
     {
-        poses_.emplace(w_t_b);
+        poses_.push(w_t_b);
         notify_event_.notify_one();
     }
     inline void renewTimeStamp(const time_t &stamp)

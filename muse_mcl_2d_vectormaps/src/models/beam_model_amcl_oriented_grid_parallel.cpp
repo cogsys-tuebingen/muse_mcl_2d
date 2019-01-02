@@ -5,9 +5,6 @@
 #include <muse_mcl_2d_vectormaps/static_maps/oriented_grid_vectormap.h>
 #include <cslibs_vectormaps/maps/oriented_grid_vector_map.h>
 
-
-#include <cslibs_utility/synchronized/synchronized_queue.hpp>
-
 #include <class_loader/class_loader_register_macro.h>
 
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_vectormaps::BeamModelAMCLOrientedGridParallel, muse_mcl_2d::UpdateModel2D)
@@ -19,18 +16,18 @@ namespace muse_mcl_2d_vectormaps {
 
 
 
-    void BeamModelAMCLOrientedGridParallel::apply(const data_t::ConstPtr &data,
-                                                const state_space_t::ConstPtr      &map,
-                                                sample_set_t::weight_iterator_t     set)
+    void BeamModelAMCLOrientedGridParallel::apply(const data_t::ConstPtr             &data,
+                                                  const state_space_t::ConstPtr      &map,
+                                                  sample_set_t::weight_iterator_t     set)
     {
         if(!map->isType<static_maps::OrientedGridVectorMap>()) {
             return;
         }
 
-        const static_maps::OrientedGridVectorMap &vectormap = map->as<static_maps::OrientedGridVectorMap>();
-        const cslibs_vectormaps::OrientedGridVectorMap &map_data = vectormap.getMap();
         const cslibs_plugins_data::types::Laserscan &laser_data = data->as<cslibs_plugins_data::types::Laserscan>();
-        const cslibs_plugins_data::types::Laserscan::rays_t &laser_rays = laser_data.getRays();
+
+        data_ = data;
+        map_ = map;
 
         /// laser to base transform
         cslibs_math_2d::Transform2d b_T_l;
@@ -42,22 +39,61 @@ namespace muse_mcl_2d_vectormaps {
                                  tf_timeout_))
             return;
         if(!tf_->lookupTransform(world_frame_,
-                                 vectormap.getFrame(),
+                                 map->getFrame(),
                                  ros::Time(laser_data.timeFrame().end.seconds()),
                                  m_T_w,
                                  tf_timeout_))
             return;
 
-        const cslibs_plugins_data::types::Laserscan::rays_t rays = laser_data.getRays();
-        const auto end = set.end();
-        rays_size_ = rays.size();
+        rays_size_ = laser_data.getRays().size();
         rays_step_  = std::max(1ul, (rays_size_ - 1) / (max_beams_ - 1));
         range_max_  = laser_data.getLinearMax();
         p_rand_     = z_rand_ * 1.0 / range_max_;
 
-        for(auto it = set.begin(); it != end; ++it) {
-            const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
-            *it *= probability(laser_rays, m_T_l, map_data);
+        if(results_.size() == set.size()) {
+            std::fill(results_.begin(), results_.end(), 0.0);
+        } else {
+            results_.resize(set.size(), 0.0);
+        }
+
+        /// enqueue
+        std::size_t index = 0;
+        for(auto it = set.const_begin() ; it != set.const_end() ; ++it, ++index) {
+            samples_[index % 4].push(std::make_pair(&(it->state), index));
+        }
+
+        /// do work
+        auto do_work = [this](const cslibs_math_2d::Pose2d &m_T_w,
+                              const cslibs_math_2d::Pose2d &b_T_l,
+                              std::queue<std::pair<cslibs_math_2d::Pose2d const*, std::size_t>> &q){
+            const static_maps::OrientedGridVectorMap &vectormap = map_->as<static_maps::OrientedGridVectorMap>();
+            const cslibs_vectormaps::OrientedGridVectorMap &map_data = vectormap.getMap();
+            const cslibs_plugins_data::types::Laserscan &laser_data = data_->as<cslibs_plugins_data::types::Laserscan>();
+            const cslibs_plugins_data::types::Laserscan::rays_t &rays = laser_data.getRays();
+
+            while(!q.empty()) {
+                std::pair<cslibs_math_2d::Pose2d const*, std::size_t> s = q.front();
+                const cslibs_math_2d::Pose2d m_T_l = m_T_w * (*(s.first)) * b_T_l;
+                results_[s.second] = probability(rays, m_T_l, map_data);
+                q.pop();
+            }
+        };
+
+        std::array<std::thread, 4> threads = {{std::thread([this, &m_T_w, &b_T_l, &do_work]{do_work(m_T_w, b_T_l, samples_[0]);}),
+                                               std::thread([this, &m_T_w, &b_T_l, &do_work]{do_work(m_T_w, b_T_l, samples_[1]);}),
+                                               std::thread([this, &m_T_w, &b_T_l, &do_work]{do_work(m_T_w, b_T_l, samples_[2]);}),
+                                               std::thread([this, &m_T_w, &b_T_l, &do_work]{do_work(m_T_w, b_T_l, samples_[3]);})}};
+
+        for(auto &t : threads) {
+            if(t.joinable())
+                t.join();
+        }
+
+        /// finalize
+        auto p_it = results_.begin();
+        const auto end = set.end();
+        for(auto it = set.begin(); it != end; ++it, ++p_it) {
+            *it *= *p_it;
         }
     }
 
