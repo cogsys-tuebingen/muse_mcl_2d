@@ -14,7 +14,8 @@ public:
     using pose_t = StateSpaceDescription2D::transform_t;
 
     inline PredictionIntegralAMCL2D() :
-        linear_distance_abs_(0.0),
+        linear_distance_x_abs_(0.0),
+        linear_distance_y_abs_(0.0),
         angular_distance_abs_(0.0),
         linear_threshold_(0.0),
         angular_threshold_(0.0),
@@ -27,7 +28,8 @@ public:
     inline PredictionIntegralAMCL2D(const double linear_threshold,
                                     const double angular_threshold,
                                     const bool   exceed_both = false) :
-        linear_distance_abs_(0.0),
+        linear_distance_x_abs_(0.0),
+        linear_distance_y_abs_(0.0),
         angular_distance_abs_(0.0),
         linear_threshold_(linear_threshold),
         angular_threshold_(angular_threshold),
@@ -50,8 +52,9 @@ public:
                 start_pose_ = appl.getStartPose();
             end_pose_ = appl.getEndPose();
 
-            linear_distance_abs_  = (end_pose_.translation() - start_pose_.translation()).length();
-            angular_distance_abs_ = std::fabs(cslibs_math::common::angle::difference(end_pose_.yaw(), start_pose_.yaw()));
+            linear_distance_x_abs_ = std::fabs(end_pose_.tx() - start_pose_.tx());
+            linear_distance_y_abs_ = std::fabs(end_pose_.ty() - start_pose_.ty());
+            angular_distance_abs_  = std::fabs(cslibs_math::common::angle::difference(end_pose_.yaw(), start_pose_.yaw()));
         } else {
             throw std::runtime_error("PreditionIntegral is fed the wrong prediction step type!");
         }
@@ -60,33 +63,38 @@ public:
     virtual void reset() override
     {
         start_pose_ = end_pose_;
-        linear_distance_abs_  = 0.0;
-        angular_distance_abs_ = 0.0;
+        linear_distance_x_abs_ = 0.0;
+        linear_distance_y_abs_ = 0.0;
+        angular_distance_abs_  = 0.0;
     }
 
     virtual bool thresholdExceeded() const override
     {
         if(exceed_both_)
-          return (linear_distance_abs_ >= linear_threshold_ &&
-                  angular_distance_abs_ >= angular_threshold_);
+          return (linear_distance_x_abs_ >= linear_threshold_ &&
+                  linear_distance_y_abs_ >= linear_threshold_ &&
+                  angular_distance_abs_  >= angular_threshold_);
 
-        return  (linear_distance_abs_ >= linear_threshold_ ||
-                 angular_distance_abs_ >= angular_threshold_);
+        return  (linear_distance_x_abs_ >= linear_threshold_ ||
+                 linear_distance_y_abs_ >= linear_threshold_ ||
+                 angular_distance_abs_  >= angular_threshold_);
     }
 
     virtual bool isZero() const override
     {
-        return linear_distance_abs_ == 0.0 &&
-               angular_distance_abs_ == 0.0;
+        return linear_distance_x_abs_ == 0.0 &&
+               linear_distance_y_abs_ == 0.0 &&
+               angular_distance_abs_  == 0.0;
     }
 
     virtual void info() const override
     {
-        std::cerr << linear_distance_abs_ << " " << angular_distance_abs_ << "\n";
+        std::cerr << linear_distance_x_abs_ << " " << linear_distance_y_abs_ << " " << angular_distance_abs_ << "\n";
     }
 
 private:
-    double linear_distance_abs_;
+    double linear_distance_x_abs_;
+    double linear_distance_y_abs_;
     double angular_distance_abs_;
 
     double linear_threshold_;
