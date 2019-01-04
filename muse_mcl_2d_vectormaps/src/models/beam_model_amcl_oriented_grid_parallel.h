@@ -48,15 +48,16 @@ protected:
     inline double pHit(const double ray_range, const double map_range) const
     {
         const double dz = ray_range - map_range;
-        return z_hit_ * std::exp(dz * dz * denominator_exponent_hit_);/// hit_sq_inv added
+        return z_hit_ * denominator_hit_ * std::exp(dz * dz * denominator_exponent_hit_);/// hit_sq_inv added
 
     }
 
     inline double pShort(const double ray_range, const double map_range) const
     {
         return ray_range <= map_range
-                ? z_short_ *// /*(1.0 / (1.0 - std::exp(-lambda_short_ * map_range))) * lambda_short_ **/ std::exp(-lambda_short_ * ray_range) / std::exp(-lambda_short_ * map_range)
-                  1.0 / std::exp(-lambda_short_ * map_range) * std::exp(-lambda_short_ * ray_range)
+                ? z_short_ * lambda_short_ * // /*(1.0 / (1.0 - std::exp(-lambda_short_ * map_range))) * lambda_short_ **/ std::exp(-lambda_short_ * ray_range) / std::exp(-lambda_short_ * map_range)
+                  1.0 / std::exp(-lambda_short_ * map_range) *
+                        std::exp(-lambda_short_ * ray_range)
                 : 0.0;
 
     }
@@ -108,7 +109,5 @@ protected:
             }
             return p;
     }
-
-
 };
 }
