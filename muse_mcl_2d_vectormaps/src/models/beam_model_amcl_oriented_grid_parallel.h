@@ -55,10 +55,8 @@ protected:
     inline double pShort(const double ray_range, const double map_range) const
     {
         return ray_range <= map_range
-                ? z_short_ *// /*(1.0 / (1.0 - std::exp(-lambda_short_ * map_range))) * lambda_short_ **/ std::exp(-lambda_short_ * ray_range) / std::exp(-lambda_short_ * map_range)
-                  1.0 / std::exp(-lambda_short_ * map_range) * std::exp(-lambda_short_ * ray_range)
+                ? (z_short_ / (1.0 - std::exp(-lambda_short_ * map_range)) * lambda_short_  * std::exp((-lambda_short_ * ray_range)))
                 : 0.0;
-
     }
 
     inline double pRand(const double ray_range) const
