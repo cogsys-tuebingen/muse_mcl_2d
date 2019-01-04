@@ -19,28 +19,31 @@ public:
     {
     }
 
-    inline void setup(const update_model_map_t &,
+    inline void setup(const update_model_map_t &update_models,
                       ros::NodeHandle &nh) override
     {
+        auto param_name = [this](const std::string &name){return name_ + "/" + name;};
+
+        for (const auto &um : update_models) {
+            const UpdateModel2D::Ptr &u = um.second;
+            const std::size_t id = u->getId();
+
+            applied_[id] = false;
+        }
+        update_all_ = nh.param<bool>(param_name("update_all"), false);
     }
 
     virtual bool apply(typename update_t::Ptr     &u,
                        typename sample_set_t::Ptr &s) override
     {
-        const time_t stamp = u->getStamp();
-        const time_t time_now(ros::Time::now().toNSec());
+        u->apply(s->getWeightIterator());
+        applied_[u->getModelId()] = true;
 
-        if (next_update_time_.isZero())
-            next_update_time_ = time_now;
-
-        if (stamp >= next_update_time_) {
-            u->apply(s->getWeightIterator());
-            next_update_time_ = time_now;
-
-            may_resample_ = true;
-            return true;
-        }
-        return false;
+        may_resample_ = true;
+        if (update_all_)
+            for (auto &entry : applied_)
+                may_resample_ &= entry.second;
+        return true;
     }
 
     virtual bool apply(typename resampling_t::Ptr &r,
@@ -50,6 +53,8 @@ public:
             r->apply(*s);
 
             may_resample_ = false;
+            for (auto &entry : applied_)
+                entry.second = false;
             return true;
         };
         return may_resample_ ? do_apply() : false;
@@ -58,6 +63,9 @@ public:
 protected:
     time_t next_update_time_;
     bool   may_resample_;
+
+    std::map<std::size_t, bool> applied_;
+    bool update_all_;
 };
 }
 

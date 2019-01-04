@@ -48,7 +48,7 @@ protected:
     inline double pHit(const double ray_range, const double map_range) const
     {
         const double dz = ray_range - map_range;
-        return z_hit_ * std::exp(dz * dz * denominator_exponent_hit_);/// hit_sq_inv added
+        return z_hit_ * denominator_hit_ * std::exp(dz * dz * denominator_exponent_hit_);/// hit_sq_inv added
 
     }
 
@@ -106,7 +106,5 @@ protected:
             }
             return p;
     }
-
-
 };
 }

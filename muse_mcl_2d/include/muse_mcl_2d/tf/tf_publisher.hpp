@@ -61,10 +61,10 @@ public:
         timeout_(timeout),
         running_(false),
         stop_(false),
-        w_T_o_( tf::Transform(tf::createIdentityQuaternion(),
-                              tf::Vector3(0,0,0)),
-                ros::Time(0),
-                world_frame_, odom_frame_),
+        w_T_o_(tf::Transform(tf::createIdentityQuaternion(),
+                             tf::Vector3(0,0,0)),
+               ros::Time(0),
+               world_frame_, odom_frame_),
         w_T_b_(cslibs_math_2d::Transform2d::identity(), cslibs_time::Time(0ul).time()),
         tf_tolerance_(tolerance),
         tf_last_update_(0)
@@ -99,6 +99,7 @@ public:
         poses_.push(w_t_b);
         notify_event_.notify_one();
     }
+
     inline void renewTimeStamp(const time_t &stamp)
     {
         lock_t l(tf_renew_time_stamp_mutex_);
@@ -161,7 +162,7 @@ private:
 
             while(!poses_.empty()) {
                 const stamped_t w_T_b = poses_.pop();
-                if(w_T_b.stamp() > tf_time_w_T_o_.time()) {
+                if(w_T_b.stamp() >= tf_time_w_T_o_.time()) {
                     update_tf(w_T_b);
                     w_T_o_.stamp_ = ros::Time(tf_time_w_T_o_.seconds()) + tf_tolerance_;
                     tf_broadcaster_.sendTransform(w_T_o_);
@@ -169,7 +170,7 @@ private:
                 }
             }
             if(tf_renew_time_) {
-                if(tf_renew_time_stamp_ > tf_time_w_T_o_) {
+                if(tf_renew_time_stamp_ >= tf_time_w_T_o_) {
                     renew_time_tf();
                     w_T_o_.stamp_ = ros::Time(tf_time_w_T_o_.seconds()) + tf_tolerance_;
                     tf_broadcaster_.sendTransform(w_T_o_);

@@ -24,6 +24,7 @@ add_library(${PROJECT_NAME}_models
     src/models/differential_drive.cpp
     src/models/differential_drive_abs.cpp
     src/models/differential_drive_box_muller.cpp
+    src/models/differential_drive_uncorrected.cpp
     src/models/omni_drive.cpp
 )
 target_link_libraries(${PROJECT_NAME}_models

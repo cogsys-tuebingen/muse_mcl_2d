@@ -237,15 +237,25 @@ bool MuseMCL2DNode::setup()
         const double update_threshold_angular         = cslibs_math::common::angle::toRad(nh_private_.param<double>(param_name("update_threshold_angular"), 0.0));
         const bool   update_threshold_exceed_both     = nh_private_.param<bool>(param_name("update_threshold_exceed_both"), false);
 
+        const bool   use_amcl_diff_calculation        = nh_private_.param<bool>(param_name("use_amcl_diff_calculation"), false);
 
-        prediction_integrals_.reset(new prediction_integrals_t(PredictionIntegral2D::Ptr(new PredictionIntegral2D(resampling_threshold_linear,
-                                                                                                                  resampling_threshold_angular,
-                                                                                                                  resampling_threshold_exceed_both))));
+        use_amcl_diff_calculation ?
+                    prediction_integrals_.reset(new prediction_integrals_t(PredictionIntegralAMCL2D::Ptr(new PredictionIntegralAMCL2D(resampling_threshold_linear,
+                                                                                                                                      resampling_threshold_angular,
+                                                                                                                                      resampling_threshold_exceed_both)))) :
+                    prediction_integrals_.reset(new prediction_integrals_t(PredictionIntegral2D::Ptr(new PredictionIntegral2D(resampling_threshold_linear,
+                                                                                                                              resampling_threshold_angular,
+                                                                                                                              resampling_threshold_exceed_both))));
         for(const auto &u : update_models_) {
-            prediction_integrals_->set(PredictionIntegral2D::Ptr(new PredictionIntegral2D(update_threshold_linear,
-                                                                                          update_threshold_angular,
-                                                                                          update_threshold_exceed_both)),
-                                       u.second->getId());
+            use_amcl_diff_calculation ?
+                        prediction_integrals_->set(PredictionIntegralAMCL2D::Ptr(new PredictionIntegralAMCL2D(update_threshold_linear,
+                                                                                                              update_threshold_angular,
+                                                                                                              update_threshold_exceed_both)),
+                                                   u.second->getId()) :
+                        prediction_integrals_->set(PredictionIntegral2D::Ptr(new PredictionIntegral2D(update_threshold_linear,
+                                                                                                      update_threshold_angular,
+                                                                                                      update_threshold_exceed_both)),
+                                                   u.second->getId());
         }
 
         const std::size_t sample_size                   = nh_private_.param<int>(param_name("sample_size"), 0);

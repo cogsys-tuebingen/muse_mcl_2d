@@ -6,6 +6,7 @@
 #include <muse_mcl_2d/PoseInitialization.h>
 
 #include <muse_mcl_2d/prediction/prediction_integral_2d.hpp>
+#include <muse_mcl_2d/prediction/prediction_integral_amcl_2d.hpp>
 #include <cslibs_math_ros/tf/tf_listener.hpp>
 #include <cslibs_plugins_data/data_provider.hpp>
 #include <muse_mcl_2d/map/map_provider_2d.hpp>
