@@ -47,16 +47,22 @@ void StatePublisher::publish(const sample_set_t::ConstPtr &sample_set)
 
     if(density->maxClusterMean(latest_w_T_b_.data(), latest_w_T_b_covariance_)) {
         latest_w_T_b_.stamp() = sample_set->getStamp().time();
+
         /// make sure that TF gets published first #most important
-        if (tf_publisher_)
+        if (tf_publisher_) {
+            tf_publisher_->renewTimeStamp(sample_set->getStamp());
             tf_publisher_->setTransform(latest_w_T_b_);
+        }
     }
+
     /// publish the particle set state
     publishState(sample_set);
 }
 
 void StatePublisher::publishIntermediate(const sample_set_t::ConstPtr &sample_set)
 {
+    if (tf_publisher_)
+        tf_publisher_->renewTimeStamp(sample_set->getStamp());
     publishState(sample_set);
 }
 
