@@ -27,20 +27,10 @@ public:
     virtual bool apply(typename update_t::Ptr     &u,
                        typename sample_set_t::Ptr &s) override
     {
-        const time_t stamp = u->getStamp();
-        const time_t time_now(ros::Time::now().toNSec());
+        u->apply(s->getWeightIterator());
 
-        if (next_update_time_.isZero())
-            next_update_time_ = time_now;
-
-        if (stamp >= next_update_time_) {
-            u->apply(s->getWeightIterator());
-            next_update_time_ = time_now;
-
-            may_resample_ = true;
-            return true;
-        }
-        return false;
+        may_resample_ = true;
+        return true;
     }
 
     virtual bool apply(typename resampling_t::Ptr &r,

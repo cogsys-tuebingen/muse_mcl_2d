@@ -48,8 +48,8 @@ private:
     std::mutex                          data_mutex_;
     sample_vector_t::Ptr                sample_;
     double                              maximum_weight_;
-    cslibs_math_2d::Pose2d            mean_;
-    cslibs_math_2d::Covariance3d      covariance_;
+    cslibs_math_2d::Pose2d              mean_;
+    cslibs_math_2d::Covariance3d        covariance_;
     time_t                              stamp_;
 
     ros::Publisher                      pub_markers_;

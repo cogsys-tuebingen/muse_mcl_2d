@@ -63,6 +63,7 @@ void StatePublisher::publishIntermediate(const sample_set_t::ConstPtr &sample_se
 {
     if (tf_publisher_)
         tf_publisher_->renewTimeStamp(sample_set->getStamp());
+
     publishState(sample_set);
 }
 
@@ -70,6 +71,7 @@ void StatePublisher::publishConstant(const sample_set_t::ConstPtr &sample_set)
 {
     if (tf_publisher_)
         tf_publisher_->renewTimeStamp(sample_set->getStamp());
+
     publishState(sample_set);
 }
 
