@@ -32,7 +32,7 @@ struct hash<std::array<int, 3>>
         result_type const h2 ( std::hash<int>{}(s[1]) );
         result_type const h3 ( std::hash<int>{}(s[2]) );
 
-        return h1 ^ (h2 << 1) | h3;
+        return (h1 ^ (h2 << 1)) | h3;
     }
 };
 }
@@ -56,7 +56,8 @@ public:
     using distribution_map_t        = clustering_t::distribution_map_t;
     using angular_mean_map_t        = clustering_t::angular_mean_map_t;
 
-    using cis_kd_tree_buffered_t    = cis::Storage<sample_data_t, index_t, cis::backend::kdtree::KDTreeBuffered>;
+    /// using cis_kd_tree_buffered_t    = cis::Storage<sample_data_t, index_t, cis::backend::kdtree::KDTreeBuffered>;
+    using cis_kd_tree_buffered_t    = cis::Storage<sample_data_t, index_t, cis::backend::simple::UnorderedComponentMap>;
     using cis_kd_tree_clustering_t  = cis::operations::clustering::Clustering<cis_kd_tree_buffered_t>;
 
     virtual void setup(ros::NodeHandle &nh) override;
