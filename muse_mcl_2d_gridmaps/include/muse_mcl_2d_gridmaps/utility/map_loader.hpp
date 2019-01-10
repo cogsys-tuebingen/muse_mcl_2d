@@ -10,6 +10,8 @@
 #include <libgen.h>
 #include <fstream>
 
+#include <ros/common.h>
+
 namespace muse_mcl_2d_gridmaps {
 namespace utility {
 template<typename T>
@@ -30,7 +32,10 @@ inline bool loadMap(const std::string &path,
     double origin[3];
     int negate;
     double occ_th, free_th, res;
+
+#if ROS_VERSION >= 1060878
     MapMode mode = TRINARY;
+#endif
 
     try {
         doc["resolution"] >> res;
@@ -44,6 +49,8 @@ inline bool loadMap(const std::string &path,
     try {
         doc["free_thresh"] >> free_th;
     } catch (YAML::InvalidScalar &) { free_th = 0.196; }
+
+#if ROS_VERSION >= 1060878  /// KINETIC UBUNTU 16.04 (10.01.2019)
     try {
         std::string modeS = "";
         doc["mode"] >> modeS;
@@ -57,6 +64,7 @@ inline bool loadMap(const std::string &path,
         else
             return false;
     } catch (YAML::Exception &)  { mode = TRINARY; }
+#endif
     try {
         doc["origin"][0] >> origin[0];
         doc["origin"][1] >> origin[1];
@@ -75,7 +83,11 @@ inline bool loadMap(const std::string &path,
     } catch (YAML::InvalidScalar &) { return false; }
     nav_msgs::GetMap::Response map_resp;
     try {
+#if ROS_VERSION >= 1060878
         map_server::loadMapFromFile(&map_resp, map_path.c_str(), res, negate, occ_th, free_th, origin, mode);
+#else
+        map_server::loadMapFromFile(&map_resp, map_path.c_str(), res, negate, occ_th, free_th, origin);
+#endif
     } catch (std::runtime_error &) { return false; }
 
     ros::Time::waitForValid();
