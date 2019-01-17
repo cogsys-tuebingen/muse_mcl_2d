@@ -264,6 +264,7 @@ bool MuseMCL2DNode::setup()
         const bool        enable_lag_correction             = nh_private_.param<bool>(param_name("enable_lag_correction"), true);
         const bool        reset_all_integrals_on_update     = nh_private_.param<bool>(param_name("reset_all_integrals_on_update"), false);
         const bool        reset_all_integrals_on_resampling = nh_private_.param<bool>(param_name("reset_all_integrals_on_resampling"), false);
+        const bool        keep_weights_after_resampling     = nh_private_.param<bool>(param_name("keep_weights_after_resampling"), false);
 
         if(minimum_sample_size == 0) {
             ROS_ERROR_STREAM("Minimum sample size cannot be zero!");
@@ -279,7 +280,8 @@ bool MuseMCL2DNode::setup()
                                            cslibs_time::Time(ros::Time::now().toNSec()),
                                            minimum_sample_size,
                                            maximum_sample_size,
-                                           sample_density_));
+                                           sample_density_,
+                                           keep_weights_after_resampling));
         state_publisher_.reset(new StatePublisher);
         state_publisher_->setup(nh_private_);
 
