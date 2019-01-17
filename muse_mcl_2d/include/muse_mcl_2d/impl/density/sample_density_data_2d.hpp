@@ -60,12 +60,11 @@ struct EIGEN_ALIGN16 SampleDensityData2D {
     }
 
 
-    inline SampleDensityData2D(const Sample2D &sample,
-                               const bool ignore_weight = false)
+    inline SampleDensityData2D(const Sample2D &sample)
     {
         samples.emplace_back(&sample);
-        distribution.add(sample.state.translation(), ignore_weight ? 1.0 : sample.weight);
-        angular_mean.add(sample.state.yaw(), ignore_weight ? 1.0 : sample.weight);
+        distribution.add(sample.state.translation(), sample.weight);
+        angular_mean.add(sample.state.yaw(), sample.weight);
      }
 
     inline void merge(const SampleDensityData2D &other)

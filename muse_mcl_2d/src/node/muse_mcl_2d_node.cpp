@@ -261,8 +261,6 @@ bool MuseMCL2DNode::setup()
         const std::size_t sample_size                       = nh_private_.param<int>(param_name("sample_size"), 0);
         const std::size_t minimum_sample_size               = sample_size == 0 ? nh_private_.param<int>(param_name("minimum_sample_size"), 0) : sample_size;
         const std::size_t maximum_sample_size               = sample_size == 0 ? nh_private_.param<int>(param_name("maximum_sample_size"), 0) : sample_size;
-        const bool        reset_weights_after_insertion     = nh_private_.param<bool>(param_name("reset_weights_after_insertion"), true);
-        const bool        reset_weights_to_one              = nh_private_.param<bool>(param_name("reset_weights_to_one"), true);
         const bool        enable_lag_correction             = nh_private_.param<bool>(param_name("enable_lag_correction"), true);
         const bool        reset_all_integrals_on_update     = nh_private_.param<bool>(param_name("reset_all_integrals_on_update"), false);
         const bool        reset_all_integrals_on_resampling = nh_private_.param<bool>(param_name("reset_all_integrals_on_resampling"), false);
@@ -281,9 +279,7 @@ bool MuseMCL2DNode::setup()
                                            cslibs_time::Time(ros::Time::now().toNSec()),
                                            minimum_sample_size,
                                            maximum_sample_size,
-                                           sample_density_,
-                                           reset_weights_after_insertion,
-                                           reset_weights_to_one));
+                                           sample_density_));
         state_publisher_.reset(new StatePublisher);
         state_publisher_->setup(nh_private_);
 

@@ -15,7 +15,6 @@ void SimpleSampleDensity2D::setup(ros::NodeHandle& nh)
     kdtree_.reset(new cis_kd_tree_buffered_t);
     kdtree_->set<cis::option::tags::node_allocator_chunk_size>(2 * maximum_sample_size + 1);
     clustering_impl_                        = clustering_t(indexation_);
-    ignore_weight_                          = nh.param<bool>(param_name("ignore_weight"), false);
 }
 
 void SimpleSampleDensity2D::clear()
@@ -28,7 +27,7 @@ void SimpleSampleDensity2D::clear()
 
 void SimpleSampleDensity2D::insert(const Sample2D& sample)
 {
-    kdtree_->insert(indexation_.create(sample), sample_data_t(sample, ignore_weight_));
+    kdtree_->insert(indexation_.create(sample), sample_data_t(sample));
     global_position_.add(sample.state.translation());
     global_angle_.add(sample.state.yaw());
 }
