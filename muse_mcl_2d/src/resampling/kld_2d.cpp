@@ -2,6 +2,11 @@
 
 namespace muse_mcl_2d {
 
+KLD2D::KLD2D() :
+    rng_(0.0, 1.0)
+{
+}
+
 void KLD2D::doSetup(ros::NodeHandle& nh)
 {
     auto param_name = [this](const std::string &name){return name_ + "/" + name;};
@@ -41,9 +46,8 @@ void KLD2D::doApply(sample_set_t& sample_set)
     for (std::size_t i = 0 ; i < size ; ++i)
         cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
 
-    cslibs_math::random::Uniform<1> rng(0.0, 1.0);
     for (std::size_t i = 0 ; i < sample_size_maximum ; ++i) {
-        const double u = rng.get();
+        const double u = rng_.get();
         for (std::size_t j = 0 ; j < size ; ++j) {
             if (cumsum[j] <= u && u < cumsum[j+1]) {
                 i_p_t.insert(p_t_1[j]);
@@ -66,8 +70,6 @@ void KLD2D::doApplyRecovery(sample_set_t& sample_set)
     const auto &p_t_1 = sample_set.getSamples();
     auto  i_p_t = sample_set.getInsertion();
     const std::size_t size = p_t_1.size();
-
-    cslibs_math::random::Uniform<1> rng(0.0, 1.0);
 
     Sample2D sample;
     const std::size_t sample_size_minimum = std::max(sample_set.getMinimumSampleSize(), 2ul);
@@ -100,7 +102,7 @@ void KLD2D::doApplyRecovery(sample_set_t& sample_set)
             uniform_pose_sampler_->apply(sample);
             i_p_t.insert(sample);
         } else {
-            const double u = rng.get();
+            const double u = rng_.get();
             for (std::size_t j = 0 ; j < size ; ++j) {
                 if (cumsum[j] <= u && u < cumsum[j+1]) {
                     i_p_t.insert(p_t_1[j]);
