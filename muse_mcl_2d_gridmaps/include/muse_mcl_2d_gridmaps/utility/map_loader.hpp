@@ -43,7 +43,7 @@ inline bool loadMap(const std::string &path,
     } catch (YAML::InvalidScalar &) { occ_th = 0.65; }
     try {
         doc["free_thresh"] >> free_th;
-    } catch (YAML::InvalidScalar &) { free_th = 0.196; }
+    } catch (YAML::InvalidScalar &) { free_th = 0.169; }
     try {
         std::string modeS = "";
         doc["mode"] >> modeS;

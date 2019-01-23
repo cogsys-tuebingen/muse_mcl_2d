@@ -133,7 +133,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
     d1_         = nh.param(param_name("d1"), 0.95);
     d2_         = nh.param(param_name("d2"), 0.05);
 
-    occupied_threshold_         = nh.param(param_name("occupied_threshold"), 0.196);
+    occupied_threshold_         = nh.param(param_name("occupied_threshold"), 0.169);
     const double prob_prior     = nh.param(param_name("prob_prior"), 0.5);
     const double prob_free      = nh.param(param_name("prob_free"), 0.45);
     const double prob_occupied  = nh.param(param_name("prob_occupied"), 0.65);

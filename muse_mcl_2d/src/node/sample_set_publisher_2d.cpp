@@ -60,7 +60,7 @@ SampleSetPublisher2D::~SampleSetPublisher2D()
 void SampleSetPublisher2D::setup(ros::NodeHandle &nh)
 {
     publish_poses_   = nh.param<bool>("publish_poses", true);
-    publish_mean_   = nh.param<bool>("publish_means", true);
+    publish_mean_    = nh.param<bool>("publish_means", true);
     publish_markers_ = nh.param<bool>("publish_markers", false);
     publish_samples_ = nh.param<bool>("publish_samples", false);
 
