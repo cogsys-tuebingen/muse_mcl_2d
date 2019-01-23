@@ -78,7 +78,6 @@ protected:
     clustering_t                                clustering_impl_;
     cslibs_math::statistics::Distribution<2,0>  global_position_;
     cslibs_math::statistics::AngularMean        global_angle_;
-    bool                                        ignore_weight_;
 
 };
 }
