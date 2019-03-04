@@ -10,6 +10,7 @@ void std_exp()
     cslibs_math::random::Uniform<double,1> rng(-100.0, +100.0);
 
     double ms = 0;
+    double y = 0.0;
     for(int i = 0 ; i < ITERATIONS ; ++i) {
         double x = rng.get();
 
@@ -25,6 +26,7 @@ void c_exp()
     cslibs_math::random::Uniform<double,1> rng(-100.0, +100.0);
 
     double ms = 0;
+    double y = 0.0;
     for(int i = 0 ; i < ITERATIONS ; ++i) {
         double x = rng.get();
 
@@ -40,6 +42,7 @@ void std_log()
     cslibs_math::random::Uniform<double,1> rng(-100.0, +100.0);
 
     double ms = 0;
+    double y = 0.0;
     for(int i = 0 ; i < ITERATIONS ; ++i) {
         double x = rng.get();
 
@@ -55,6 +58,7 @@ void c_log()
     cslibs_math::random::Uniform<double,1> rng(-100.0, +100.0);
 
     double ms = 0;
+    double y = 0.0;
     for(int i = 0 ; i < ITERATIONS ; ++i) {
         double x = rng.get();
 
