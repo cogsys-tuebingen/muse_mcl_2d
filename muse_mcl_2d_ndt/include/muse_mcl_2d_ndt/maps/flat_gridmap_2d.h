@@ -9,19 +9,21 @@ class FlatGridmap2D : public muse_mcl_2d::Map2D
 {
 public:
     using Ptr = std::shared_ptr<FlatGridmap2D>;
+    using map_t = cslibs_ndt_2d::static_maps::mono::Gridmap<double>;
+    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
 
-    FlatGridmap2D(const cslibs_ndt_2d::static_maps::mono::Gridmap::Ptr &map,
+    FlatGridmap2D(const map_t::Ptr &map,
                   const std::string frame_id);
 
     state_space_boundary_t getMin() const override;
     state_space_boundary_t getMax() const override;
     state_space_transform_t getOrigin() const override;
-    bool validate(const cslibs_math_2d::Pose2d &p) const override;
-    cslibs_ndt_2d::static_maps::mono::Gridmap::Ptr& data();
-    cslibs_ndt_2d::static_maps::mono::Gridmap::Ptr const& data() const;
+    bool validate(const state_t &p) const override;
+    map_t::Ptr& data();
+    map_t::Ptr const& data() const;
 
 private:
-    cslibs_ndt_2d::static_maps::mono::Gridmap::Ptr data_;
+    map_t::Ptr data_;
 };
 }
 #endif // FLAT_GRIDMAP_2D_H

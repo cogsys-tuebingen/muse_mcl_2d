@@ -9,19 +9,21 @@ class OccupancyGridmap2d : public muse_mcl_2d::Map2D
 {
 public:
     using Ptr = std::shared_ptr<OccupancyGridmap2d>;
+    using map_t = cslibs_ndt_2d::dynamic_maps::OccupancyGridmap<double>;
+    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
 
-    OccupancyGridmap2d(const cslibs_ndt_2d::dynamic_maps::OccupancyGridmap::Ptr &map,
+    OccupancyGridmap2d(const map_t::Ptr &map,
                      const std::string frame_id);
 
     state_space_boundary_t getMin() const override;
     state_space_boundary_t getMax() const override;
     state_space_transform_t getOrigin() const override;
-    bool validate(const cslibs_math_2d::Pose2d &p) const override;
-    cslibs_ndt_2d::dynamic_maps::OccupancyGridmap::Ptr& data();
-    cslibs_ndt_2d::dynamic_maps::OccupancyGridmap::Ptr const& data() const;
+    bool validate(const state_t &p) const override;
+    map_t::Ptr& data();
+    map_t::Ptr const& data() const;
 
 private:
-    cslibs_ndt_2d::dynamic_maps::OccupancyGridmap::Ptr data_;
+    map_t::Ptr data_;
 };
 }
 
