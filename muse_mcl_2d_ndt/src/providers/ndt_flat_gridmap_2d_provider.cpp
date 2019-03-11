@@ -37,9 +37,9 @@ void NDTFlatGridmap2DProvider::loadMap()
     auto load = [this]() {
         std::unique_lock<std::mutex> l(map_mutex_);
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
-        cslibs_ndt_2d::dynamic_maps::Gridmap::Ptr map;
-        if (cslibs_ndt_2d::dynamic_maps::loadBinary(path_, map)) {
-            map_.reset(new FlatGridmap2D(cslibs_ndt_2d::conversion::merge(map), frame_id_));
+        cslibs_ndt_2d::dynamic_maps::Gridmap<double>::Ptr map;
+        if (cslibs_ndt_2d::dynamic_maps::loadBinary<double>(path_, map)) {
+            map_.reset(new FlatGridmap2D(cslibs_ndt_2d::conversion::merge<double>(map), frame_id_));
 
             ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
         } else

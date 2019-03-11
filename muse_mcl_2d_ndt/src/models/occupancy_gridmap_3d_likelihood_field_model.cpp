@@ -141,7 +141,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
     const double prob_prior     = nh.param(param_name("prob_prior"), 0.5);
     const double prob_free      = nh.param(param_name("prob_free"), 0.45);
     const double prob_occupied  = nh.param(param_name("prob_occupied"), 0.65);
-    inverse_model_.reset(new cslibs_gridmaps::utility::InverseModel(prob_prior, prob_free, prob_occupied));
+    inverse_model_.reset(new cslibs_gridmaps::utility::InverseModel<double>(prob_prior, prob_free, prob_occupied));
 
     histogram_resolution_  = nh.param(param_name("histogram_resolution"), 0.0);
 }

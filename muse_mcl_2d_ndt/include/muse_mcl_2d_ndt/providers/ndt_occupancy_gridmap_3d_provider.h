@@ -28,7 +28,6 @@ protected:
     mutable std::condition_variable map_notify_;
     OccupancyGridmap3d::Ptr         map_;
     std::thread                     worker_;
-
 };
 }
 

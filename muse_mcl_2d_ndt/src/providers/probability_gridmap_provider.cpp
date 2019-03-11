@@ -34,11 +34,11 @@ void ProbabilityGridmapProvider::setup(ros::NodeHandle &nh)
 
     auto load = [this]() {
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
-        cslibs_ndt_2d::dynamic_maps::Gridmap::Ptr map;
-        if (cslibs_ndt_2d::dynamic_maps::loadBinary(path_, map)) {
+        cslibs_ndt_2d::dynamic_maps::Gridmap<double>::Ptr map;
+        if (cslibs_ndt_2d::dynamic_maps::loadBinary<double>(path_, map)) {
 
-            cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr lf_map;
-            cslibs_ndt_2d::conversion::from(map, lf_map, sampling_resolution_);
+            cslibs_gridmaps::static_maps::ProbabilityGridmap<double,double>::Ptr lf_map;
+            cslibs_ndt_2d::conversion::from<double>(map, lf_map, sampling_resolution_);
             if (lf_map) {
                 std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new muse_mcl_2d_gridmaps::ProbabilityGridmap(lf_map, frame_id_));

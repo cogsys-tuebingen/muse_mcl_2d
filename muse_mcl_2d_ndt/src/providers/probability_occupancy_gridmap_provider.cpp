@@ -35,15 +35,15 @@ void ProbabilityOccupancyGridmapProvider::setup(ros::NodeHandle &nh)
     const double prob_prior     = nh.param(param_name("prob_prior"), 0.5);
     const double prob_free      = nh.param(param_name("prob_free"), 0.45);
     const double prob_occupied  = nh.param(param_name("prob_occupied"), 0.65);
-    inverse_model_.reset(new cslibs_gridmaps::utility::InverseModel(prob_prior, prob_free, prob_occupied));
+    inverse_model_.reset(new cslibs_gridmaps::utility::InverseModel<double>(prob_prior, prob_free, prob_occupied));
 
     auto load_blocking = [this]() {
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
-        cslibs_ndt_2d::dynamic_maps::OccupancyGridmap::Ptr map;
-        if (cslibs_ndt_2d::dynamic_maps::loadBinary(path_, map)) {
+        cslibs_ndt_2d::dynamic_maps::OccupancyGridmap<double>::Ptr map;
+        if (cslibs_ndt_2d::dynamic_maps::loadBinary<double>(path_, map)) {
 
-            cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr lf_map;
-            cslibs_ndt_2d::conversion::from(map, lf_map, sampling_resolution_, inverse_model_);
+            cslibs_gridmaps::static_maps::ProbabilityGridmap<double,double>::Ptr lf_map;
+            cslibs_ndt_2d::conversion::from<double>(map, lf_map, sampling_resolution_, inverse_model_);
             if (lf_map) {
                 std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new muse_mcl_2d_gridmaps::ProbabilityGridmap(lf_map, frame_id_));

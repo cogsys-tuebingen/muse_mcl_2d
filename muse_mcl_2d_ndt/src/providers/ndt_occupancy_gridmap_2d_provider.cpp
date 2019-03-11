@@ -33,8 +33,8 @@ void NDTOccupancyGridmap2dProvider::setup(ros::NodeHandle &nh)
 
     auto load = [this]() {
         ROS_INFO_STREAM("Loading file '" << path_ << "'...");
-        cslibs_ndt_2d::dynamic_maps::OccupancyGridmap::Ptr map;
-        if (cslibs_ndt_2d::dynamic_maps::loadBinary(path_, map)) {
+        cslibs_ndt_2d::dynamic_maps::OccupancyGridmap<double>::Ptr map;
+        if (cslibs_ndt_2d::dynamic_maps::loadBinary<double>(path_, map)) {
             std::unique_lock<std::mutex> l(map_mutex_);
             map_.reset(new OccupancyGridmap2d(map, frame_id_));
             ROS_INFO_STREAM("Successfully loaded file '" << path_ << "'!");
