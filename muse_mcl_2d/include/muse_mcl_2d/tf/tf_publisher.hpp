@@ -19,6 +19,8 @@
 #include <cslibs_time/rate.hpp>
 #include <cslibs_utility/synchronized/synchronized_queue.hpp>
 
+#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
+
 #include <ros/time.h>
 
 namespace muse_mcl_2d {
@@ -34,7 +36,8 @@ namespace muse_mcl_2d {
 class EIGEN_ALIGN16 TFPublisher {
 public:
     using Ptr = std::shared_ptr<TFPublisher>;
-    using stamped_t = cslibs_math::utility::Stamped<cslibs_math_2d::Transform2d>;
+    using transform_t = StateSpaceDescription2D::transform_t;
+    using stamped_t   = cslibs_math::utility::Stamped<transform_t>;
     using time_t  = cslibs_time::Time;
     using queue_t = cslibs_utility::synchronized::queue<stamped_t, std::deque<stamped_t, stamped_t::allocator_t>>;
     using mutex_t = std::mutex;
@@ -65,7 +68,7 @@ public:
                              tf::Vector3(0,0,0)),
                ros::Time(0),
                world_frame_, odom_frame_),
-        w_T_b_(cslibs_math_2d::Transform2d::identity(), cslibs_time::Time(0ul).time()),
+        w_T_b_(transform_t::identity(), cslibs_time::Time(0ul).time()),
         tf_tolerance_(tolerance),
         tf_last_update_(0)
     {
@@ -138,10 +141,10 @@ private:
     inline void loop()
     {
         auto update_tf = [this] (const stamped_t &w_t_b) {
-            cslibs_math_2d::Transform2d b_T_o = cslibs_math_2d::Transform2d::identity();
+            transform_t b_T_o = transform_t::identity();
             const ros::Time time = ros::Time(cslibs_math::utility::tiny_time::seconds(w_t_b.stamp()));
             if(tf_listener_.lookupTransform(base_frame_, odom_frame_, time, b_T_o, timeout_)) {
-                cslibs_math_2d::Transform2d w_T_o = w_t_b.data() * b_T_o;
+                transform_t w_T_o = w_t_b.data() * b_T_o;
                 w_T_o_ = tf::StampedTransform( cslibs_math_ros::tf::conversion_2d::from(w_T_o), time, world_frame_, odom_frame_);
                 tf_time_w_T_o_ = cslibs_time::Time(w_t_b.stamp());
                 return true;
