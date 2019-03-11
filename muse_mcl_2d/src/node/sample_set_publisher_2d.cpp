@@ -107,11 +107,11 @@ bool SampleSetPublisher2D::end()
     return false;
 }
 
-void SampleSetPublisher2D::set(const sample_vector_t &sample_vector,
-                               const double maximum_weight,
-                               const cslibs_math_2d::Pose2d &mean,
-                               const cslibs_math_2d::Covariance3d &covariance,
-                               const time_t &stamp)
+void SampleSetPublisher2D::set(const sample_vector_t  &sample_vector,
+                               const double            maximum_weight,
+                               const state_t          &mean,
+                               const covariance_t     &covariance,
+                               const time_t           &stamp)
 {
     lock_t lock(data_mutex_);
     stamp_ = stamp;
@@ -129,7 +129,6 @@ void SampleSetPublisher2D::set(const sample_vector_t &sample_vector,
 
 void SampleSetPublisher2D::loop()
 {
-
     auto create_empty_marker = [this]()
     {
         visualization_msgs::Marker marker;
@@ -143,7 +142,7 @@ void SampleSetPublisher2D::loop()
         return marker;
     };
 
-    auto create_pose = [](const cslibs_math_2d::Pose2d &pose)
+    auto create_pose = [](const state_t &pose)
     {
         geometry_msgs::Pose p;
         p.position.x = pose.tx();
@@ -181,8 +180,8 @@ void SampleSetPublisher2D::loop()
 
     time_t                         stamp;
     sample_vector_t::Ptr           samples;
-    cslibs_math_2d::Pose2d         mean;
-    cslibs_math_2d::Covariance3d   covariance;
+    state_t                        mean;
+    covariance_t                   covariance;
     double                         maximum_weight = 0.0;
 
     while(!stop_) {

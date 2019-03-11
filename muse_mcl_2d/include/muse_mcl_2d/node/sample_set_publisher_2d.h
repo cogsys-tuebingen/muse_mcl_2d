@@ -25,6 +25,9 @@ public:
     using time_t          = cslibs_time::Time;
     using lock_t          = std::unique_lock<std::mutex>;
 
+    using state_t         = StateSpaceDescription2D::state_t;
+    using covariance_t    = StateSpaceDescription2D::covariance_t;
+
     SampleSetPublisher2D();
     virtual ~SampleSetPublisher2D();
 
@@ -32,11 +35,11 @@ public:
     bool start();
     bool end();
 
-    void set(const sample_vector_t                   &sample_vector,
-             const double                             weight_maximum,
-             const cslibs_math_2d::Pose2d          &mean,
-             const cslibs_math_2d::Covariance3d    &covariance,
-             const time_t                            &stamp);
+    void set(const sample_vector_t  &sample_vector,
+             const double            maximum_weight,
+             const state_t          &mean,
+             const covariance_t     &covariance,
+             const time_t           &stamp);
 
 private:
     std::atomic_bool                    running_;
@@ -48,8 +51,8 @@ private:
     std::mutex                          data_mutex_;
     sample_vector_t::Ptr                sample_;
     double                              maximum_weight_;
-    cslibs_math_2d::Pose2d              mean_;
-    cslibs_math_2d::Covariance3d        covariance_;
+    state_t                             mean_;
+    covariance_t                        covariance_;
     time_t                              stamp_;
 
     ros::Publisher                      pub_markers_;
