@@ -21,13 +21,17 @@ void BeamModelAMCLNormalized::apply(const data_t::ConstPtr &data,
         return;
     }
 
-    const cslibs_gridmaps::static_maps::BinaryGridmap &gridmap    = *(map->as<BinaryGridmap>().data());
-    const cslibs_plugins_data::types::Laserscan              &laser_data = data->as<cslibs_plugins_data::types::Laserscan>();
-    const cslibs_plugins_data::types::Laserscan::rays_t      &laser_rays = laser_data.getRays();
+    using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
+    using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
+    using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
+
+    const BinaryGridmap::map_t &gridmap    = *(map->as<BinaryGridmap>().data());
+    const laserscan_t          &laser_data = data->as<laserscan_t>();
+    const laserscan_t::rays_t  &laser_rays = laser_data.getRays();
 
     /// laser to base transform
-    cslibs_math_2d::Transform2d b_T_l;
-    cslibs_math_2d::Transform2d m_T_w;
+    transform_t b_T_l;
+    transform_t m_T_w;
     if(!tf_->lookupTransform(robot_base_frame_,
                              laser_data.frame(),
                              ros::Time(laser_data.timeFrame().end.seconds()),
@@ -41,7 +45,7 @@ void BeamModelAMCLNormalized::apply(const data_t::ConstPtr &data,
                              tf_timeout_))
         return;
 
-    const cslibs_plugins_data::types::Laserscan::rays_t rays = laser_data.getRays();
+    const laserscan_t::rays_t rays = laser_data.getRays();
     const auto end = set.end();
     const auto const_end = set.const_end();
     const std::size_t rays_size = rays.size();
@@ -72,7 +76,7 @@ void BeamModelAMCLNormalized::apply(const data_t::ConstPtr &data,
         return ray_range < range_max ? p_rand : 0.0;
     };
     auto probability = [&gridmap, &p_hit, &p_short, &p_max, &p_random, &range_max]
-            (const cslibs_plugins_data::types::Laserscan::Ray &ray, const cslibs_math_2d::Pose2d &m_T_l) {
+            (const laserscan_t::Ray &ray, const state_t &m_T_l) {
         const double ray_range = ray.range;
         auto         ray_end_point = m_T_l * ray.end_point;
         const double map_range = std::min(range_max, gridmap.getRange(m_T_l.translation(), ray_end_point));
@@ -82,7 +86,7 @@ void BeamModelAMCLNormalized::apply(const data_t::ConstPtr &data,
     auto it_ps = ps_.begin();
     double max = std::numeric_limits<double>::lowest();
     for(auto it = set.const_begin() ; it != const_end ; ++it, ++it_ps) {
-        const cslibs_math_2d::Pose2d m_T_l = m_T_w * it->state * b_T_l; /// laser scanner pose in map coordinates
+        const state_t m_T_l = m_T_w * it->state * b_T_l; /// laser scanner pose in map coordinates
         double p = 1.0;
         for(std::size_t i = 0 ; i < rays_size ;  i+= ray_step) {
             const auto &ray = laser_rays[i];

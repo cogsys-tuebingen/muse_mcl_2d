@@ -21,13 +21,17 @@ void LikelihoodFieldProbModelAMCL::apply(const data_t::ConstPtr          &data,
         return;
     }
 
-    const cslibs_gridmaps::static_maps::DistanceGridmap &gridmap = *(map->as<DistanceGridmap>().data());
-    const cslibs_plugins_data::types::Laserscan                &laser_data = data->as<cslibs_plugins_data::types::Laserscan>();
-    const cslibs_plugins_data::types::Laserscan::rays_t        &laser_rays = laser_data.getRays();
+    using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
+    using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
+    using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
+
+    const DistanceGridmap::map_t &gridmap    = *(map->as<DistanceGridmap>().data());
+    const laserscan_t            &laser_data = data->as<laserscan_t>();
+    const laserscan_t::rays_t    &laser_rays = laser_data.getRays();
 
     /// laser to base transform
-    cslibs_math_2d::Transform2d b_T_l;
-    cslibs_math_2d::Transform2d m_T_w;
+    transform_t b_T_l;
+    transform_t m_T_w;
     if(!tf_->lookupTransform(robot_base_frame_,
                              laser_data.frame(),
                              ros::Time(laser_data.timeFrame().end.seconds()),
@@ -41,7 +45,7 @@ void LikelihoodFieldProbModelAMCL::apply(const data_t::ConstPtr          &data,
                              tf_timeout_))
         return;
 
-    const cslibs_plugins_data::types::Laserscan::rays_t rays = laser_data.getRays();
+    const laserscan_t::rays_t rays = laser_data.getRays();
     const std::size_t rays_size = rays.size();
     const std::size_t ray_step  = std::max(1ul, (rays_size) / max_beams_);
     const double range_max = laser_data.getLinearMax();
@@ -65,7 +69,7 @@ void LikelihoodFieldProbModelAMCL::apply(const data_t::ConstPtr          &data,
         const auto end = set.const_end();
         std::size_t sample_index = 0;
         for(auto it = set.const_begin() ; it != end ; ++it, ++sample_index) {
-            const cslibs_math_2d::Pose2d m_T_l = m_T_w * it->state * b_T_l; /// laser scanner pose in map coordinates
+            const state_t m_T_l = m_T_w * it->state * b_T_l; /// laser scanner pose in map coordinates
             std::size_t observation_index = 0;
             for(std::size_t i = 0 ; i < rays_size ;  i+= ray_step, ++observation_index) {
                 const auto &ray = laser_rays[i];
