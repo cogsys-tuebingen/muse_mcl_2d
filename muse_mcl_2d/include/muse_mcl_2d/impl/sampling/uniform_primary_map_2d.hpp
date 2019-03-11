@@ -17,7 +17,9 @@ public:
     using allocator_t = Eigen::aligned_allocator<UniformPrimaryMap2D>;
     using Metric = cslibs_math::sampling::Metric;
     using Radian = cslibs_math::sampling::Radian;
-    using rng_t  = cslibs_math::sampling::Uniform<Metric, Metric, Radian>;
+    using rng_t  = cslibs_math::sampling::Uniform<double, Metric, Metric, Radian>;
+
+    using transform_t  = typename StateSpaceDescription2D::transform_t;
 
     UniformPrimaryMap2D() = default;
 
@@ -30,11 +32,11 @@ protected:
     int                             random_seed_;
 
     rng_t::Ptr                      rng_;
-    cslibs_math_2d::Transform2d     w_T_primary_;
+    transform_t                     w_T_primary_;
     Map2D::ConstPtr                 primary_map_;
     MapProvider2D::Ptr              primary_map_provider_;
     std::vector<Map2D::ConstPtr>    secondary_maps_;
-    std::vector<cslibs_math_2d::Transform2d, cslibs_math_2d::Transform2d::allocator_t>  secondary_maps_T_w_;
+    std::vector<transform_t, transform_t::allocator_t>  secondary_maps_T_w_;
 
     virtual void doSetup(const std::map<std::string, MapProvider2D::Ptr> &map_providers,
                          ros::NodeHandle &nh) override;

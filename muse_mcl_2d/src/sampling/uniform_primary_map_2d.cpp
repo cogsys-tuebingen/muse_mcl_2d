@@ -28,7 +28,7 @@ bool UniformPrimaryMap2D::update(const std::string& frame)
             throw std::runtime_error("[UniformPrimaryMap2D] : a secondary map was null!");
         }
 
-        cslibs_math_2d::Transform2d secondary_map_T_w;
+        transform_t secondary_map_T_w;
         if(tf_->lookupTransform(map->getFrame(), frame, now, secondary_map_T_w, tf_timeout_)) {
             secondary_maps_T_w_[i] = secondary_map_T_w;
             secondary_maps_[i] = map;
@@ -40,8 +40,9 @@ bool UniformPrimaryMap2D::update(const std::string& frame)
     /// to be axis-aligned, relative to the map origin
     /// but internal frames are already within calculation
 
-    cslibs_math_2d::Point2d min = primary_map_->getMin();
-    cslibs_math_2d::Point2d max = primary_map_->getMax();
+    using point_t = StateSpaceDescription2D::state_space_boundary_t;
+    point_t min = primary_map_->getMin();
+    point_t max = primary_map_->getMax();
     rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}));
     if (random_seed_ >= 0)
         rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}, random_seed_));
@@ -96,7 +97,7 @@ void UniformPrimaryMap2D::apply(Sample2D& sample)
         sample.state.setFrom(rng_->get());
         valid = primary_map_->validate(sample.state);
         if (valid) {
-            cslibs_math_2d::Transform2d pose  = w_T_primary_ * sample.state;
+            transform_t pose  = w_T_primary_ * sample.state;
             for (std::size_t i = 0 ; i < secondary_maps_count ; ++i)
                 valid &= secondary_maps_[i]->validate(secondary_maps_T_w_[i] * pose);
         }

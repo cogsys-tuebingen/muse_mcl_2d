@@ -44,7 +44,7 @@ void KLDAugmented2D::doApply(sample_set_t& sample_set)
     for (std::size_t i = 0 ; i < size ; ++i)
         cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
 
-    cslibs_math::random::Uniform<1> rng(0.0, 1.0);
+    cslibs_math::random::Uniform<double,1> rng(0.0, 1.0);
     double min_weight = std::numeric_limits<double>::max();
     for (std::size_t i = 0 ; i < sample_size_maximum ; ++i) {
         const double u = rng.get();
@@ -88,7 +88,7 @@ void KLDAugmented2D::doApplyRecovery(sample_set_t& sample_set)
     auto  i_p_t = sample_set.getInsertion();
     const std::size_t size = p_t_1.size();
 
-    cslibs_math::random::Uniform<1> rng(0.0, 1.0);
+    cslibs_math::random::Uniform<double,1> rng(0.0, 1.0);
 
     Sample2D sample;
     const std::size_t sample_size_minimum = std::max(sample_set.getMinimumSampleSize(), 2ul);
@@ -114,7 +114,7 @@ void KLDAugmented2D::doApplyRecovery(sample_set_t& sample_set)
     for (std::size_t i = 0 ; i < size ; ++i)
         cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
 
-    cslibs_math::random::Uniform<1> rng_recovery(0.0, 1.0);
+    cslibs_math::random::Uniform<double,1> rng_recovery(0.0, 1.0);
     double min_weight = std::numeric_limits<double>::max();
     for (std::size_t i = 0 ; i < sample_size_maximum ; ++i) {
         const double recovery_probability = rng_recovery.get();

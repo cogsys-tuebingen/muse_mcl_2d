@@ -9,13 +9,14 @@ bool Normal2D::update(const std::string& frame)
     maps_.clear();
     const ros::Time now = ros::Time::now();
 
-    cslibs_math_2d::Point2d min(std::numeric_limits<double>::max(),
-            std::numeric_limits<double>::max());
-    cslibs_math_2d::Point2d max(std::numeric_limits<double>::lowest(),
-            std::numeric_limits<double>::lowest());
+    using point_t = StateSpaceDescription2D::state_space_boundary_t;
+    point_t min(std::numeric_limits<double>::max(),
+                std::numeric_limits<double>::max());
+    point_t max(std::numeric_limits<double>::lowest(),
+                std::numeric_limits<double>::lowest());
 
     for (auto &m : map_providers_) {
-        cslibs_math_2d::Transform2d map_t_w;
+        transform_t map_t_w;
         m->waitForStateSpace();
         Map2D::ConstPtr map = m->getStateSpace();
         if (!map)
@@ -25,7 +26,7 @@ bool Normal2D::update(const std::string& frame)
             maps_.emplace_back(map);
             maps_T_w_.emplace_back(map_t_w);
 
-            cslibs_math_2d::Transform2d w_T_map = map_t_w.inverse();
+            transform_t w_T_map = map_t_w.inverse();
             min = cslibs_math::linear::min(w_T_map * map->getMin(), min);
             max = cslibs_math::linear::max(w_T_map * map->getMax(), max);
         }
@@ -33,7 +34,7 @@ bool Normal2D::update(const std::string& frame)
     return true;
 }
 
-bool Normal2D::apply(const cslibs_math_2d::Pose2d& pose, const cslibs_math_2d::Covariance3d& covariance, sample_set_t& sample_set)
+bool Normal2D::apply(const transform_t& pose, const covariance_t& covariance, sample_set_t& sample_set)
 {
     if (!update(sample_set.getFrame()))
         return false;

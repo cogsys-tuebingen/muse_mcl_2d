@@ -52,15 +52,13 @@ public:
     void mean(state_t &mean, covariance_t &covariance) const override;
     bool maxClusterMean(state_t &mean, covariance_t &covariance) const override;
 
-
 protected:
-    indexation_t                                indexation_;
-    std::shared_ptr<cis_kd_tree_buffered_t>     kdtree_;
+    indexation_t                                       indexation_;
+    std::shared_ptr<cis_kd_tree_buffered_t>            kdtree_;
 
-    mutable state_t                             offset_;
-    clustering_t                                clustering_impl_;
-    cslibs_math::statistics::Distribution<2,0>  global_position_;
-    cslibs_math::statistics::AngularMean        global_angle_;
+    mutable state_t                                    offset_;
+    clustering_t                                       clustering_impl_;
+    cslibs_math::statistics::Distribution<double,2,0>  global_position_;
+    cslibs_math::statistics::AngularMean<double>       global_angle_;
 };
-
 }

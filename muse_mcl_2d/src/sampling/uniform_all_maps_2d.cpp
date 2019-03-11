@@ -11,10 +11,11 @@ bool UniformAllMaps2D::update(const std::string& frame)
 {
     const ros::Time now = ros::Time::now();
 
-    cslibs_math_2d::Point2d min(std::numeric_limits<double>::max(),
-            std::numeric_limits<double>::max());
-    cslibs_math_2d::Point2d max(std::numeric_limits<double>::lowest(),
-            std::numeric_limits<double>::lowest());
+    using point_t = StateSpaceDescription2D::state_space_boundary_t;
+    point_t min(std::numeric_limits<double>::max(),
+                std::numeric_limits<double>::max());
+    point_t max(std::numeric_limits<double>::lowest(),
+                std::numeric_limits<double>::lowest());
 
     const std::size_t map_provider_count = map_providers_.size();
     maps_T_w_.resize(map_provider_count);
@@ -28,12 +29,12 @@ bool UniformAllMaps2D::update(const std::string& frame)
         if(!map)
             throw std::runtime_error("[UniformAllMaps2D] : map was null!");
 
-        cslibs_math_2d::Transform2d map_T_w;
+        transform_t map_T_w;
         if (tf_->lookupTransform(map->getFrame(), frame, now, map_T_w, tf_timeout_)) {
             maps_[i] = map;
             maps_T_w_[i] = map_T_w;
 
-            cslibs_math_2d::Transform2d w_T_map = map_T_w.inverse();
+            transform_t w_T_map = map_T_w.inverse();
             min = cslibs_math::linear::min(w_T_map * map->getMin(), min);
             max = cslibs_math::linear::max(w_T_map * map->getMax(), max);
         } else {

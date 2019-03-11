@@ -10,15 +10,13 @@
 
 namespace muse_mcl_2d {
 struct EIGEN_ALIGN16 SampleDensityData2D {
-
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
-
     using allocator_t = Eigen::aligned_allocator<SampleDensityData2D>;
 
     using sample_ptr_vector_t = std::vector<const Sample2D *>;
 
-    using distribution_t      = cslibs_math::statistics::WeightedDistribution<2,0>;
-    using angular_mean_t      = cslibs_math::statistics::WeightedAngularMean;
+    using distribution_t      = cslibs_math::statistics::WeightedDistribution<double,2,0>;
+    using angular_mean_t      = cslibs_math::statistics::WeightedAngularMean<double>;
 
     int                 cluster = -1;
     sample_ptr_vector_t samples;
@@ -36,7 +34,6 @@ struct EIGEN_ALIGN16 SampleDensityData2D {
         angular_mean((other.angular_mean))
     {
     }
-
 
     inline SampleDensityData2D(SampleDensityData2D &&other) :
         cluster(other.cluster),
@@ -59,7 +56,6 @@ struct EIGEN_ALIGN16 SampleDensityData2D {
     {
     }
 
-
     inline SampleDensityData2D(const Sample2D &sample)
     {
         samples.emplace_back(&sample);
@@ -73,7 +69,6 @@ struct EIGEN_ALIGN16 SampleDensityData2D {
         distribution += other.distribution;
         angular_mean += other.angular_mean;
     }
-
 };
 }
 

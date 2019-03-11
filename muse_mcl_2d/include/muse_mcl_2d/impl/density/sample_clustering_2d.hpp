@@ -140,10 +140,7 @@ struct SampleClustering2D {
     cluster_map_t      clusters;
     distribution_map_t distributions;
     angular_mean_map_t angular_means;
-
 };
-
 }
-
 
 #endif // SAMPLE_CLUSTERING_2D_HPP

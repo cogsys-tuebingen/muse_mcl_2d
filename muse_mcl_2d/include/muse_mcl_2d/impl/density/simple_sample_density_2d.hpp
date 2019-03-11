@@ -47,8 +47,8 @@ public:
     using indexation_t              = SampleIndexation2D;
     using sample_data_t             = SampleDensityData2D;
     using clustering_t              = SampleClustering2D;
-    using distribution_t            = cslibs_math::statistics::WeightedDistribution<2,0>;
-    using angular_mean_t            = cslibs_math::statistics::WeightedAngularMean;
+    using distribution_t            = cslibs_math::statistics::WeightedDistribution<double,2,0>;
+    using angular_mean_t            = cslibs_math::statistics::WeightedAngularMean<double>;
 
     using index_t                   = indexation_t::index_t;
 
@@ -72,12 +72,12 @@ public:
     bool maxClusterMean(state_t &mean, covariance_t &covariance) const override;
 
 protected:
-    indexation_t                                indexation_;
-    std::shared_ptr<cis_kd_tree_buffered_t>     kdtree_;
+    indexation_t                                       indexation_;
+    std::shared_ptr<cis_kd_tree_buffered_t>            kdtree_;
 
-    clustering_t                                clustering_impl_;
-    cslibs_math::statistics::Distribution<2,0>  global_position_;
-    cslibs_math::statistics::AngularMean        global_angle_;
+    clustering_t                                       clustering_impl_;
+    cslibs_math::statistics::Distribution<double,2,0>  global_position_;
+    cslibs_math::statistics::AngularMean<double>       global_angle_;
 
 };
 }

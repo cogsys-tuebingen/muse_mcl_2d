@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     for(const double sigma : sigmas) {
         std::cout << "Running with sigma '" << sigma << "'" << std::endl;
         cslibs_time::Duration duration_box_muller;
-        cslibs_math::statistics::Distribution<1> distribution_box_muller;
+        cslibs_math::statistics::Distribution<double,1> distribution_box_muller;
         for(std::size_t i = 0 ; i < samples ; ++i) {
             double r;
             cslibs_time::Time t = cslibs_time::Time::now();
@@ -45,8 +45,8 @@ int main(int argc, char *argv[])
         std::cout << "----------------------" << std::endl;
 
         cslibs_time::Duration duration_normal;
-        cslibs_math::statistics::Distribution<1,0> distribution_normal;
-        cslibs_math::random::Normal<1> rng(0.0, sigma);
+        cslibs_math::statistics::Distribution<double,1,0> distribution_normal;
+        cslibs_math::random::Normal<double,1> rng(0.0, sigma);
         for(std::size_t i = 0 ; i < samples ; ++i) {
             double r;
             cslibs_time::Time t = cslibs_time::Time::now();

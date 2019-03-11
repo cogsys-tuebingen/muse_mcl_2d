@@ -32,18 +32,18 @@ public:
         return "muse_mcl_2d::SampleDensity2D";
     }
 
-    using distribution_t      = cslibs_math::statistics::WeightedDistribution<2,0>;
-    using angular_mean_t      = cslibs_math::statistics::WeightedAngularMean;
+    using distribution_t      = cslibs_math::statistics::WeightedDistribution<double,2,0>;
+    using angular_mean_t      = cslibs_math::statistics::WeightedAngularMean<double>;
     using distribution_map_t  = std::unordered_map<int,
                                                    distribution_t,
                                                    std::hash<int>,
                                                    std::equal_to<int>,
                                                    Eigen::aligned_allocator<std::pair<const int, distribution_t>>>;
-    using angular_mean_map_t    = std::unordered_map<int,
-                                                     angular_mean_t,
-                                                     std::hash<int>,
-                                                     std::equal_to<int>,
-                                                     Eigen::aligned_allocator<std::pair<const int, angular_mean_t>>>;
+    using angular_mean_map_t  = std::unordered_map<int,
+                                                   angular_mean_t,
+                                                   std::hash<int>,
+                                                   std::equal_to<int>,
+                                                   Eigen::aligned_allocator<std::pair<const int, angular_mean_t>>>;
     using sample_ptr_vector_t = std::vector<const Sample2D *>;
     using cluster_map_t       = std::unordered_map<int, sample_ptr_vector_t>;
 

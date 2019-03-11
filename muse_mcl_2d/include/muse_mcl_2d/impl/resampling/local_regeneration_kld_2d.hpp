@@ -8,16 +8,17 @@
 namespace muse_mcl_2d {
 class LocalRegenerationKLD2D : public Resampling2D
 {
+    using covariance_t = typename StateSpaceDescription2D::covariance_t;
 
 protected:
-    double                       kld_error_;
-    double                       kld_z_;
-    cslibs_math_2d::Covariance3d covariance_;
-    double                       cov_x_;
-    double                       cov_y_;
-    double                       cov_yaw_;
-    double                       variance_threshold_;
-    bool                         reset_one_;
+    double       kld_error_;
+    double       kld_z_;
+    covariance_t covariance_;
+    double       cov_x_;
+    double       cov_y_;
+    double       cov_yaw_;
+    double       variance_threshold_;
+    bool         reset_one_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;
     void doApply(sample_set_t &sample_set);
