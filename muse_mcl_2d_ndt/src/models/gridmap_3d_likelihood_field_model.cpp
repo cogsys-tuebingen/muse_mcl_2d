@@ -18,15 +18,19 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
                                           const state_space_t::ConstPtr  &map,
                                           sample_set_t::weight_iterator_t set)
 {
-    if (!map->isType<Gridmap3d>() || !data->isType<cslibs_plugins_data::types::Pointcloud3d>())
+    using pointcloud_t = cslibs_plugins_data::types::Pointcloud3d<double>;
+    using transform_t  = cslibs_math_3d::Transform3d<double>;
+    using point_t      = cslibs_math_3d::Point3d<double>;
+
+    if (!map->isType<Gridmap3d>() || !data->isType<pointcloud_t>())
         return;
 
-    const cslibs_ndt_3d::dynamic_maps::Gridmap      &gridmap       = *(map->as<Gridmap3d>().data());
-    const cslibs_plugins_data::types::Pointcloud3d  &cloud_data   = data->as<cslibs_plugins_data::types::Pointcloud3d>();
-    const cslibs_math_3d::Pointcloud3d::ConstPtr    &cloud_points = cloud_data.points();
+    const Gridmap3d::map_t &gridmap      = *(map->as<Gridmap3d>().data());
+    const pointcloud_t     &cloud_data   = data->as<pointcloud_t>();
+    const cslibs_math_3d::Pointcloud3d<double>::ConstPtr &cloud_points = cloud_data.points();
 
     /// cloud to base transform
-    cslibs_math_3d::Transform3d b_T_s, m_T_w;
+    transform_t b_T_s, m_T_w;
     if (!tf_->lookupTransform(robot_base_frame_,
                               cloud_data.frame(),
                               ros::Time(cloud_data.timeFrame().end.seconds()),
@@ -42,19 +46,19 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
 
     // mixture distribution entries
     const double bundle_resolution_inv = 1.0 / gridmap.getBundleResolution();
-    auto to_bundle_index = [&bundle_resolution_inv](const cslibs_math_3d::Point3d &p) {
+    auto to_bundle_index = [&bundle_resolution_inv](const point_t &p) {
         return std::array<int, 3>({{static_cast<int>(std::floor(p(0) * bundle_resolution_inv)),
                                     static_cast<int>(std::floor(p(1) * bundle_resolution_inv)),
                                     static_cast<int>(std::floor(p(2) * bundle_resolution_inv))}});
     };
-    auto likelihood = [this](const cslibs_math_3d::Point3d &p,
-                             const cslibs_math::statistics::Distribution<3, 3> &d) {
+    auto likelihood = [this](const point_t &p,
+                             const cslibs_math::statistics::Distribution<double,3, 3> &d) {
         const auto &q         = p.data() - d.getMean();
         const double exponent = -0.5 * d2_ * double(q.transpose() * d.getInformationMatrix() * q);
         const double e        = d1_ * std::exp(exponent);
         return std::isnormal(e) ? e : 0.0;
     };
-    auto bundle_likelihood = [&gridmap, &to_bundle_index, &likelihood](const cslibs_math_3d::Point3d &p) {
+    auto bundle_likelihood = [&gridmap, &to_bundle_index, &likelihood](const point_t &p) {
         const auto &bundle = gridmap.getDistributionBundle(to_bundle_index(p));
         return 0.125 * (likelihood(p, bundle->at(0)->data()) +
                         likelihood(p, bundle->at(1)->data()) +
@@ -85,12 +89,12 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
         utility_pcl::getRepresentativePoints(histogram, *cloud_points, cloud_indices);
 
         for (auto it = set.begin(); it != set.end(); ++it) {
-            cslibs_math_3d::Transform3d it_s(it.state().tx(), it.state().ty(), 0, it.state().yaw()); /// cloud camera pose in map coordinates
-            cslibs_math_3d::Transform3d m_T_s = m_T_w * it_s * b_T_s;
+            transform_t it_s(it.state().tx(), it.state().ty(), 0, it.state().yaw()); /// cloud camera pose in map coordinates
+            transform_t m_T_s = m_T_w * it_s * b_T_s;
             double p = 1.0;
             for (const std::size_t i : cloud_indices) {
                 const auto &point = cloud_points->at(i);
-                const cslibs_math_3d::Point3d map_point = m_T_s * point;
+                const point_t map_point = m_T_s * point;
                 p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
             }
             *it *= p;
@@ -99,12 +103,12 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
         const std::size_t points_size = cloud_points->size();
         const std::size_t points_step = std::max(1ul, (points_size - 1) / (max_points_ - 1));
         for (auto it = set.begin() ; it != set.end() ; ++it) {
-            cslibs_math_3d::Transform3d it_s(it.state().tx(), it.state().ty(), 0, it.state().yaw()); /// cloud camera pose in map coordinates
-            cslibs_math_3d::Transform3d m_T_s = m_T_w * it_s * b_T_s;
+            transform_t it_s(it.state().tx(), it.state().ty(), 0, it.state().yaw()); /// cloud camera pose in map coordinates
+            transform_t m_T_s = m_T_w * it_s * b_T_s;
             double p = 1.0;
             for (std::size_t i = 0 ; i < points_size ;  i+= points_step) {
                 const auto &point = cloud_points->at(i);
-                const cslibs_math_3d::Point3d map_point = m_T_s * point;
+                const point_t map_point = m_T_s * point;
                 p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
             }
             *it *= p;

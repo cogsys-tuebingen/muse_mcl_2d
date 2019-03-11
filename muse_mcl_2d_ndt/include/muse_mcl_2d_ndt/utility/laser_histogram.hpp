@@ -10,10 +10,11 @@
 namespace muse_mcl_2d_ndt {
 namespace utility_ray {
 namespace cis        = cslibs_indexed_storage;
-using ray_t          = cslibs_plugins_data::types::Laserscan::Ray;
-using rays_t         = cslibs_plugins_data::types::Laserscan::rays_t;
-using point_t        = cslibs_plugins_data::types::Laserscan::point_t;
-using distribution_t = cslibs_math::statistics::Distribution<2>;
+using laserscan_t    = cslibs_plugins_data::types::Laserscan<double>;
+using ray_t          = laserscan_t::Ray;
+using rays_t         = laserscan_t::rays_t;
+using point_t        = laserscan_t::point_t;
+using distribution_t = cslibs_math::statistics::Distribution<double,2>;
 using index_t        = std::array<int, 2>;
 
 struct EIGEN_ALIGN16 Data {

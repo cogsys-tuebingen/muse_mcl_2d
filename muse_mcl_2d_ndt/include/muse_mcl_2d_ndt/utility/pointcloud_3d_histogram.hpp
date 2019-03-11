@@ -10,9 +10,9 @@
 namespace muse_mcl_2d_ndt {
 namespace utility_pcl {
 namespace cis        = cslibs_indexed_storage;
-using cloud_t        = cslibs_math_3d::Pointcloud3d;
-using point_t        = cslibs_math_3d::Point3d;
-using distribution_t = cslibs_math::statistics::Distribution<3>;
+using cloud_t        = cslibs_math_3d::Pointcloud3d<double>;
+using point_t        = cslibs_math_3d::Point3d<double>;
+using distribution_t = cslibs_math::statistics::Distribution<double,3>;
 using index_t        = std::array<int, 3>;
 
 struct EIGEN_ALIGN16 Data {
