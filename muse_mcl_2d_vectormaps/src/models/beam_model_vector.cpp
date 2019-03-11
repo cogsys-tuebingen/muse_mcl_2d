@@ -24,14 +24,15 @@ void BeamModelVector::apply(const data_t::ConstPtr          &data,
         return;
     }
 
+    using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
     const static_maps::VectorMap &vectormap = map->as<static_maps::VectorMap>();
     const cslibs_vectormaps::VectorMap &cslibs_vectormap = vectormap.getMap();
-    const cslibs_plugins_data::types::Laserscan &laser_data = data->as<cslibs_plugins_data::types::Laserscan>();
-    const cslibs_plugins_data::types::Laserscan::rays_t &laser_rays = laser_data.getRays();
+    const laserscan_t &laser_data = data->as<laserscan_t>();
+    const laserscan_t::rays_t &laser_rays = laser_data.getRays();
 
     /// laser to base transform
-    cslibs_math_2d::Transform2d b_T_l;
-    cslibs_math_2d::Transform2d m_T_w;
+    transform_t b_T_l;
+    transform_t m_T_w;
     if(!tf_->lookupTransform(robot_base_frame_,
                              laser_data.frame(),
                              ros::Time(laser_data.timeFrame().end.seconds()),
@@ -45,7 +46,7 @@ void BeamModelVector::apply(const data_t::ConstPtr          &data,
                              tf_timeout_))
         return;
 
-    const cslibs_plugins_data::types::Laserscan::rays_t rays = laser_data.getRays();
+    const laserscan_t::rays_t rays = laser_data.getRays();
     const auto end = set.end();
     const std::size_t rays_size = rays.size();
     const std::size_t ray_step  = std::max(1ul, rays_size / max_beams_);
@@ -72,8 +73,8 @@ void BeamModelVector::apply(const data_t::ConstPtr          &data,
         return ray_range < range_max ? p_rand : 0.0;
     };
     auto probability = [&cslibs_vectormap, &p_hit, &p_short, &p_max, &p_random, range_max]
-            (const cslibs_plugins_data::types::Laserscan::Ray &ray, const cslibs_math_2d::Pose2d &m_T_l,
-            cslibs_vectormaps::VectorMap::Vector &vectormap_ray, const void* cell)
+            (const laserscan_t::Ray &ray, const state_t &m_T_l,
+             cslibs_vectormaps::VectorMap::Vector &vectormap_ray, const void* cell)
     {
         /// <--- vectormap specific
         const double ray_angle = m_T_l.yaw() + ray.angle; // ray angle in map coordinates
@@ -89,7 +90,7 @@ void BeamModelVector::apply(const data_t::ConstPtr          &data,
     };
 
     for(auto it = set.begin(); it != end; ++it) {
-        const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
+        const state_t m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
         double p = 1.0;
 
         /// <--- vectormap specific

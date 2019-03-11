@@ -13,6 +13,10 @@
 namespace muse_mcl_2d_vectormaps {
 class BeamModelAMCLOrientedGridParallel : public muse_mcl_2d::UpdateModel2D {
 public:
+    using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
+    using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
+
     BeamModelAMCLOrientedGridParallel();
 
     virtual void apply(const data_t::ConstPtr          &data,
@@ -36,12 +40,12 @@ protected:
     std::size_t rays_size_;
     std::size_t rays_step_;
 
-    data_t::ConstPtr                                                data_;
-    state_space_t::ConstPtr                                         map_;
+    data_t::ConstPtr                                                    data_;
+    state_space_t::ConstPtr                                             map_;
 
-    std::array<std::queue<std::pair<cslibs_math_2d::Pose2d const*, std::size_t>>, 4> samples_;
+    std::array<std::queue<std::pair<state_t const*, std::size_t>>, 4>   samples_;
 
-    std::vector<double>                                             results_;
+    std::vector<double>                                                 results_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;
 
@@ -74,8 +78,8 @@ protected:
         return x*x*x;
     }
 
-    inline double probability(const cslibs_plugins_data::types::Laserscan::rays_t  &rays,
-                              const cslibs_math_2d::Pose2d                         &m_T_l,
+    inline double probability(const laserscan_t::rays_t                            &rays,
+                              const state_t                                        &m_T_l,
                               const cslibs_vectormaps::OrientedGridVectorMap       &map_data) const
     {
             cslibs_vectormaps::VectorMap::Vector vectormap_ray;

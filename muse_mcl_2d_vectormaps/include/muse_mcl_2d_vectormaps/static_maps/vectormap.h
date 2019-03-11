@@ -6,10 +6,11 @@
 
 namespace muse_mcl_2d_vectormaps {
 namespace static_maps {
-
 class VectorMap : public muse_mcl_2d::Map2D {
 public:
     using Ptr = std::shared_ptr<VectorMap>;
+    using point_t = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
+    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
 
     VectorMap(cslibs_vectormaps::VectorMap::Ptr vector_map) :
         muse_mcl_2d::Map2D("map"),
@@ -17,26 +18,26 @@ public:
     {
     }
 
-    virtual cslibs_math_2d::Point2d getMin() const override
+    virtual point_t getMin() const override
     {
         cslibs_vectormaps::VectorMap::Point p = vector_map_->minCorner();
-        return cslibs_math_2d::Point2d(p.x(), p.y());
+        return point_t(p.x(), p.y());
     }
 
-    virtual cslibs_math_2d::Point2d getMax() const override
+    virtual point_t getMax() const override
     {
         cslibs_vectormaps::VectorMap::Point p = vector_map_->maxCorner();
-        return cslibs_math_2d::Point2d(p.x(), p.y());
+        return point_t(p.x(), p.y());
     }
 
-    virtual cslibs_math_2d::Pose2d getOrigin() const override
+    virtual state_t getOrigin() const override
     {
-        cslibs_math_2d::Pose2d origin = cslibs_math_2d::Pose2d::identity();
+        state_t origin = state_t::identity();
         origin.translation() = getMin();
         return origin;
     }
 
-    virtual bool validate(const cslibs_math_2d::Pose2d &) const override
+    virtual bool validate(const state_t &) const override
     {
         return true;
     }

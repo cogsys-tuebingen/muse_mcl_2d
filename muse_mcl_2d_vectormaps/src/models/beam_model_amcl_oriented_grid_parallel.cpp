@@ -14,8 +14,6 @@ namespace muse_mcl_2d_vectormaps {
     {
     }
 
-
-
     void BeamModelAMCLOrientedGridParallel::apply(const data_t::ConstPtr             &data,
                                                   const state_space_t::ConstPtr      &map,
                                                   sample_set_t::weight_iterator_t     set)
@@ -24,14 +22,14 @@ namespace muse_mcl_2d_vectormaps {
             return;
         }
 
-        const cslibs_plugins_data::types::Laserscan &laser_data = data->as<cslibs_plugins_data::types::Laserscan>();
+        const laserscan_t &laser_data = data->as<laserscan_t>();
 
         data_ = data;
         map_ = map;
 
         /// laser to base transform
-        cslibs_math_2d::Transform2d b_T_l;
-        cslibs_math_2d::Transform2d m_T_w;
+        transform_t b_T_l;
+        transform_t m_T_w;
         if(!tf_->lookupTransform(robot_base_frame_,
                                  laser_data.frame(),
                                  ros::Time(laser_data.timeFrame().end.seconds()),
@@ -63,17 +61,17 @@ namespace muse_mcl_2d_vectormaps {
         }
 
         /// do work
-        auto do_work = [this](const cslibs_math_2d::Pose2d &m_T_w,
-                              const cslibs_math_2d::Pose2d &b_T_l,
-                              std::queue<std::pair<cslibs_math_2d::Pose2d const*, std::size_t>> &q){
+        auto do_work = [this](const state_t &m_T_w,
+                              const state_t &b_T_l,
+                              std::queue<std::pair<state_t const*, std::size_t>> &q){
             const static_maps::OrientedGridVectorMap &vectormap = map_->as<static_maps::OrientedGridVectorMap>();
             const cslibs_vectormaps::OrientedGridVectorMap &map_data = vectormap.getMap();
-            const cslibs_plugins_data::types::Laserscan &laser_data = data_->as<cslibs_plugins_data::types::Laserscan>();
-            const cslibs_plugins_data::types::Laserscan::rays_t &rays = laser_data.getRays();
+            const laserscan_t &laser_data = data_->as<laserscan_t>();
+            const laserscan_t::rays_t &rays = laser_data.getRays();
 
             while(!q.empty()) {
-                std::pair<cslibs_math_2d::Pose2d const*, std::size_t> s = q.front();
-                const cslibs_math_2d::Pose2d m_T_l = m_T_w * (*(s.first)) * b_T_l;
+                std::pair<state_t const*, std::size_t> s = q.front();
+                const state_t m_T_l = m_T_w * (*(s.first)) * b_T_l;
                 results_[s.second] = probability(rays, m_T_l, map_data);
                 q.pop();
             }
@@ -111,6 +109,5 @@ namespace muse_mcl_2d_vectormaps {
         denominator_hit_          = 1.0 / (std::sqrt(2.0 * M_PI) * sigma_hit_);
         lambda_short_ = nh.param(param_name("lambda_short"), 0.01);
         chi_outlier_  = nh.param(param_name("chi_outlier"), 0.05);
-
     }
 }

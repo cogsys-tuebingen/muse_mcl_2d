@@ -26,14 +26,15 @@ namespace muse_mcl_2d_vectormaps {
             return;
         }
 
+        using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
         const static_maps::OrientedGridVectorMap &vectormap = map->as<static_maps::OrientedGridVectorMap>();
         const cslibs_vectormaps::OrientedGridVectorMap &cslibs_vectormap = vectormap.getMap();
-        const cslibs_plugins_data::types::Laserscan &laser_data = data->as<cslibs_plugins_data::types::Laserscan>();
-        const cslibs_plugins_data::types::Laserscan::rays_t &laser_rays = laser_data.getRays();
+        const laserscan_t &laser_data = data->as<laserscan_t>();
+        const laserscan_t::rays_t &laser_rays = laser_data.getRays();
 
         /// laser to base transform
-        cslibs_math_2d::Transform2d b_T_l;
-        cslibs_math_2d::Transform2d m_T_w;
+        transform_t b_T_l;
+        transform_t m_T_w;
         if(!tf_->lookupTransform(robot_base_frame_,
                                  laser_data.frame(),
                                  ros::Time(laser_data.timeFrame().end.seconds()),
@@ -47,7 +48,7 @@ namespace muse_mcl_2d_vectormaps {
                                  tf_timeout_))
             return;
 
-        const cslibs_plugins_data::types::Laserscan::rays_t rays = laser_data.getRays();
+        const laserscan_t::rays_t rays = laser_data.getRays();
         const auto end = set.end();
         const std::size_t rays_size = rays.size();
         const std::size_t ray_step  = std::max(1ul, (rays_size - 1) / (max_beams_ - 1));
@@ -75,15 +76,15 @@ namespace muse_mcl_2d_vectormaps {
             return ray_range < range_max ? p_rand : 0.0;
         };
 
-        cslibs_math::statistics::Mean<2> mean;
-        double                           min_angle = std::numeric_limits<double>::max();
-        double                           max_angle = std::numeric_limits<double>::lowest();
+        cslibs_math::statistics::Mean<double,2> mean;
+        double min_angle = std::numeric_limits<double>::max();
+        double max_angle = std::numeric_limits<double>::lowest();
 
         auto probability = [&cslibs_vectormap, &p_hit, &p_short, &p_max, &p_random, range_max,
                             &min_angle, &max_angle, &mean]
-                (const cslibs_plugins_data::types::Laserscan::Ray &ray, const cslibs_math_2d::Pose2d &m_T_l,
-                cslibs_vectormaps::VectorMap::Vector &vectormap_ray, //const void* cell)
-                const unsigned int& vrow, const unsigned int& vcol)
+                (const laserscan_t::Ray &ray, const state_t &m_T_l,
+                 cslibs_vectormaps::VectorMap::Vector &vectormap_ray, //const void* cell)
+                 const unsigned int& vrow, const unsigned int& vcol)
         {
             /// <--- vectormap specific
             const double ray_angle = cslibs_math::common::angle::normalize(m_T_l.yaw() + ray.angle); // ray angle in map coordinates
@@ -115,7 +116,7 @@ namespace muse_mcl_2d_vectormaps {
 
 
         for(auto it = set.begin(); it != end; ++it) {
-            const cslibs_math_2d::Pose2d m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
+            const state_t m_T_l = m_T_w * it.state() * b_T_l; /// laser scanner pose in map coordinates
             double p = 1.0;
 
             /// <--- vectormap specific
