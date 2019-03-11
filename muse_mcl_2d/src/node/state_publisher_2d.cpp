@@ -4,7 +4,7 @@
 
 namespace muse_mcl_2d {
 StatePublisher::StatePublisher() :
-    latest_w_T_b_(cslibs_math_2d::Transform2d(),
+    latest_w_T_b_(transform_t(),
                   cslibs_time::Time(ros::Time::now().toNSec()).time())
 {
 }

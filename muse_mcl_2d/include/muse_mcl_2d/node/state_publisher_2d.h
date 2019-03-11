@@ -17,7 +17,9 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     using Ptr = std::shared_ptr<StatePublisher>;
-    using stamped_t = cslibs_math::utility::Stamped<cslibs_math_2d::Transform2d>;
+    using transform_t  = StateSpaceDescription2D::transform_t;
+    using covariance_t = StateSpaceDescription2D::covariance_t;
+    using stamped_t    = cslibs_math::utility::Stamped<transform_t>;
 
     StatePublisher();
     virtual ~StatePublisher();
@@ -36,8 +38,8 @@ private:
     std::string                 odom_frame_;
     std::string                 base_frame_;
 
-    stamped_t                             latest_w_T_b_;
-    cslibs_math_2d::Covariance3d          latest_w_T_b_covariance_;
+    stamped_t                   latest_w_T_b_;
+    covariance_t                latest_w_T_b_covariance_;
 
     void publishState(const sample_set_t::ConstPtr &sample_set);
 };
