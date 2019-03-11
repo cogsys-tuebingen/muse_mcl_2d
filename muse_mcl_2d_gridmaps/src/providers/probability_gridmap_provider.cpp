@@ -40,8 +40,8 @@ namespace muse_mcl_2d_gridmaps {
         auto load = [this, msg]() {
             if(!map_ || cslibs_time::Time(msg->info.map_load_time.toNSec()) > map_->getStamp()) {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << msg->info.width << " x " << msg->info.height << "]");
-                cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr map;
-                cslibs_gridmaps::static_maps::conversion::from(*msg, map);
+                ProbabilityGridmap::map_t::Ptr map;
+                cslibs_gridmaps::static_maps::conversion::from<double,double>(*msg, map);
 
                 std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new ProbabilityGridmap(map, msg->header.frame_id));

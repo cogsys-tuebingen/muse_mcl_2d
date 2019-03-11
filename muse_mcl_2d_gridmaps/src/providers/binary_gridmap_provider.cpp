@@ -47,8 +47,8 @@ namespace muse_mcl_2d_gridmaps {
 
             if(update_map) {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << msg->info.width << " x " << msg->info.height << "]");
-                cslibs_gridmaps::static_maps::BinaryGridmap::Ptr map;
-                cslibs_gridmaps::static_maps::conversion::from(*msg, map, binarization_threshold_);
+                BinaryGridmap::map_t::Ptr map;
+                cslibs_gridmaps::static_maps::conversion::from<double>(*msg, map, binarization_threshold_);
 
                 std::unique_lock<std::mutex> l(map_mutex_);
                 map_.reset(new BinaryGridmap(map, msg->header.frame_id));

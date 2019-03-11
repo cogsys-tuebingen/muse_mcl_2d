@@ -33,8 +33,8 @@ namespace muse_mcl_2d_gridmaps {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map [" << path << "]");
                 nav_msgs::OccupancyGrid::Ptr msg;
                 if (utility::loadMap(path, frame_id, msg)) {
-                    cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr map;
-                    cslibs_gridmaps::static_maps::conversion::from(*msg, map);
+                    ProbabilityGridmap::map_t::Ptr map;
+                    cslibs_gridmaps::static_maps::conversion::from<double,double>(*msg, map);
 
                     std::unique_lock<std::mutex> l(map_mutex_);
                     map_.reset(new ProbabilityGridmap(map, msg->header.frame_id));

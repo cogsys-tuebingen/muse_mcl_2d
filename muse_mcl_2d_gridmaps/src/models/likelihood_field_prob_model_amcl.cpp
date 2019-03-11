@@ -24,6 +24,7 @@ void LikelihoodFieldProbModelAMCL::apply(const data_t::ConstPtr          &data,
     using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
     using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
     using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using point_t     = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
 
     const DistanceGridmap::map_t &gridmap    = *(map->as<DistanceGridmap>().data());
     const laserscan_t            &laser_data = data->as<laserscan_t>();
@@ -76,7 +77,7 @@ void LikelihoodFieldProbModelAMCL::apply(const data_t::ConstPtr          &data,
                 if(!ray.valid())
                     continue;
 
-                const cslibs_math_2d::Point2d ray_end_point = m_T_l * ray.end_point;
+                const point_t ray_end_point = m_T_l * ray.end_point;
                 const double distance = gridmap.at(ray_end_point);
                 const double pz = p_hit(distance) + p_rand;
 

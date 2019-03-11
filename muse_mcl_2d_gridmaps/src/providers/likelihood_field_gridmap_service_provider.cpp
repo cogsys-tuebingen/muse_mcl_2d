@@ -22,8 +22,8 @@ namespace muse_mcl_2d_gridmaps {
             nav_msgs::GetMap req;
             if(source_.call(req)) {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map.");
-                cslibs_gridmaps::static_maps::LikelihoodFieldGridmap::Ptr map;
-                cslibs_gridmaps::static_maps::conversion::from(req.response.map, map, maximum_distance_, sigma_hit_, binarization_threshold_);
+                LikelihoodFieldGridmap::map_t::Ptr map;
+                cslibs_gridmaps::static_maps::conversion::from<double,double>(req.response.map, map, maximum_distance_, sigma_hit_, binarization_threshold_);
                 map_.reset(new LikelihoodFieldGridmap(map, std::string(req.response.map.header.frame_id)));
                 ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
             }

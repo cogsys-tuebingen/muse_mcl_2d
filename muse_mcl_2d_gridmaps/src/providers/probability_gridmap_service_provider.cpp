@@ -18,8 +18,8 @@ namespace muse_mcl_2d_gridmaps {
             nav_msgs::GetMap req;
             if(source_.call(req)) {
                 ROS_INFO_STREAM("[" << name_ << "]: Loading map.");
-                cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr map;
-                cslibs_gridmaps::static_maps::conversion::from(req.response.map, map);
+                ProbabilityGridmap::map_t::Ptr map;
+                cslibs_gridmaps::static_maps::conversion::from<double,double>(req.response.map, map);
                 map_.reset(new ProbabilityGridmap(map, std::string(req.response.map.header.frame_id)));
                 ROS_INFO_STREAM("[" << name_ << "]: Loaded map.");
             }
