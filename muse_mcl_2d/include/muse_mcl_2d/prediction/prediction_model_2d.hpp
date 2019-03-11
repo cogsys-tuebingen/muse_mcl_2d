@@ -22,10 +22,11 @@ public:
 
     struct Result2D : public Result
     {
+        using odometry_t = cslibs_plugins_data::types::Odometry2D<double>;
         inline Result2D(const double linear_distance_abs,
                         const double angular_distance_abs,
-                        const cslibs_plugins_data::types::Odometry2D::ConstPtr &applied,
-                        const cslibs_plugins_data::types::Odometry2D::ConstPtr &left_to_apply) :
+                        const odometry_t::ConstPtr &applied,
+                        const odometry_t::ConstPtr &left_to_apply) :
             Result(applied, left_to_apply),
             linear_distance_abs(linear_distance_abs),
             angular_distance_abs(angular_distance_abs)

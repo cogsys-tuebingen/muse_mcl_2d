@@ -15,11 +15,10 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
     /// ----------------- t^u
     ///
 
-    cslibs_plugins_data::types::Odometry2D::ConstPtr original =
-      std::dynamic_pointer_cast<cslibs_plugins_data::types::Odometry2D const>(data);
+    Result2D::odometry_t::ConstPtr original = std::dynamic_pointer_cast<Result2D::odometry_t const>(data);
 
-    cslibs_plugins_data::types::Odometry2D::ConstPtr apply = original;
-    cslibs_plugins_data::types::Odometry2D::ConstPtr leave;
+    Result2D::odometry_t::ConstPtr apply = original;
+    Result2D::odometry_t::ConstPtr leave;
 
     const cslibs_time::Time       &s = states.getStamp();
     const cslibs_time::TimeFrame &tf = data->timeFrame();
@@ -31,7 +30,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
        apply = original;
     }
 
-    const cslibs_plugins_data::types::Odometry2D &odometry = *apply;
+    const Result2D::odometry_t &odometry = *apply;
 
 
     const double delta_trans = odometry.getDeltaLinear();
@@ -67,22 +66,22 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
                                              alpha_2_ * sq(delta_trans));
 
     if(!rng_delta_rot_hat1_) {
-        rng_delta_rot_hat1_.reset(new cslibs_math::random::Normal<1>(0.0,  sigma_rot_hat1, seed_));
+        rng_delta_rot_hat1_.reset(new cslibs_math::random::Normal<double,1>(0.0,  sigma_rot_hat1, seed_));
     } else {
         rng_delta_rot_hat1_->set(0.0, sigma_rot_hat1);
     }
     if(!rng_delta_trans_hat_) {
-        rng_delta_trans_hat_.reset(new cslibs_math::random::Normal<1>(0.0, sigma_trans_hat, seed_ + 1));
+        rng_delta_trans_hat_.reset(new cslibs_math::random::Normal<double,1>(0.0, sigma_trans_hat, seed_ + 1));
     } else {
         rng_delta_trans_hat_->set(0.0, sigma_trans_hat);
     }
     if(!rng_delta_rot_hat2_) {
-        rng_delta_rot_hat2_.reset(new cslibs_math::random::Normal<1>(0.0, sigma_rot_hat2, seed_ + 2));
+        rng_delta_rot_hat2_.reset(new cslibs_math::random::Normal<double,1>(0.0, sigma_rot_hat2, seed_ + 2));
     } else {
         rng_delta_rot_hat2_->set(0.0, sigma_rot_hat2);
     }
 
-    for(cslibs_math_2d::Pose2d &sample : states) {
+    for(muse_mcl_2d::StateSpaceDescription2D::state_t &sample : states) {
         const double delta_rot_hat1  = cslibs_math::common::angle::difference(delta_rot1, rng_delta_rot_hat1_->get());
         const double delta_trans_hat = (delta_trans - rng_delta_trans_hat_->get()) * sign_trans;
         const double delta_rot_hat2  = cslibs_math::common::angle::difference(delta_rot2, rng_delta_rot_hat2_->get());

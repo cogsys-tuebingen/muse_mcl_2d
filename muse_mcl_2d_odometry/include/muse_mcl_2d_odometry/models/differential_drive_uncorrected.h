@@ -24,9 +24,9 @@ protected:
     double       alpha_5_;
     double       translation_threshold_;
 
-    cslibs_math::random::Normal<1>::Ptr rng_delta_rot_hat1_;
-    cslibs_math::random::Normal<1>::Ptr rng_delta_trans_hat_;
-    cslibs_math::random::Normal<1>::Ptr rng_delta_rot_hat2_;
+    cslibs_math::random::Normal<double,1>::Ptr rng_delta_rot_hat1_;
+    cslibs_math::random::Normal<double,1>::Ptr rng_delta_trans_hat_;
+    cslibs_math::random::Normal<double,1>::Ptr rng_delta_rot_hat2_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;
 };

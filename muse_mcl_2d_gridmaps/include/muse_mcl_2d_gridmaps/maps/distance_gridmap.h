@@ -11,20 +11,21 @@ class DistanceGridmap : public muse_mcl_2d::Map2D
 {
 public:
     using Ptr = std::shared_ptr<DistanceGridmap>;
+    using map_t = cslibs_gridmaps::static_maps::DistanceGridmap<double,double>;
+    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
 
-    DistanceGridmap(const cslibs_gridmaps::static_maps::DistanceGridmap::Ptr &map,
+    DistanceGridmap(const map_t::Ptr &map,
                     const std::string frame_id);
 
     state_space_boundary_t getMin() const override;
     state_space_boundary_t getMax() const override;
     state_space_transform_t getOrigin() const override;
-    bool validate(const cslibs_math_2d::Pose2d &p_w) const override;
-    cslibs_gridmaps::static_maps::DistanceGridmap::Ptr& data();
-    cslibs_gridmaps::static_maps::DistanceGridmap::Ptr const & data() const;
+    bool validate(const state_t &p_w) const override;
+    map_t::Ptr& data();
+    map_t::Ptr const & data() const;
 
 private:
-    cslibs_gridmaps::static_maps::DistanceGridmap::Ptr data_;
-
+    map_t::Ptr data_;
 };
 }
 #endif // MUSE_MCL_2D_GRIDMAPS_DISTANCE_GRIDMAP_HPP

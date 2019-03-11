@@ -10,19 +10,19 @@ OmniDrive::Result::Ptr OmniDrive::apply(const cslibs_plugins_data::Data::ConstPt
                                         const cslibs_time::Time                   &until,
                                         sample_set_t::state_iterator_t             states)
 {
-    cslibs_plugins_data::types::Odometry2D::ConstPtr apply;
-    cslibs_plugins_data::types::Odometry2D::ConstPtr leave;
+    Result2D::odometry_t::ConstPtr apply;
+    Result2D::odometry_t::ConstPtr leave;
     if(until < data->timeFrame().end) {
-        cslibs_plugins_data::types::Odometry2D::ConstPtr original =
-            std::dynamic_pointer_cast<cslibs_plugins_data::types::Odometry2D const>(data);
+        Result2D::odometry_t::ConstPtr original =
+            std::dynamic_pointer_cast<Result2D::odometry_t const>(data);
         if(!original->split(until, apply, leave)) {
             apply = original;
         }
     } else {
-        apply = std::dynamic_pointer_cast<cslibs_plugins_data::types::Odometry2D const>(data);
+        apply = std::dynamic_pointer_cast<Result2D::odometry_t const>(data);
     }
 
-    const cslibs_plugins_data::types::Odometry2D &odometry = *apply;
+    const Result2D::odometry_t &odometry = *apply;
 
     const double delta_trans = odometry.getDeltaLinear();
     const double delta_rot   = odometry.getDeltaAngular();
@@ -43,22 +43,22 @@ OmniDrive::Result::Ptr OmniDrive::apply(const cslibs_plugins_data::Data::ConstPt
     const double delta_strafe_hat_stddev    = std::sqrt(alpha_1_ * sq(delta_rot) +
                                                         alpha_5_ * sq(delta_trans));
     if(!rng_delta_trans_hat_) {
-        rng_delta_trans_hat_.reset(new cslibs_math::random::Normal<1>(0.0,  delta_trans_hat_stddev, seed_));
+        rng_delta_trans_hat_.reset(new cslibs_math::random::Normal<double,1>(0.0,  delta_trans_hat_stddev, seed_));
     } else {
         rng_delta_trans_hat_->set(0.0, delta_trans_hat_stddev);
     }
     if(!rng_delta_rot_hat_) {
-        rng_delta_rot_hat_.reset(new cslibs_math::random::Normal<1>(0.0,  delta_rot_hat_stddev, seed_));
+        rng_delta_rot_hat_.reset(new cslibs_math::random::Normal<double,1>(0.0,  delta_rot_hat_stddev, seed_));
     } else {
         rng_delta_rot_hat_->set(0.0, delta_rot_hat_stddev);
     }
     if(!rng_delta_strafe_hat_) {
-        rng_delta_strafe_hat_.reset(new cslibs_math::random::Normal<1>(0.0,  delta_strafe_hat_stddev, seed_));
+        rng_delta_strafe_hat_.reset(new cslibs_math::random::Normal<double,1>(0.0,  delta_strafe_hat_stddev, seed_));
     } else {
         rng_delta_strafe_hat_->set(0.0, delta_strafe_hat_stddev);
     }
 
-    for(cslibs_math_2d::Pose2d &sample : states) {
+    for(muse_mcl_2d::StateSpaceDescription2D::state_t &sample : states) {
         double tx  = sample.tx();
         double ty  = sample.ty();
         double yaw = sample.yaw();

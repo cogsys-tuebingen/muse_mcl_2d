@@ -10,18 +10,21 @@ class ProbabilityGridmap : public muse_mcl_2d::Map2D
 {
 public:
     using Ptr = std::shared_ptr<ProbabilityGridmap>;
+    using map_t = cslibs_gridmaps::static_maps::ProbabilityGridmap<double,double>;
+    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
 
-    ProbabilityGridmap(const cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr &map,
+    ProbabilityGridmap(const map_t::Ptr &map,
                        const std::string frame_id);
     state_space_boundary_t getMin() const override;
     state_space_boundary_t getMax() const override;
     state_space_transform_t getOrigin() const override;
-    bool validate(const cslibs_math_2d::Pose2d &p_w) const override;
-    cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr& data();
-    cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr const & data() const;
-private:
-    cslibs_gridmaps::static_maps::ProbabilityGridmap::Ptr data_;
+    bool validate(const state_t &p_w) const override;
+    map_t::Ptr& data();
+    map_t::Ptr const & data() const;
 
+private:
+    map_t::Ptr data_;
 };
 }
+
 #endif // PROBABILITY_GRIDMAP_HPP

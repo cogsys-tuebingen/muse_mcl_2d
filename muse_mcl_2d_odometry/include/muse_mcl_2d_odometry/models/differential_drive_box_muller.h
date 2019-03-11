@@ -11,9 +11,9 @@ class DifferentialDriveBoxMuller : public muse_mcl_2d::PredictionModel2D
 public:
     DifferentialDriveBoxMuller() = default;
 
-    virtual Result::Ptr apply(const cslibs_plugins_data::Data::ConstPtr  &data,
-                              const cslibs_time::Time                    &until,
-                              sample_set_t::state_iterator_t  states) override;
+    virtual Result::Ptr apply(const cslibs_plugins_data::Data::ConstPtr &data,
+                              const cslibs_time::Time                   &until,
+                              sample_set_t::state_iterator_t             states) override;
 
 protected:
     unsigned int seed_;

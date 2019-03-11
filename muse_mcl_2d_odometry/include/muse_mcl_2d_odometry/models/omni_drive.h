@@ -11,9 +11,9 @@ class OmniDrive : public muse_mcl_2d::PredictionModel2D
 public:
     OmniDrive() = default;
 
-    virtual Result::Ptr apply(const cslibs_plugins_data::Data::ConstPtr          &data,
-                              const cslibs_time::Time                    &until,
-                              sample_set_t::state_iterator_t  states) override;
+    virtual Result::Ptr apply(const cslibs_plugins_data::Data::ConstPtr &data,
+                              const cslibs_time::Time                   &until,
+                              sample_set_t::state_iterator_t             states) override;
 
 protected:
     unsigned int seed_;
@@ -23,12 +23,11 @@ protected:
     double alpha_4_;
     double alpha_5_;
 
-    cslibs_math::random::Normal<1>::Ptr rng_delta_trans_hat_;
-    cslibs_math::random::Normal<1>::Ptr rng_delta_rot_hat_;
-    cslibs_math::random::Normal<1>::Ptr rng_delta_strafe_hat_;
+    cslibs_math::random::Normal<double,1>::Ptr rng_delta_trans_hat_;
+    cslibs_math::random::Normal<double,1>::Ptr rng_delta_rot_hat_;
+    cslibs_math::random::Normal<double,1>::Ptr rng_delta_strafe_hat_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;
-
 };
 }
 

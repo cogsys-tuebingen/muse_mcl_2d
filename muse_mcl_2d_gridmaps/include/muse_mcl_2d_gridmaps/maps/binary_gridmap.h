@@ -2,6 +2,7 @@
 #define MUSE_MCL_2D_GRIDMAPS_BINARY_GRIDMAP_HPP
 
 #include <muse_mcl_2d/map/map_2d.hpp>
+#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 
 #include <cslibs_time/stamped.hpp>
 #include <cslibs_gridmaps/static_maps/binary_gridmap.h>
@@ -11,20 +12,21 @@ class BinaryGridmap : public muse_mcl_2d::Map2D
 {
 public:
     using Ptr = std::shared_ptr<BinaryGridmap>;
+    using map_t = cslibs_gridmaps::static_maps::BinaryGridmap<double>;
+    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
 
-    BinaryGridmap(const cslibs_gridmaps::static_maps::BinaryGridmap::Ptr &map,
+    BinaryGridmap(const map_t::Ptr &map,
                   const std::string frame_id);
 
     state_space_boundary_t getMin() const override;
     state_space_boundary_t getMax() const override;
     state_space_transform_t getOrigin() const override;
-    bool validate(const cslibs_math_2d::Pose2d &p) const override;
-    cslibs_gridmaps::static_maps::BinaryGridmap::Ptr& data();
-    cslibs_gridmaps::static_maps::BinaryGridmap::Ptr const & data() const;
+    bool validate(const state_t &p) const override;
+    map_t::Ptr& data();
+    map_t::Ptr const & data() const;
 
 private:
-    cslibs_gridmaps::static_maps::BinaryGridmap::Ptr data_;
-
+    map_t::Ptr data_;
 };
 }
 
