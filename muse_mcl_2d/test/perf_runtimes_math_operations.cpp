@@ -13,12 +13,12 @@ const std::size_t ITERATIONS = 1000000;
 
 void constructors()
 {
-    cslibs_math::random::Uniform<1> rng(-10.0, 10.0);
+    cslibs_math::random::Uniform<double,1> rng(-10.0, 10.0);
 
     cslibs_time::Time start = cslibs_time::Time::now();
     double yaw = 0.0;
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        cslibs_math_2d::Transform2d t;
+        cslibs_math_2d::Transform2d<double> t;
         yaw = t.yaw();
     }
     std::cout << "empty:" << "\n";
@@ -26,16 +26,16 @@ void constructors()
 
     start = cslibs_time::Time::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        cslibs_math_2d::Transform2d t(i, i);
+        cslibs_math_2d::Transform2d<double> t(i, i);
         yaw = t.yaw();
     }
     std::cout << "x y:" << "\n";
     std::cout << "took time: " << (cslibs_time::Time::now() - start).milliseconds() << "ms" << "\n";
 
     start = cslibs_time::Time::now();
-    cslibs_math_2d::Vector2d v(rng.get(), rng.get());
+    cslibs_math_2d::Vector2d<double> v(rng.get(), rng.get());
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        cslibs_math_2d::Transform2d t(v);
+        cslibs_math_2d::Transform2d<double> t(v);
         yaw = t.yaw();
         v(0) += i;
     }
@@ -44,7 +44,7 @@ void constructors()
 
     start = cslibs_time::Time::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        cslibs_math_2d::Transform2d t(i,i,i);
+        cslibs_math_2d::Transform2d<double> t(i,i,i);
         yaw = t.yaw();
     }
     std::cout << "x y yaw:" << "\n";
@@ -52,16 +52,16 @@ void constructors()
 
     start = cslibs_time::Time::now();
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        cslibs_math_2d::Transform2d t(v,i);
+        cslibs_math_2d::Transform2d<double> t(v,i);
         yaw = t.yaw();
     }
     std::cout << "v yaw:" << "\n";
     std::cout << "took time: " << (cslibs_time::Time::now() - start).milliseconds() << "ms" << "\n";
 
     start = cslibs_time::Time::now();
-    cslibs_math_2d::Transform2d t(rng.get(), rng.get());
+    cslibs_math_2d::Transform2d<double> t(rng.get(), rng.get());
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
-        cslibs_math_2d::Transform2d t_(t);
+        cslibs_math_2d::Transform2d<double> t_(t);
         yaw = t_.yaw();
     }
     std::cout << "t:" << "\n";
@@ -70,14 +70,14 @@ void constructors()
 
 void multiplyVector()
 {
-    cslibs_math::random::Uniform<1> rng(-10.0, 10.0);
+    cslibs_math::random::Uniform<double,1> rng(-10.0, 10.0);
     double mean_ms_t = 0.0;
     double mean_ms_tf= 0.0;
 
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         cslibs_time::Time start = cslibs_time::Time::now();
-        cslibs_math_2d::Transform2d t(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
-        cslibs_math_2d::Vector2d v(rng.get(), rng.get());
+        cslibs_math_2d::Transform2d<double> t(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
+        cslibs_math_2d::Vector2d<double> v(rng.get(), rng.get());
         for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
             v = t * v;
         }
@@ -101,16 +101,16 @@ void multiplyVector()
 
 void multiplyTransform()
 {
-    cslibs_math::random::Uniform<1> rng(-10.0, 10.0);
+    cslibs_math::random::Uniform<double,1> rng(-10.0, 10.0);
     double mean_ms_t = 0.0;
     double mean_ms_tf= 0.0;
 
-    cslibs_math_2d::Transform2d t;
+    cslibs_math_2d::Transform2d<double> t;
     tf::Transform tf;
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         cslibs_time::Time start = cslibs_time::Time::now();
-        cslibs_math_2d::Transform2d ta(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
-        cslibs_math_2d::Transform2d tb(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
+        cslibs_math_2d::Transform2d<double> ta(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
+        cslibs_math_2d::Transform2d<double> tb(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
         for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
             tb = ta * tb;
         }
@@ -137,16 +137,16 @@ void multiplyTransform()
 
 void multiplyAssignTransform()
 {
-    cslibs_math::random::Uniform<1> rng(-10.0, 10.0);
+    cslibs_math::random::Uniform<double,1> rng(-10.0, 10.0);
     double mean_ms_t = 0.0;
     double mean_ms_tf= 0.0;
 
-    cslibs_math_2d::Transform2d t;
+    cslibs_math_2d::Transform2d<double> t;
     tf::Transform tf;
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         cslibs_time::Time start = cslibs_time::Time::now();
-        cslibs_math_2d::Transform2d ta(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
-        cslibs_math_2d::Transform2d tb(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
+        cslibs_math_2d::Transform2d<double> ta(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
+        cslibs_math_2d::Transform2d<double> tb(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
         for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
             tb *= ta;
         }
@@ -173,17 +173,17 @@ void multiplyAssignTransform()
 
 void assign()
 {
-    cslibs_math::random::Uniform<1> rng(-10.0, 10.0);
+    cslibs_math::random::Uniform<double,1> rng(-10.0, 10.0);
     double mean_ms_t = 0.0;
     double mean_ms_tl= 0.0;
     double mean_ms_tf= 0.0;
 
-    cslibs_math_2d::Transform2d t;
+    cslibs_math_2d::Transform2d<double> t;
     tf::Transform tf;
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         cslibs_time::Time start = cslibs_time::Time::now();
-        cslibs_math_2d::Transform2d ta(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
-        cslibs_math_2d::Transform2d tb(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
+        cslibs_math_2d::Transform2d<double> ta(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
+        cslibs_math_2d::Transform2d<double> tb(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
         for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
             tb = ta;
         }
@@ -210,15 +210,15 @@ void assign()
 
 void inverse()
 {
-    cslibs_math::random::Uniform<1> rng(-10.0, 10.0);
+    cslibs_math::random::Uniform<double,1> rng(-10.0, 10.0);
     double mean_ms_t = 0.0;
     double mean_ms_tf= 0.0;
 
-    cslibs_math_2d::Transform2d t;
+    cslibs_math_2d::Transform2d<double> t;
     tf::Transform tf;
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         cslibs_time::Time start = cslibs_time::Time::now();
-        cslibs_math_2d::Transform2d ta(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
+        cslibs_math_2d::Transform2d<double> ta(rng.get(), rng.get(), cslibs_math::common::angle::normalize(rng.get()));
         for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
             t = ta.inverse() * t;
         }
@@ -241,13 +241,13 @@ void inverse()
 
 void length()
 {
-    cslibs_math::random::Uniform<1> rng(-10.0, 10.0);
+    cslibs_math::random::Uniform<double,1> rng(-10.0, 10.0);
     double mean_ms_t = 0.0;
     double mean_ms_tf= 0.0;
 
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         cslibs_time::Time start = cslibs_time::Time::now();
-        cslibs_math_2d::Vector2d tv(rng.get(), rng.get());
+        cslibs_math_2d::Vector2d<double> tv(rng.get(), rng.get());
         double length = 0.0;
         for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
             length = tv.length();
