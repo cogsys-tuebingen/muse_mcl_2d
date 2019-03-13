@@ -25,7 +25,7 @@ void LikelihoodFieldModelAMCL::apply(const data_t::ConstPtr          &data,
         return;
     }
 
-    using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
+    using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
     using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
     using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
     using point_t     = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;

@@ -23,7 +23,7 @@ void LikelihoodFieldModelVector::apply(const data_t::ConstPtr          &data,
         return;
     }
 
-    using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
+    using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
     const static_maps::VectorMap &vectormap = map->as<static_maps::VectorMap>();
     const cslibs_vectormaps::VectorMap &cslibs_vectormap = vectormap.getMap();
     const laserscan_t &laser_data = data->as<laserscan_t>();

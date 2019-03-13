@@ -47,7 +47,7 @@ public:
     {
         if(step->isType<PredictionModel2D::Result2D>()) {
             const PredictionModel2D::Result2D &step_2d = step->as<PredictionModel2D::Result2D>();
-            const cslibs_plugins_data::types::Odometry2D<double> &appl = step_2d.applied->as<const cslibs_plugins_data::types::Odometry2D<double>>();
+            const cslibs_plugins_data::types::Odometry2d &appl = step_2d.applied->as<const cslibs_plugins_data::types::Odometry2d>();
             if (start_pose_.tx() == 0.0 && start_pose_.ty() == 0.0 && start_pose_.yaw() == 0.0)
                 start_pose_ = appl.getStartPose();
             end_pose_ = appl.getEndPose();

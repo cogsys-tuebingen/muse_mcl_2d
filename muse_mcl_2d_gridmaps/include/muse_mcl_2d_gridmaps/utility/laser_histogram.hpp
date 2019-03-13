@@ -10,9 +10,9 @@
 namespace muse_mcl_2d_gridmaps {
 namespace utilty {
 namespace cis        = cslibs_indexed_storage;
-using ray_t          = cslibs_plugins_data::types::Laserscan::Ray;
-using rays_t         = cslibs_plugins_data::types::Laserscan::rays_t;
-using point_t        = cslibs_plugins_data::types::Laserscan::point_t;
+using ray_t          = cslibs_plugins_data::types::Laserscan2::Ray;
+using rays_t         = cslibs_plugins_data::types::Laserscan2::rays_t;
+using point_t        = cslibs_plugins_data::types::Laserscan2::point_t;
 using distribution_t = cslibs_math::statistics::Distribution<2>;
 using index_t        = std::array<int, 2>;
 

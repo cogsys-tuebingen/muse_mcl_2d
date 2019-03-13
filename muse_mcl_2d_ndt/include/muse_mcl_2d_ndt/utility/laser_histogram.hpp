@@ -10,7 +10,7 @@
 namespace muse_mcl_2d_ndt {
 namespace utility_ray {
 namespace cis        = cslibs_indexed_storage;
-using laserscan_t    = cslibs_plugins_data::types::Laserscan<double>;
+using laserscan_t    = cslibs_plugins_data::types::Laserscan2d;
 using ray_t          = laserscan_t::Ray;
 using rays_t         = laserscan_t::rays_t;
 using point_t        = laserscan_t::point_t;

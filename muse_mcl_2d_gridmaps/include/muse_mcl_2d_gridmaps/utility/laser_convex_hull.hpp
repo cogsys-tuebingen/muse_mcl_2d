@@ -38,9 +38,9 @@ struct Point
 } __attribute__ ((aligned (32)));
 
 using polygon_t = boost::geometry::model::polygon<Point>;
-using rays_t    = cslibs_plugins_data::types::Laserscan::rays_t;
-using ray_t     = cslibs_plugins_data::types::Laserscan::Ray;
-using laserscan_t = cslibs_plugins_data::types::Laserscan;
+using rays_t    = cslibs_plugins_data::types::Laserscan2::rays_t;
+using ray_t     = cslibs_plugins_data::types::Laserscan2::Ray;
+using laserscan_t = cslibs_plugins_data::types::Laserscan2;
 
 inline void convexHull(const laserscan_t& scan,
                        std::vector<std::size_t> &indices)

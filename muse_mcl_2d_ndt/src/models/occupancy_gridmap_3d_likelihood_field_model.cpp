@@ -18,16 +18,16 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                                                    const state_space_t::ConstPtr  &map,
                                                    sample_set_t::weight_iterator_t set)
 {
-    using pointcloud_t = cslibs_plugins_data::types::Pointcloud3d<double>;
-    using transform_t  = cslibs_math_3d::Transform3d<double>;
-    using point_t      = cslibs_math_3d::Point3d<double>;
+    using pointcloud_t = cslibs_plugins_data::types::Pointcloud3d;
+    using transform_t  = cslibs_math_3d::Transform3d;
+    using point_t      = cslibs_math_3d::Point3d;
 
     if (!map->isType<OccupancyGridmap3d>() || !data->isType<pointcloud_t>())
         return;
 
     const OccupancyGridmap3d::map_t &gridmap    = *(map->as<OccupancyGridmap3d>().data());
     const pointcloud_t              &cloud_data = data->as<pointcloud_t>();
-    const cslibs_math_3d::Pointcloud3d<double>::ConstPtr &cloud_points = cloud_data.points();
+    const cslibs_math_3d::Pointcloud3d::ConstPtr &cloud_points = cloud_data.points();
 
     /// cloud to base transform
     transform_t b_T_s, m_T_w;

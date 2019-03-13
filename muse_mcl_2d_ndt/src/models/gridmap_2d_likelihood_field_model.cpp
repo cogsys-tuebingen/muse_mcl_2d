@@ -16,7 +16,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
                                           const state_space_t::ConstPtr  &map,
                                           sample_set_t::weight_iterator_t set)
 {
-    using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
+    using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
     using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
     using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
     using point_t     = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
@@ -46,7 +46,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
 
     /// evaluation functions
     const double bundle_resolution_inv = 1.0 / gridmap.getBundleResolution();
-    auto to_bundle_index = [&bundle_resolution_inv](const cslibs_math_2d::Vector2d<double> &p) {
+    auto to_bundle_index = [&bundle_resolution_inv](const cslibs_math_2d::Vector2d &p) {
         return std::array<int, 2>({{static_cast<int>(std::floor(p(0) * bundle_resolution_inv)),
                                     static_cast<int>(std::floor(p(1) * bundle_resolution_inv))}});
     };

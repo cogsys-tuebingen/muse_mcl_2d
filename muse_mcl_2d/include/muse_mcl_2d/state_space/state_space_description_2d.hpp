@@ -7,10 +7,10 @@ namespace muse_mcl_2d {
 struct StateSpaceDescription2D
 {
     using sample_t               = Sample2D;
-    using state_t                = typename cslibs_math_2d::Pose2d<double>;
-    using state_space_boundary_t = typename cslibs_math_2d::Point2d<double>;
-    using transform_t            = typename cslibs_math_2d::Transform2d<double>;
-    using covariance_t           = typename cslibs_math_2d::Covariance2d<double>;
+    using state_t                = cslibs_math_2d::Pose2d;
+    using state_space_boundary_t = cslibs_math_2d::Point2d;
+    using transform_t            = cslibs_math_2d::Transform2d;
+    using covariance_t           = cslibs_math_2d::Covariance2d;
 };
 }
 

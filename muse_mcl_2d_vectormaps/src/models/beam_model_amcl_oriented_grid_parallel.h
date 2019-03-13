@@ -15,7 +15,7 @@ class BeamModelAMCLOrientedGridParallel : public muse_mcl_2d::UpdateModel2D {
 public:
     using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
     using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
-    using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
+    using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
 
     BeamModelAMCLOrientedGridParallel();
 

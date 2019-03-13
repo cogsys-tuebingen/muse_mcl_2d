@@ -15,7 +15,7 @@ namespace muse_mcl_2d_ndt {
                     const state_space_t::ConstPtr   &map,
                     sample_set_t::weight_iterator_t  set)
   {
-      using laserscan_t = cslibs_plugins_data::types::Laserscan<double>;
+      using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
       using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
       using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
       using point_t     = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
