@@ -1,5 +1,3 @@
-#pragma once
-
 #include <muse_mcl_2d/scheduling/scheduler_2d.hpp>
 #include <cslibs_plugins/plugin.hpp>
 #include <ext/pb_ds/priority_queue.hpp>
