@@ -18,9 +18,10 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                                                    const state_space_t::ConstPtr  &map,
                                                    sample_set_t::weight_iterator_t set)
 {
-    using pointcloud_t = cslibs_plugins_data::types::Pointcloud3d;
-    using transform_t  = cslibs_math_3d::Transform3d;
-    using point_t      = cslibs_math_3d::Point3d;
+    using pointcloud_t   = cslibs_plugins_data::types::Pointcloud3d;
+    using transform_t    = cslibs_math_3d::Transform3d;
+    using point_t        = cslibs_math_3d::Point3d;
+    using distribution_t = typename OccupancyGridmap3d::map_t::distribution_t::distribution_t;
 
     if (!map->isType<OccupancyGridmap3d>() || !data->isType<pointcloud_t>())
         return;
@@ -52,7 +53,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                                     static_cast<int>(std::floor(p(2) * bundle_resolution_inv))}});
     };
     auto likelihood = [this](const point_t &p,
-                             const cslibs_math::statistics::Distribution<double,3, 3>::Ptr &d,
+                             const typename distribution_t::Ptr &d,
                              const double &inv_occ) {
         auto apply = [&p, &d, &inv_occ, this](){
             const auto &q         = p.data() - d->getMean();

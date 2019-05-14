@@ -16,10 +16,11 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
                                           const state_space_t::ConstPtr  &map,
                                           sample_set_t::weight_iterator_t set)
 {
-    using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
-    using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
-    using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
-    using point_t     = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
+    using laserscan_t    = cslibs_plugins_data::types::Laserscan2d;
+    using transform_t    = muse_mcl_2d::StateSpaceDescription2D::transform_t;
+    using state_t        = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using point_t        = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
+    using distribution_t = typename Gridmap2d::map_t::distribution_t::distribution_t;
 
     if (!map->isType<Gridmap2d>() || !data->isType<laserscan_t>())
         return;
@@ -51,7 +52,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
                                     static_cast<int>(std::floor(p(1) * bundle_resolution_inv))}});
     };
     auto likelihood = [this](const point_t &p,
-                             const cslibs_math::statistics::Distribution<double, 2, 3> &d) {
+                             const distribution_t &d) {
         const auto &q         = p.data() - d.getMean();
         const double exponent = -0.5 * d2_ * double(q.transpose() * d.getInformationMatrix() * q);
         const double e        = d1_ * std::exp(exponent);

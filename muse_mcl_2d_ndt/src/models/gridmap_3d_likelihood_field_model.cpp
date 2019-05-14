@@ -18,9 +18,10 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
                                           const state_space_t::ConstPtr  &map,
                                           sample_set_t::weight_iterator_t set)
 {
-    using pointcloud_t = cslibs_plugins_data::types::Pointcloud3d;
-    using transform_t  = cslibs_math_3d::Transform3d;
-    using point_t      = cslibs_math_3d::Point3d;
+    using pointcloud_t   = cslibs_plugins_data::types::Pointcloud3d;
+    using transform_t    = cslibs_math_3d::Transform3d;
+    using point_t        = cslibs_math_3d::Point3d;
+    using distribution_t = typename Gridmap3d::map_t::distribution_t::distribution_t;
 
     if (!map->isType<Gridmap3d>() || !data->isType<pointcloud_t>())
         return;
@@ -52,7 +53,7 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
                                     static_cast<int>(std::floor(p(2) * bundle_resolution_inv))}});
     };
     auto likelihood = [this](const point_t &p,
-                             const cslibs_math::statistics::Distribution<double,3, 3> &d) {
+                             const distribution_t &d) {
         const auto &q         = p.data() - d.getMean();
         const double exponent = -0.5 * d2_ * double(q.transpose() * d.getInformationMatrix() * q);
         const double e        = d1_ * std::exp(exponent);
