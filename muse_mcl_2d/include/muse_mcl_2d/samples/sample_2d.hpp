@@ -6,6 +6,9 @@
 #include <cslibs_math_2d/linear/point.hpp>
 #include <cslibs_math_2d/linear/pose.hpp>
 #include <cslibs_math_2d/linear/covariance.hpp>
+#include <cslibs_plugins_data/data_provider.hpp>
+
+#include <muse_smc/smc/smc_traits.hpp>
 
 namespace muse_mcl_2d {
 struct EIGEN_ALIGN16 Sample2D {
@@ -56,5 +59,36 @@ public:
     }
 };
 }
+
+namespace muse_smc {
+namespace traits {
+template<>
+struct State<muse_mcl_2d::Sample2D>
+{
+    using type = cslibs_math_2d::Pose2d;
+};
+template<>
+struct Transform<muse_mcl_2d::Sample2D>
+{
+    using type = cslibs_math_2d::Transform2d;
+};
+template<>
+struct Covariance<muse_mcl_2d::Sample2D>
+{
+    using type = cslibs_math_2d::Transform2d;
+};
+template<>
+struct StateSpaceBoundary<muse_mcl_2d::Sample2D>
+{
+    using type = cslibs_math_2d::Transform2d;
+};
+template<>
+struct DataProvider<muse_mcl_2d::Sample2D>
+{
+    using type = cslibs_plugins_data::DataProvider;
+}
+}
+}
+
 
 #endif // SAMPLE_2D_HPP
