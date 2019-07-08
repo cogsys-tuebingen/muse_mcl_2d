@@ -2,7 +2,6 @@
 #define UPDATE_MODEL2D_HPP
 
 #include <muse_mcl_2d/samples/sample_2d.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 
 #include <muse_smc/update/update_model.hpp>
 
@@ -13,7 +12,7 @@
 #include <ros/node_handle.h>
 
 namespace muse_mcl_2d {
-class UpdateModel2D : public muse_smc::UpdateModel<StateSpaceDescription2D, cslibs_plugins_data::Data>,
+class UpdateModel2D : public muse_smc::UpdateModel<Sample2D>,
                       public cslibs_plugins::Plugin
 {
 public:
@@ -23,14 +22,6 @@ public:
     inline const static std::string Type()
     {
         return "muse_mcl_2d::UpdateModel2D";
-    }
-
-    inline UpdateModel2D()
-    {
-    }
-
-    virtual ~UpdateModel2D()
-    {
     }
 
     virtual inline std::size_t getId() const override

@@ -9,10 +9,9 @@ bool Normal2D::update(const std::string& frame)
     maps_.clear();
     const ros::Time now = ros::Time::now();
 
-    using point_t = StateSpaceDescription2D::state_space_boundary_t;
-    point_t min(std::numeric_limits<double>::max(),
+    cslibs_math_2d::Point2d min(std::numeric_limits<double>::max(),
                 std::numeric_limits<double>::max());
-    point_t max(std::numeric_limits<double>::lowest(),
+    cslibs_math_2d::Point2d max(std::numeric_limits<double>::lowest(),
                 std::numeric_limits<double>::lowest());
 
     for (auto &m : map_providers_) {

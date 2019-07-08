@@ -69,7 +69,7 @@ bool MuseMCL2DNode::requestPoseInitialization(muse_mcl_2d::PoseInitialization::R
         return  cslibs_math_ros::tf::conversion_2d::from<double>(p);
     };
     auto convert_covariance = [&req]() {
-        StateSpaceDescription2D::covariance_t cov;
+        Sample2D::covariance_t cov;
         for(std::size_t i = 0 ; i < 2 ; ++i) {
             for(std::size_t j = 0 ; j < 2 ; ++j) {
                 cov(i,j) = req.pose.covariance[6*i+j];
@@ -96,7 +96,7 @@ void MuseMCL2DNode::poseInitialization(const geometry_msgs::PoseWithCovarianceSt
         return  cslibs_math_ros::tf::conversion_2d::from<double>(p);
     };
     auto convert_covariance = [&msg]() {
-        StateSpaceDescription2D::covariance_t cov;
+        Sample2D::covariance_t cov;
         for(std::size_t i = 0 ; i < 2 ; ++i) {
             for(std::size_t j = 0 ; j < 2 ; ++j) {
                 cov(i,j) = msg->pose.covariance[6*i+j];
@@ -339,14 +339,14 @@ void MuseMCL2DNode::checkPoseInitialization()
             ROS_ERROR_STREAM("The initialization pose is expected to have 3 values [x, y, yaw]");
             return;
         }
-        StateSpaceDescription2D::state_t pose = StateSpaceDescription2D::state_t(p_v[0], p_v[1], p_v[2]);
+        Sample2D::state_t pose = Sample2D::state_t(p_v[0], p_v[1], p_v[2]);
 
         if(c_v.size() != 9) {
             ROS_ERROR_STREAM("The initialization covariance is expected to have 9 values.");
             return;
         }
 
-        StateSpaceDescription2D::covariance_t covariance;
+        Sample2D::covariance_t covariance;
         auto get = [&c_v](std::size_t r, std::size_t c, std::size_t step)
         {
             return c_v[r * step + c];

@@ -12,6 +12,8 @@
 #include <cslibs_math_ros/tf/tf_listener.hpp>
 #include <cslibs_math_ros/tf/conversion_2d.hpp>
 
+#include <muse_smc/smc/smc_traits.hpp>
+
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>
 #include <tf/transform_listener.h>
@@ -19,7 +21,6 @@
 #include <cslibs_time/rate.hpp>
 #include <cslibs_utility/synchronized/synchronized_queue.hpp>
 
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 
 #include <ros/time.h>
 
@@ -36,7 +37,7 @@ namespace muse_mcl_2d {
 class EIGEN_ALIGN16 TFPublisher {
 public:
     using Ptr = std::shared_ptr<TFPublisher>;
-    using transform_t = StateSpaceDescription2D::transform_t;
+    using transform_t = muse_smc::traits::Transform<Sample2D>::type;
     using stamped_t   = cslibs_math::utility::Stamped<transform_t>;
     using time_t  = cslibs_time::Time;
     using queue_t = cslibs_utility::synchronized::queue<stamped_t, std::deque<stamped_t, stamped_t::allocator_t>>;

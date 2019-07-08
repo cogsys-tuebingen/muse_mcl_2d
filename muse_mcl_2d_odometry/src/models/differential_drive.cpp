@@ -81,7 +81,7 @@ DifferentialDrive::Result::Ptr DifferentialDrive::apply(const cslibs_plugins_dat
         rng_delta_rot_hat2_->set(0.0, sigma_rot_hat2);
     }
 
-    for(muse_mcl_2d::StateSpaceDescription2D::state_t &sample : states) {
+    for(muse_mcl_2d::Sample2D::state_t &sample : states) {
         const double delta_rot_hat1  = cslibs_math::common::angle::difference(delta_rot1, rng_delta_rot_hat1_->get());
         const double delta_trans_hat = (delta_trans - rng_delta_trans_hat_->get()) * sign_trans;
         const double delta_rot_hat2  = cslibs_math::common::angle::difference(delta_rot2, rng_delta_rot_hat2_->get());

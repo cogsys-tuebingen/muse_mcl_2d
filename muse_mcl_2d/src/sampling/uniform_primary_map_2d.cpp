@@ -40,9 +40,8 @@ bool UniformPrimaryMap2D::update(const std::string& frame)
     /// to be axis-aligned, relative to the map origin
     /// but internal frames are already within calculation
 
-    using point_t = StateSpaceDescription2D::state_space_boundary_t;
-    point_t min = primary_map_->getMin();
-    point_t max = primary_map_->getMax();
+    cslibs_math_2d::Point2d min = primary_map_->getMin();
+    cslibs_math_2d::Point2d max = primary_map_->getMax();
     rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}));
     if (random_seed_ >= 0)
         rng_.reset(new rng_t({min(0), min(1), -M_PI}, {max(0), max(1), M_PI}, random_seed_));

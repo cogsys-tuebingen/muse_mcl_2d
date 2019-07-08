@@ -7,7 +7,10 @@
 #include <cslibs_math_2d/linear/pose.hpp>
 #include <cslibs_math_2d/linear/covariance.hpp>
 #include <cslibs_plugins_data/data_provider.hpp>
+<<<<<<< HEAD
 
+=======
+>>>>>>> working on traits
 #include <muse_smc/smc/smc_traits.hpp>
 
 namespace muse_mcl_2d {
@@ -62,33 +65,60 @@ public:
 
 namespace muse_smc {
 namespace traits {
+/**
+ * @brief Defines the data type the filter is working with.
+ * @tparam SampleType   sample type to set the trait for
+ */
 template<>
-struct State<muse_mcl_2d::Sample2D>
-{
+struct Data<muse_mcl_2d::Sample2D> {
+    using type = cslibs_plugins_data::Data;
+};
+
+
+/**
+ * @brief Defines the data provider type the filter is working with.
+ * @tparam SampleType   sample type to set the trait for
+ */
+template<>
+struct DataProvider<muse_mcl_2d::Sample2D> {
+    using type = cslibs_plugins_data::DataProvider;
+};
+
+/**
+ * @brief Defines the state type the filter is working with.
+ * @tparam SampleType   sample type to set the trait for
+ */
+template<>
+struct State<muse_mcl_2d::Sample2D> {
     using type = cslibs_math_2d::Pose2d;
 };
-template<>
-struct Transform<muse_mcl_2d::Sample2D>
-{
-    using type = cslibs_math_2d::Transform2d;
-};
-template<>
-struct Covariance<muse_mcl_2d::Sample2D>
-{
-    using type = cslibs_math_2d::Transform2d;
-};
-template<>
-struct StateSpaceBoundary<muse_mcl_2d::Sample2D>
-{
-    using type = cslibs_math_2d::Transform2d;
-};
-template<>
-struct DataProvider<muse_mcl_2d::Sample2D>
-{
-    using type = cslibs_plugins_data::DataProvider;
-}
-}
-}
 
+/**
+ * @brief Defines the transform type the filter is working with.
+ * @tparam SampleType   sample type to set the trait for
+ */
+template<>
+struct Transform<muse_mcl_2d::Sample2D> {
+    using type = cslibs_math_2d::Transform2d;
+};
 
+/**
+ * @brief Defines the covariance type the filter is working with.
+ * @tparam SampleType   sample type to set the trait for
+ */
+template<>
+struct Covariance<muse_mcl_2d::Sample2D> {
+    using type = cslibs_math_2d::Covariance2d;
+};
+
+/**
+ * @brief Defines the state space bounary type the filter is working with.
+ * @tparam SampleType   sample type to set the trait for
+ */
+template<>
+struct StateSpaceBoundary<muse_mcl_2d::Sample2D> {
+    using type = cslibs_math_2d::Point2d;
+};
+}
+}
 #endif // SAMPLE_2D_HPP

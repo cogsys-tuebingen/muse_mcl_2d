@@ -6,12 +6,12 @@ namespace muse_mcl_2d {
 
 void Systematic::doApply(sample_set_t& sample_set)
 {
-    muse_smc::impl::Systematic<StateSpaceDescription2D>::apply(sample_set);
+    muse_smc::impl::Systematic<Sample2D>::apply(sample_set);
 }
 
 void Systematic::doApplyRecovery(sample_set_t& sample_set)
 {
-    muse_smc::impl::Systematic<StateSpaceDescription2D>::applyRecovery(uniform_pose_sampler_,
+    muse_smc::impl::Systematic<Sample2D>::applyRecovery(uniform_pose_sampler_,
             recovery_random_pose_probability_,
             sample_set);
 }

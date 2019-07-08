@@ -13,8 +13,8 @@
 namespace muse_mcl_2d_vectormaps {
 class BeamModelAMCLOrientedGridParallel : public muse_mcl_2d::UpdateModel2D {
 public:
-    using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
-    using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using transform_t = muse_mcl_2d::Sample2D::transform_t;
+    using state_t     = muse_mcl_2d::Sample2D::state_t;
     using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
 
     BeamModelAMCLOrientedGridParallel();

@@ -1,7 +1,6 @@
 #ifndef PREDICTION_MODEL_2D_HPP
 #define PREDICTION_MODEL_2D_HPP
 
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 #include <muse_mcl_2d/samples/sample_2d.hpp>
 
 #include <muse_smc/prediction/prediction_model.hpp>
@@ -14,7 +13,7 @@
 #include <ros/node_handle.h>
 
 namespace muse_mcl_2d {
-class PredictionModel2D : public muse_smc::PredictionModel<StateSpaceDescription2D, cslibs_plugins_data::Data>,
+class PredictionModel2D : public muse_smc::PredictionModel<Sample2D, cslibs_plugins_data::Data>,
                           public cslibs_plugins::Plugin
 {
 public:

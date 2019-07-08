@@ -1,6 +1,7 @@
 #ifndef MUSE_MCL_NODE_H
 #define MUSE_MCL_NODE_H
 
+#include <muse_mcl_2d/samples/sample_2d.hpp>
 
 #include <muse_mcl_2d/GlobalInitialization.h>
 #include <muse_mcl_2d/PoseInitialization.h>
@@ -8,7 +9,6 @@
 #include <muse_mcl_2d/prediction/prediction_integral_2d.hpp>
 #include <muse_mcl_2d/prediction/prediction_integral_amcl_2d.hpp>
 #include <cslibs_math_ros/tf/tf_listener.hpp>
-#include <cslibs_plugins_data/data_provider.hpp>
 #include <muse_mcl_2d/map/map_provider_2d.hpp>
 #include <muse_mcl_2d/update/update_model_2d.hpp>
 #include <muse_mcl_2d/prediction/prediction_model_2d.hpp>
@@ -16,7 +16,6 @@
 #include <muse_mcl_2d/sampling/normal_sampling_2d.hpp>
 #include <muse_mcl_2d/resampling/resampling_2d.hpp>
 #include <muse_mcl_2d/density/sample_density_2d.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 #include <muse_mcl_2d/scheduling/scheduler_2d.hpp>
 
 #include <muse_mcl_2d/node/state_publisher_2d.h>
@@ -60,11 +59,11 @@ private:
     using data_provider_map_t    = std::map<std::string, typename data_provider_t::Ptr>;
     using update_model_map_t     = std::map<std::string, UpdateModel2D::Ptr>;
 
-    using UpdateRelay2D          = muse_smc::UpdateRelay<StateSpaceDescription2D, data_t, data_provider_t>;
-    using PredictionRelay2D      = muse_smc::PredictionRelay<StateSpaceDescription2D, data_t, data_provider_t>;
-    using smc_t                  = muse_smc::SMC<StateSpaceDescription2D, data_t>;
-    using sample_set_t           = muse_smc::SampleSet<StateSpaceDescription2D>;
-    using prediction_integrals_t = muse_smc::PredictionIntegrals<StateSpaceDescription2D, data_t>;
+    using UpdateRelay2D          = muse_smc::UpdateRelay<Sample2D, data_t, data_provider_t>;
+    using PredictionRelay2D      = muse_smc::PredictionRelay<Sample2D, data_t, data_provider_t>;
+    using smc_t                  = muse_smc::SMC<Sample2D, data_t>;
+    using sample_set_t           = muse_smc::SampleSet<Sample2D>;
+    using prediction_integrals_t = muse_smc::PredictionIntegrals<Sample2D, data_t>;
 
     using update_model_mapping_t = UpdateRelay2D::map_t;
 

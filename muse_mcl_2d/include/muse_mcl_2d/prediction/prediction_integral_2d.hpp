@@ -8,7 +8,7 @@
 #include <cslibs_plugins_data/data.hpp>
 
 namespace muse_mcl_2d {
-class PredictionIntegral2D : public muse_smc::PredictionIntegral<StateSpaceDescription2D, cslibs_plugins_data::Data>
+class PredictionIntegral2D : public muse_smc::PredictionIntegral<Sample2D, cslibs_plugins_data::Data>
 {
 public:
     inline PredictionIntegral2D() :

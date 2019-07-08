@@ -4,7 +4,6 @@
 #include <cslibs_math/common/index.hpp>
 
 #include <muse_mcl_2d/samples/sample_2d.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 
 namespace muse_mcl_2d {
 class SampleIndexation2D {
@@ -12,7 +11,7 @@ public:
     using resolution_t  = std::array<double, 2>;
     using index_t       = std::array<int, 3>;
     using size_t        = std::array<std::size_t, 2>;
-    using state_t       = StateSpaceDescription2D::state_t;
+    using state_t       = Sample2D::state_t;
 
     inline SampleIndexation2D()
     {

@@ -9,8 +9,8 @@ namespace static_maps {
 class VectorMap : public muse_mcl_2d::Map2D {
 public:
     using Ptr = std::shared_ptr<VectorMap>;
-    using point_t = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
-    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using point_t = muse_mcl_2d::Sample2D::state_space_boundary_t;
+    using state_t = muse_mcl_2d::Sample2D::state_t;
 
     VectorMap(cslibs_vectormaps::VectorMap::Ptr vector_map) :
         muse_mcl_2d::Map2D("map"),

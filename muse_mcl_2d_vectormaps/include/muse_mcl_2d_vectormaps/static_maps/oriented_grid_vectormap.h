@@ -10,8 +10,8 @@ namespace static_maps {
 class OrientedGridVectorMap : public muse_mcl_2d::Map2D {
 public:
     using Ptr = std::shared_ptr<OrientedGridVectorMap>;
-    using point_t = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
-    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using point_t = muse_mcl_2d::Sample2D::state_space_boundary_t;
+    using state_t = muse_mcl_2d::Sample2D::state_t;
 
     OrientedGridVectorMap(cslibs_vectormaps::OrientedGridVectorMap::Ptr vector_map) :
         muse_mcl_2d::Map2D("map"),

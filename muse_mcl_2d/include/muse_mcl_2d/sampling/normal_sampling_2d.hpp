@@ -1,10 +1,9 @@
 #ifndef NORMAL_2D_HPP
 #define NORMAL_2D_HPP
 
+#include <muse_mcl_2d/samples/sample_2d.hpp>
 #include <muse_smc/sampling/normal.hpp>
 
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
-#include <muse_mcl_2d/samples/sample_2d.hpp>
 #include <muse_mcl_2d/map/map_provider_2d.hpp>
 #include <muse_mcl_2d/map/map_2d.hpp>
 
@@ -14,7 +13,7 @@
 #include <ros/time.h>
 
 namespace muse_mcl_2d {
-class NormalSampling2D : public muse_smc::NormalSampling<StateSpaceDescription2D>,
+class NormalSampling2D : public muse_smc::NormalSampling<Sample2D>,
                          public cslibs_plugins::Plugin
 {
 public:

@@ -22,8 +22,8 @@ void BeamModelAMCL::apply(const data_t::ConstPtr          &data,
     }
 
     using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
-    using transform_t = muse_mcl_2d::StateSpaceDescription2D::transform_t;
-    using state_t     = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using transform_t = muse_mcl_2d::Sample2D::transform_t;
+    using state_t     = muse_mcl_2d::Sample2D::state_t;
 
     const BinaryGridmap::map_t &gridmap    = *(map->as<BinaryGridmap>().data());
     const laserscan_t          &laser_data = data->as<laserscan_t>();

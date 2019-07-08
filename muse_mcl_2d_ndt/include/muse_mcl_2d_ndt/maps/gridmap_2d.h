@@ -10,7 +10,7 @@ class Gridmap2d : public muse_mcl_2d::Map2D
 public:
     using Ptr = std::shared_ptr<Gridmap2d>;
     using map_t = cslibs_ndt_2d::dynamic_maps::Gridmap<double>;
-    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using state_t = muse_mcl_2d::Sample2D::state_t;
 
     Gridmap2d(const map_t::Ptr &map,
               const std::string frame_id);

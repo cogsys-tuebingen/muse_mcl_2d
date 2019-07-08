@@ -19,7 +19,7 @@ public:
     using Radian = cslibs_math::sampling::Radian;
     using rng_t  = cslibs_math::sampling::Uniform<double, Metric, Metric, Radian>;
 
-    using transform_t  = typename StateSpaceDescription2D::transform_t;
+    using transform_t  = typename muse_smc::traits::Transform<Sample2D>::type;
 
     virtual bool update(const std::string &frame) override;
     virtual void apply(Sample2D &sample) override;

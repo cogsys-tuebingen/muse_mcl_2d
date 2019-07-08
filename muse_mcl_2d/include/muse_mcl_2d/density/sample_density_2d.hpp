@@ -5,10 +5,8 @@
 #include <unordered_map>
 #include <class_loader/class_loader_register_macro.h>
 
-#include <muse_smc/samples/sample_density.hpp>
-
 #include <muse_mcl_2d/samples/sample_2d.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
+#include <muse_smc/samples/sample_density.hpp>
 
 #include <cslibs_math/statistics/weighted_angular_mean.hpp>
 #include <cslibs_math/statistics/weighted_distribution.hpp>
@@ -24,8 +22,8 @@ public:
 
     using Ptr          = std::shared_ptr<SampleDensity2D>;
     using ConstPtr     = std::shared_ptr<SampleDensity2D const>;
-    using state_t      = StateSpaceDescription2D::state_t;
-    using covariance_t = StateSpaceDescription2D::covariance_t;
+    using state_t      = Sample2D::state_t;
+    using covariance_t = muse_smc::traits::Covariance<Sample2D>::type;
 
     inline const static std::string Type()
     {

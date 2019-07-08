@@ -4,6 +4,7 @@
 
 #include <muse_mcl_2d/sampling/uniform_sampling_2d.hpp>
 
+#include <muse_smc/smc/smc_traits.hpp>
 
 #include <cslibs_math/sampling/uniform.hpp>
 #include <cslibs_math_ros/tf/conversion_2d.hpp>
@@ -19,7 +20,7 @@ public:
     using Radian = cslibs_math::sampling::Radian;
     using rng_t  = cslibs_math::sampling::Uniform<double, Metric, Metric, Radian>;
 
-    using transform_t  = typename StateSpaceDescription2D::transform_t;
+    using transform_t  = muse_smc::traits::Transform<Sample2D>::type;
 
     UniformPrimaryMap2D() = default;
 

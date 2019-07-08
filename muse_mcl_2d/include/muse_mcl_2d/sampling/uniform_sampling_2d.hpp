@@ -1,10 +1,9 @@
 #ifndef UNIFORM_2D_HPP
 #define UNIFORM_2D_HPP
 
-#include <muse_smc/sampling/uniform.hpp>
-
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 #include <muse_mcl_2d/samples/sample_2d.hpp>
+
+#include <muse_smc/sampling/uniform.hpp>
 #include <muse_mcl_2d/map/map_provider_2d.hpp>
 #include <muse_mcl_2d/map/map_2d.hpp>
 
@@ -12,7 +11,7 @@
 #include <cslibs_plugins/plugin.hpp>
 
 namespace muse_mcl_2d {
-class UniformSampling2D : public muse_smc::UniformSampling<StateSpaceDescription2D>,
+class UniformSampling2D : public muse_smc::UniformSampling<Sample2D>,
                           public cslibs_plugins::Plugin
 {
 public:

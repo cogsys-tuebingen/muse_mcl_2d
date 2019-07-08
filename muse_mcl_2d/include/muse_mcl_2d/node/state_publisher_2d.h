@@ -1,24 +1,24 @@
 #ifndef STATE_PUBLISHER_H
 #define STATE_PUBLISHER_H
 
+#include <muse_mcl_2d/samples/sample_2d.hpp>
+
 #include <muse_smc/smc/smc_state.hpp>
 #include <cslibs_utility/logger/csv_logger.hpp>
 
-#include <muse_mcl_2d/samples/sample_2d.hpp>
 #include <muse_mcl_2d/tf/tf_publisher.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 
 #include "sample_set_publisher_2d.h"
 
 namespace muse_mcl_2d {
-class EIGEN_ALIGN16 StatePublisher : public muse_smc::SMCState<StateSpaceDescription2D>
+class EIGEN_ALIGN16 StatePublisher : public muse_smc::SMCState<Sample2D>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     using Ptr = std::shared_ptr<StatePublisher>;
-    using transform_t  = StateSpaceDescription2D::transform_t;
-    using covariance_t = StateSpaceDescription2D::covariance_t;
+    using transform_t  = Sample2D::transform_t;
+    using covariance_t = Sample2D::covariance_t;
     using stamped_t    = cslibs_math::utility::Stamped<transform_t>;
 
     StatePublisher();

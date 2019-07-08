@@ -58,7 +58,7 @@ OmniDrive::Result::Ptr OmniDrive::apply(const cslibs_plugins_data::Data::ConstPt
         rng_delta_strafe_hat_->set(0.0, delta_strafe_hat_stddev);
     }
 
-    for(muse_mcl_2d::StateSpaceDescription2D::state_t &sample : states) {
+    for(muse_mcl_2d::Sample2D::state_t &sample : states) {
         double tx  = sample.tx();
         double ty  = sample.ty();
         double yaw = sample.yaw();

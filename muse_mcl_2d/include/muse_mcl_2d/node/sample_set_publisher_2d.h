@@ -1,6 +1,7 @@
 #ifndef SAMPLE_SET_PUBLISHER_2D_H
 #define SAMPLE_SET_PUBLISHER_2D_H
 
+
 #include <memory>
 #include <thread>
 #include <atomic>
@@ -9,24 +10,22 @@
 #include <ros/node_handle.h>
 #include <ros/publisher.h>
 
-#include <muse_smc/samples/sample_set.hpp>
-
 #include <muse_mcl_2d/samples/sample_2d.hpp>
+#include <muse_smc/samples/sample_set.hpp>
 #include <muse_mcl_2d/SampleSetMsg.h>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 
 namespace muse_mcl_2d {
 class SampleSetPublisher2D
 {
 public:
     using Ptr = std::shared_ptr<SampleSetPublisher2D>;
-    using sample_set_t    = muse_smc::SampleSet<StateSpaceDescription2D>;
+    using sample_set_t    = muse_smc::SampleSet<Sample2D>;
     using sample_vector_t = sample_set_t::sample_vector_t;
     using time_t          = cslibs_time::Time;
     using lock_t          = std::unique_lock<std::mutex>;
 
-    using state_t         = StateSpaceDescription2D::state_t;
-    using covariance_t    = StateSpaceDescription2D::covariance_t;
+    using state_t         = muse_smc::traits::State<Sample2D>::type;
+    using covariance_t    = muse_smc::traits::Covariance<Sample2D>::type;
 
     SampleSetPublisher2D();
     virtual ~SampleSetPublisher2D();

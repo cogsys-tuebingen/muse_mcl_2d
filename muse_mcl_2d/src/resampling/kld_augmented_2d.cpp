@@ -66,7 +66,7 @@ void KLDAugmented2D::doApply(sample_set_t& sample_set)
     }
 
     const std::size_t left_to_insert = static_cast<std::size_t>(static_cast<double>(sample_set.getMaximumSampleSize() - i_p_t.getData().size()) * uniform_percent_);
-    sample_t sample;
+    Sample2D sample;
     for (std::size_t i = 0; i < left_to_insert; ++i) {
         uniform_pose_sampler_->apply(sample);
         sample.weight = min_weight_ratio_ * min_weight;

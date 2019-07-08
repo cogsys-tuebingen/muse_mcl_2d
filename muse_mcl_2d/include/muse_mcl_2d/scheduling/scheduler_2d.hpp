@@ -1,8 +1,9 @@
 #ifndef SCHEDULER_2D_HPP
 #define SCHEDULER_2D_HPP
 
+#include <muse_mcl_2d/samples/sample_2d.hpp>
+
 #include <muse_smc/scheduling/scheduler.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 #include <muse_mcl_2d/update/update_model_2d.hpp>
 
 #include <cslibs_plugins/plugin.hpp>
@@ -13,14 +14,12 @@
 
 
 namespace muse_mcl_2d {
-class Scheduler2D : public muse_smc::Scheduler<StateSpaceDescription2D, cslibs_plugins_data::Data>,
+class Scheduler2D : public muse_smc::Scheduler<Sample2D>,
                     public cslibs_plugins::Plugin
 {
 public:
     using Ptr                 = std::shared_ptr<Scheduler2D>;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
-
-    virtual inline ~Scheduler2D() = default;
 
     inline const static std::string Type()
     {

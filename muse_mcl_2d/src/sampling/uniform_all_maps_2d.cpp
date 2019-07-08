@@ -11,11 +11,10 @@ bool UniformAllMaps2D::update(const std::string& frame)
 {
     const ros::Time now = ros::Time::now();
 
-    using point_t = StateSpaceDescription2D::state_space_boundary_t;
-    point_t min(std::numeric_limits<double>::max(),
-                std::numeric_limits<double>::max());
-    point_t max(std::numeric_limits<double>::lowest(),
-                std::numeric_limits<double>::lowest());
+    cslibs_math_2d::Point2d min(std::numeric_limits<double>::max(),
+                                std::numeric_limits<double>::max());
+    cslibs_math_2d::Point2d max(std::numeric_limits<double>::lowest(),
+                                std::numeric_limits<double>::lowest());
 
     const std::size_t map_provider_count = map_providers_.size();
     maps_T_w_.resize(map_provider_count);

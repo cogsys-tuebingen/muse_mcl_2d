@@ -77,7 +77,7 @@ namespace muse_mcl_2d_odometry {
         const double sigma_rot_hat2 =  std::sqrt(alpha_1_ * sq(delta_rot_noise2) +
                                                  alpha_2_ * sq(delta_trans));
 
-        for(muse_mcl_2d::StateSpaceDescription2D::state_t &sample : states) {
+        for(muse_mcl_2d::Sample2D::state_t &sample : states) {
             const double delta_rot_hat1  = cslibs_math::common::angle::difference(delta_rot1, boxMuller(sigma_rot_hat1));
             const double delta_trans_hat = delta_trans - boxMuller(sigma_trans_hat);
             const double delta_rot_hat2  = cslibs_math::common::angle::difference(delta_rot2, boxMuller(sigma_rot_hat2));

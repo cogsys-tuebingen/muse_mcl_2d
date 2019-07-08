@@ -10,7 +10,7 @@ class FlatGridmap2D : public muse_mcl_2d::Map2D
 public:
     using Ptr = std::shared_ptr<FlatGridmap2D>;
     using map_t = cslibs_ndt_2d::static_maps::mono::Gridmap<double>;
-    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using state_t = muse_mcl_2d::Sample2D::state_t;
 
     FlatGridmap2D(const map_t::Ptr &map,
                   const std::string frame_id);

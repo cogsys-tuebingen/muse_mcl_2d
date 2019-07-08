@@ -10,8 +10,8 @@ class OccupancyGridmap3d : public muse_mcl_2d::Map2D
 public:
     using Ptr = std::shared_ptr<OccupancyGridmap3d>;
     using map_t = cslibs_ndt_3d::dynamic_maps::OccupancyGridmap<double>;
-    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
-    using point_t = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
+    using state_t = muse_mcl_2d::Sample2D::state_t;
+    using point_t = muse_mcl_2d::Sample2D::state_space_boundary_t;
 
     OccupancyGridmap3d(const map_t::Ptr &map,
                        const std::string frame_id);

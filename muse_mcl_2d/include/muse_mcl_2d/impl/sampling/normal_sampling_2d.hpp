@@ -17,9 +17,9 @@ public:
     using Radian = cslibs_math::sampling::Radian;
     using rng_t  = cslibs_math::sampling::Normal<double, Metric, Metric, Radian>;
 
-    using state_t      = typename StateSpaceDescription2D::state_t;
-    using transform_t  = typename StateSpaceDescription2D::transform_t;
-    using covariance_t = typename StateSpaceDescription2D::covariance_t;
+    using state_t      = muse_smc::traits::State<Sample2D>::type;
+    using transform_t  = muse_smc::traits::Transform<Sample2D>::type;
+    using covariance_t = muse_smc::traits::Covariance<Sample2D>::type;
 
     virtual bool update(const std::string &frame) override;
     virtual bool apply(const state_t      &pose,
