@@ -13,7 +13,7 @@
 #include <ros/node_handle.h>
 
 namespace muse_mcl_2d {
-class PredictionModel2D : public muse_smc::PredictionModel<Sample2D, cslibs_plugins_data::Data>,
+class PredictionModel2D : public muse_smc::PredictionModel<Sample2D>,
                           public cslibs_plugins::Plugin
 {
 public:

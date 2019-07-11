@@ -54,16 +54,17 @@ public:
 private:
     using data_t                 = cslibs_plugins_data::Data;
     using data_provider_t        = cslibs_plugins_data::DataProvider;
+    using covariance_t           = muse_smc::traits::Covariance<Sample2D>::type;
 
     using map_provider_map_t     = std::map<std::string, MapProvider2D::Ptr>;
     using data_provider_map_t    = std::map<std::string, typename data_provider_t::Ptr>;
     using update_model_map_t     = std::map<std::string, UpdateModel2D::Ptr>;
 
-    using UpdateRelay2D          = muse_smc::UpdateRelay<Sample2D, data_t, data_provider_t>;
-    using PredictionRelay2D      = muse_smc::PredictionRelay<Sample2D, data_t, data_provider_t>;
-    using smc_t                  = muse_smc::SMC<Sample2D, data_t>;
+    using UpdateRelay2D          = muse_smc::UpdateRelay<Sample2D>;
+    using PredictionRelay2D      = muse_smc::PredictionRelay<Sample2D>;
+    using smc_t                  = muse_smc::SMC<Sample2D>;
     using sample_set_t           = muse_smc::SampleSet<Sample2D>;
-    using prediction_integrals_t = muse_smc::PredictionIntegrals<Sample2D, data_t>;
+    using prediction_integrals_t = muse_smc::PredictionIntegrals<Sample2D>;
 
     using update_model_mapping_t = UpdateRelay2D::map_t;
 

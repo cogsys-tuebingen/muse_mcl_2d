@@ -8,7 +8,7 @@
 #include <cslibs_plugins_data/data.hpp>
 
 namespace muse_mcl_2d {
-class PredictionIntegral2D : public muse_smc::PredictionIntegral<Sample2D, cslibs_plugins_data::Data>
+class PredictionIntegral2D : public muse_smc::PredictionIntegral<Sample2D>
 {
 public:
     inline PredictionIntegral2D() :
@@ -31,9 +31,6 @@ public:
     {
     }
 
-    virtual ~PredictionIntegral2D()
-    {
-    }
 
     virtual void add(const typename prediction_model_t::Result::ConstPtr &step) override
     {

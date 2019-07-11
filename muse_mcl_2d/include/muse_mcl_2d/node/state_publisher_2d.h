@@ -17,12 +17,11 @@ public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
     using Ptr = std::shared_ptr<StatePublisher>;
-    using transform_t  = Sample2D::transform_t;
-    using covariance_t = Sample2D::covariance_t;
+    using transform_t  = muse_smc::traits::Transform<Sample2D>::type;
+    using covariance_t = muse_smc::traits::Covariance<Sample2D>::type;
     using stamped_t    = cslibs_math::utility::Stamped<transform_t>;
 
     StatePublisher();
-    virtual ~StatePublisher();
 
     void setup(ros::NodeHandle &nh);
 

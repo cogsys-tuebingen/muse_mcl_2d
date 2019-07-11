@@ -9,10 +9,6 @@ StatePublisher::StatePublisher() :
 {
 }
 
-StatePublisher::~StatePublisher()
-{
-}
-
 void StatePublisher::setup(ros::NodeHandle &nh)
 {
     const double tf_timeout     = nh.param<double>("tf_timeout", 0.05);

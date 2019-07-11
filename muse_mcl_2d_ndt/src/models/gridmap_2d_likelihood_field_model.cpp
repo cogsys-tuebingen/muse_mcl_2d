@@ -16,11 +16,15 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
                                           const state_space_t::ConstPtr  &map,
                                           sample_set_t::weight_iterator_t set)
 {
+<<<<<<< HEAD
     using laserscan_t    = cslibs_plugins_data::types::Laserscan2d;
     using transform_t    = muse_mcl_2d::Sample2D::transform_t;
     using state_t        = muse_mcl_2d::Sample2D::state_t;
     using point_t        = muse_mcl_2d::Sample2D::state_space_boundary_t;
     using distribution_t = typename Gridmap2d::map_t::distribution_t::distribution_t;
+=======
+    using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
+>>>>>>> update traits
 
     if (!map->isType<Gridmap2d>() || !data->isType<laserscan_t>())
         return;
@@ -59,7 +63,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
         return std::isnormal(e) ? e : 0.0;
     };
     auto bundle_likelihood = [&gridmap, &to_bundle_index, &likelihood](const point_t &p) {
-        const auto &bundle = gridmap.getDistributionBundle(to_bundle_index(p));
+        const auto *bundle = gridmap.getDistributionBundle(to_bundle_index(p));
         return 0.25 * (likelihood(p, bundle->at(0)->data()) +
                        likelihood(p, bundle->at(1)->data()) +
                        likelihood(p, bundle->at(2)->data()) +

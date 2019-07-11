@@ -25,9 +25,6 @@ void LikelihoodFieldModelLog::apply(const data_t::ConstPtr          &data,
     std::fill(ps_.begin(), ps_.end(), 0.0);
 
     using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
-    using transform_t = muse_mcl_2d::Sample2D::transform_t;
-    using state_t     = muse_mcl_2d::Sample2D::state_t;
-    using point_t     = muse_mcl_2d::Sample2D::state_space_boundary_t;
 
     const DistanceGridmap::map_t &gridmap    = *(map->as<DistanceGridmap>().data());
     const laserscan_t            &laser_data = data->as<laserscan_t>();

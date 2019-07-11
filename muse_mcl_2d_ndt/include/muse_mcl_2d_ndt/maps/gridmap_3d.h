@@ -10,8 +10,7 @@ class Gridmap3d : public muse_mcl_2d::Map2D
 public:
     using Ptr = std::shared_ptr<Gridmap3d>;
     using map_t = cslibs_ndt_3d::dynamic_maps::Gridmap<double>;
-    using state_t = muse_mcl_2d::Sample2D::state_t;
-    using point_t = muse_mcl_2d::Sample2D::state_space_boundary_t;
+    using point_t = state_space_boundary_t;
 
     Gridmap3d(const map_t::Ptr &map,
               const std::string frame_id);

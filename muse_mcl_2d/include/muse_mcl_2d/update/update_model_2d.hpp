@@ -16,8 +16,13 @@ class UpdateModel2D : public muse_smc::UpdateModel<Sample2D>,
                       public cslibs_plugins::Plugin
 {
 public:
-    using Ptr    = std::shared_ptr<UpdateModel2D>;
-    using data_t = cslibs_plugins_data::Data;
+    using Ptr           = std::shared_ptr<UpdateModel2D>;
+    using data_t        = cslibs_plugins_data::Data;
+    using sample_t      = Sample2D;
+    using transform_t   = muse_smc::traits::Transform<sample_t>::type;
+    using state_t       = muse_smc::traits::State<sample_t>::type;
+    using point_t       = muse_smc::traits::StateSpaceBoundary<sample_t>::type;
+
 
     inline const static std::string Type()
     {

@@ -16,12 +16,16 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                                                    const state_space_t::ConstPtr  &map,
                                                    sample_set_t::weight_iterator_t set)
 {
+<<<<<<< HEAD
     using laserscan_t    = cslibs_plugins_data::types::Laserscan2d;
     using transform_t = muse_mcl_2d::Sample2D::transform_t;
     using state_t     = muse_mcl_2d::Sample2D::state_t;
     using point_t     = muse_mcl_2d::Sample2D::state_space_boundary_t;
     using distribution_t = typename OccupancyGridmap2d::map_t::distribution_t::distribution_t;
 
+=======
+    using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
+>>>>>>> update traits
 
     if (!map->isType<OccupancyGridmap2d>() || !data->isType<laserscan_t>() || !inverse_model_)
         return;
