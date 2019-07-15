@@ -7,10 +7,7 @@
 #include <cslibs_math_2d/linear/pose.hpp>
 #include <cslibs_math_2d/linear/covariance.hpp>
 #include <cslibs_plugins_data/data_provider.hpp>
-<<<<<<< HEAD
 
-=======
->>>>>>> working on traits
 #include <muse_smc/smc/smc_traits.hpp>
 
 namespace muse_mcl_2d {
