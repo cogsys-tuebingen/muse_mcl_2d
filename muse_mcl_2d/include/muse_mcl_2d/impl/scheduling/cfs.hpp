@@ -54,11 +54,11 @@ public:
 
     using Ptr                 = std::shared_ptr<CFS>;
     using rate_t              = cslibs_time::Rate;
-    using update_t            = muse_smc::Update<Sample2D>;
+    using update_t            = muse_smc::SMC<Sample2D>::update_t;
     using queue_t             = __gnu_pbds::priority_queue<Entry, typename Entry::Greater, __gnu_pbds::rc_binomial_heap_tag>;
     using time_priority_map_t = std::unordered_map<id_t, double>;
-    using resampling_t        = muse_smc::Resampling<Sample2D>;
-    using sample_set_t        = muse_smc::SampleSet<Sample2D>;
+    using resampling_t        = muse_smc::SMC<Sample2D>::resampling_t;
+    using sample_set_t        = muse_smc::SMC<Sample2D>::sample_set_t;
     using nice_map_t          = std::unordered_map<id_t, double>;
     using time_t              = cslibs_time::Time;
     using duration_t          = cslibs_time::Duration;

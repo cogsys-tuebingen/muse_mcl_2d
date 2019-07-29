@@ -14,7 +14,7 @@
 
 
 namespace muse_mcl_2d {
-class Scheduler2D : public muse_smc::Scheduler<Sample2D>,
+class Scheduler2D : public muse_smc::Scheduler<muse_smc::SMC<Sample2D>>,
                     public cslibs_plugins::Plugin
 {
 public:

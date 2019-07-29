@@ -12,10 +12,10 @@ class Rate : public muse_mcl_2d::Scheduler2D
 public:
     using Ptr                 = std::shared_ptr<Rate>;
     using rate_t              = cslibs_time::Rate;
-    using update_t            = muse_smc::Update<Sample2D>;
+    using update_t            = muse_smc::SMC<Sample2D>::update_t;
     using time_priority_map_t = std::unordered_map<id_t, double>;
-    using resampling_t        = muse_smc::Resampling<Sample2D>;
-    using sample_set_t        = muse_smc::SampleSet<Sample2D>;
+    using resampling_t        = muse_smc::SMC<Sample2D>::resampling_t;
+    using sample_set_t        = muse_smc::SMC<Sample2D>::sample_set_t;
     using time_t              = cslibs_time::Time;
     using duration_t          = cslibs_time::Duration;
     using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;

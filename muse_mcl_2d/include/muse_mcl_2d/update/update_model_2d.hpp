@@ -3,7 +3,7 @@
 
 #include <muse_mcl_2d/samples/sample_2d.hpp>
 
-#include <muse_smc/update/update_model.hpp>
+#include <muse_smc/smc/smc.hpp>
 
 #include <cslibs_math_ros/tf/tf_provider.hpp>
 
@@ -12,7 +12,7 @@
 #include <ros/node_handle.h>
 
 namespace muse_mcl_2d {
-class UpdateModel2D : public muse_smc::UpdateModel<Sample2D>,
+class UpdateModel2D : public muse_smc::SMC<Sample2D>::update_model_t,
                       public cslibs_plugins::Plugin
 {
 public:

@@ -3,18 +3,18 @@
 
 #include <muse_mcl_2d/samples/sample_2d.hpp>
 
-#include <muse_smc/resampling/resampling.hpp>
 
 #include <ros/ros.h>
 #include <class_loader/class_loader_register_macro.h>
+#include <muse_smc/smc/smc.hpp>
 
 namespace muse_mcl_2d {
-class Resampling2D : public muse_smc::Resampling<Sample2D>,
+class Resampling2D : public muse_smc::SMC<Sample2D>::resampling_t,
                      public cslibs_plugins::Plugin
 {
 public:
     using Ptr    = std::shared_ptr<Resampling2D>;
-    using base_t = muse_smc::Resampling<Sample2D>;
+    using base_t = muse_smc::SMC<Sample2D>::resampling_t;
 
     inline const static std::string Type()
     {
