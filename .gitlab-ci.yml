@@ -2,14 +2,15 @@ before_script:
   # Install ssh-agent if not already installed, it is required by Docker.
   # (change apt-get to yum if you use a CentOS-based image)
   - 'apt-get -qq update -y'
-  - 'apt-get -qq install build-essential \
-                 openssh-client libeigen3-dev \
-                 libyaml-cpp-dev \
-                 libtbb-dev \
-                 libopencv-dev \
-                 libgdal-dev \
-                 libpcl1-dev \
-                 python-catkin-tools \
+  - 'apt-get -qq install build-essential
+                 openssh-client
+                 libeigen3-dev
+                 libyaml-cpp-dev
+                 libtbb-dev
+                 libopencv-dev
+                 libgdal-dev
+                 libpcl1-dev
+                 python-catkin-tools
                  sudo -y'
 
   # Run ssh-agent (inside the build environment)
