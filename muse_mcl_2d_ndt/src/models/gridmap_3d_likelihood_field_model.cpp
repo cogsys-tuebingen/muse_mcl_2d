@@ -60,15 +60,16 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
         return std::isnormal(e) ? e : 0.0;
     };
     auto bundle_likelihood = [&gridmap, &to_bundle_index, &likelihood](const point_t &p) {
-        const auto &bundle = gridmap.getDistributionBundle(to_bundle_index(p));
-        return 0.125 * (likelihood(p, bundle->at(0)->data()) +
-                        likelihood(p, bundle->at(1)->data()) +
-                        likelihood(p, bundle->at(2)->data()) +
-                        likelihood(p, bundle->at(3)->data()) +
-                        likelihood(p, bundle->at(4)->data()) +
-                        likelihood(p, bundle->at(5)->data()) +
-                        likelihood(p, bundle->at(6)->data()) +
-                        likelihood(p, bundle->at(7)->data()));
+        const auto *bundle = gridmap.getDistributionBundle(to_bundle_index(p));
+        assert(bundle != nullptr);
+        return 0.125 * (likelihood(p, *(bundle->at(0))) +
+                        likelihood(p, *(bundle->at(1))) +
+                        likelihood(p, *(bundle->at(2))) +
+                        likelihood(p, *(bundle->at(3))) +
+                        likelihood(p, *(bundle->at(4))) +
+                        likelihood(p, *(bundle->at(5))) +
+                        likelihood(p, *(bundle->at(6))) +
+                        likelihood(p, *(bundle->at(7))));
     };
 
     auto pow3 = [](const double& x) {
