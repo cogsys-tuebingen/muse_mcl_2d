@@ -11,6 +11,7 @@ before_script:
                  libgdal-dev
                  libpcl1-dev
                  python-catkin-tools
+                 libtinyxml-dev
                  sudo -y'
 
   # Run ssh-agent (inside the build environment)
