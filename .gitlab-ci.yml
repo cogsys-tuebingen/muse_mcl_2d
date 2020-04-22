@@ -2,7 +2,15 @@ before_script:
   # Install ssh-agent if not already installed, it is required by Docker.
   # (change apt-get to yum if you use a CentOS-based image)
   - 'apt-get -qq update -y'
-  - 'apt-get -qq install build-essential openssh-client libeigen3-dev libyaml-cpp-dev libtbb-dev libopencv-dev libgdal-dev sudo -y'
+  - 'apt-get -qq install build-essential \
+                 openssh-client libeigen3-dev \
+                 libyaml-cpp-dev \
+                 libtbb-dev \
+                 libopencv-dev \
+                 libgdal-dev \
+                 libpcl1-dev \
+                 python-catkin-tools \
+                 sudo -y'
 
   # Run ssh-agent (inside the build environment)
   - eval $(ssh-agent -s)
@@ -39,29 +47,20 @@ before_script:
 stages:
   - build
 
-indigo:
-  stage: build
-  image: ros:indigo
-  script:
-    - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
-    - rosdep install -y -r -i --from-paths src
-    - catkin_make
-    - catkin_make run_tests
-    
-jade:
-  stage: build
-  image: ros:jade
-  script:
-    - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
-    - rosdep install -y -r -i --from-paths src
-    - catkin_make
-    - catkin_make run_tests
-
 kinetic:
   stage: build
   image: ros:kinetic
   script:
     - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
     - rosdep install -y -r -i --from-paths src
-    - catkin_make
-    - catkin_make run_tests
+    - catkin build
+    - catkin run_tests
+
+melodic:
+  stage: build
+  image: ros:melodic
+  script:
+    - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
+    - rosdep install -y -r -i --from-paths src
+    - catkin build
+    - catkin run_tests
