@@ -8,7 +8,6 @@ before_script:
                  libyaml-cpp-dev
                  libtbb-dev
                  libopencv-dev
-                 libgdal-dev
                  libpcl1-dev
                  python-catkin-tools
                  libtinyxml-dev
@@ -36,8 +35,6 @@ before_script:
   - cd src
   - git clone gitlab@gitlab.cs.uni-tuebingen.de:apps/muse_smc.git -b devel muse_smc
   - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_indexed_storage.git -b devel cslibs_indexed_storage
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_boost_geometry.git -b devel cslibs_boost_geometry
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_vectormaps.git -b devel cslibs_vectormaps
   - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_time.git -b devel cslibs_time
   - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_gridmaps.git -b devel cslibs_gridmaps
   - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_ndt.git -b devel cslibs_ndt
