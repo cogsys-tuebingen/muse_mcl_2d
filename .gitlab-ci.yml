@@ -25,7 +25,9 @@ before_script:
   # you will overwrite your user's SSH config.
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-
+  - GIT_USER=gitlab
+  - GIT_HOST=$CI_SERVER_HOST
+  - if [ ! -z "$GIT_USER_OVERRIDE" ]; then GIT_USER=$GIT_USER_OVERRIDE; fi
   # Here we are at /build/$CI_PROJECT_NAME
   # For pure catkin projects, we need a workspace:
   - mkdir -p /build/ws/src/
@@ -33,14 +35,14 @@ before_script:
   - ln -s $CI_PROJECT_DIR src/$CI_PROJECT_NAME
   # clone dependencies here:
   - cd src
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:apps/muse_smc.git -b devel muse_smc
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_indexed_storage.git -b devel cslibs_indexed_storage
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_time.git -b devel cslibs_time
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_gridmaps.git -b devel cslibs_gridmaps
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_ndt.git -b devel cslibs_ndt
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_math.git -b devel cslibs_math
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_utility.git -b devel cslibs_utility
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_plugins.git -b devel cslibs_plugins
+  - git clone $GIT_USER@$GIT_HOST:apps/muse_smc.git -b devel muse_smc
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_indexed_storage.git -b devel cslibs_indexed_storage
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_time.git -b devel cslibs_time
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_gridmaps.git -b devel cslibs_gridmaps
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_ndt.git -b devel cslibs_ndt
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_math.git -b devel cslibs_math
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_utility.git -b devel cslibs_utility
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_plugins.git -b devel cslibs_plugins
   - cd /build/ws/
 
 stages:
