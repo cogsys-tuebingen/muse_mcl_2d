@@ -3,7 +3,7 @@
 #include <muse_mcl_2d_gridmaps/utility/map_loader.hpp>
 #include <cslibs_gridmaps/static_maps/conversion/convert_distance_gridmap.hpp>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::DistanceGridmapLoadProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {

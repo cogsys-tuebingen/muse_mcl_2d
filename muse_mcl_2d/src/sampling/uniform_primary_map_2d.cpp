@@ -1,6 +1,6 @@
 #include <muse_mcl_2d/impl/sampling/uniform_primary_map_2d.hpp>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 
 namespace muse_mcl_2d {
 

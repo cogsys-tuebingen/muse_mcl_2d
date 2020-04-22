@@ -7,7 +7,7 @@
 #include <cslibs_vectormaps/maps/vector_map.h>
 #include <cmath>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_vectormaps::BeamModelVector, muse_mcl_2d::UpdateModel2D)
 

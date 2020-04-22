@@ -9,7 +9,7 @@
 #include <cslibs_math/statistics/angular_mean.hpp>
 #include <cslibs_math/statistics/mean.hpp>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_vectormaps::BeamModelAMCLOrientedGridVector, muse_mcl_2d::UpdateModel2D)
 

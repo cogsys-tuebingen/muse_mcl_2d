@@ -4,7 +4,7 @@
 #include <cslibs_plugins_data/types/laserscan.hpp>
 #include <muse_mcl_2d_gridmaps/maps/binary_gridmap.h>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::BeamModelLog, muse_mcl_2d::UpdateModel2D)
 
 namespace muse_mcl_2d_gridmaps {

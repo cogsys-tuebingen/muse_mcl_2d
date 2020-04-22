@@ -1,7 +1,7 @@
 #include "probability_gridmap_service_provider.h"
 
 #include <cslibs_gridmaps/static_maps/conversion/convert_probability_gridmap.hpp>
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::ProbabilityGridmapServiceProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {

@@ -2,7 +2,7 @@
 
 #include <cslibs_vectormaps/loader/map_loader.hpp>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_vectormaps::VectorMapProvider, muse_mcl_2d::MapProvider2D)
 

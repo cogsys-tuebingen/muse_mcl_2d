@@ -3,7 +3,7 @@
 
 #include <ros/ros.h>
 #include <unordered_map>
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 
 #include <muse_mcl_2d/samples/sample_2d.hpp>
 #include <muse_smc/samples/sample_density.hpp>

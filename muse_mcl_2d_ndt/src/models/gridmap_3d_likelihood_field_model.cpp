@@ -6,7 +6,7 @@
 
 #include <cslibs_math_ros/tf/conversion_3d.hpp>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::Gridmap3dLikelihoodFieldModel, muse_mcl_2d::UpdateModel2D)
 
 namespace muse_mcl_2d_ndt {

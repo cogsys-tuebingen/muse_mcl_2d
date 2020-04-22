@@ -7,7 +7,7 @@
 
 #include <muse_mcl_2d_ndt/maps/flat_gridmap_2d.h>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::NDT2D, muse_mcl_2d::UpdateModel2D)
 
 namespace muse_mcl_2d_ndt {
