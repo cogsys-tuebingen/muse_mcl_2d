@@ -2,35 +2,48 @@ cmake_minimum_required(VERSION 2.8.3)
 project(muse_mcl_2d_gridmaps)
 
 find_package(catkin REQUIRED COMPONENTS
-  muse_mcl_2d
-  cslibs_gridmaps
-  cslibs_math_2d
-  cslibs_plugins_data
-  nav_msgs
-  pluginlib
-  roscpp
-  rostest
-  tf
-  map_server
+    cslibs_gridmaps
+    cslibs_math_2d
+    cslibs_plugins_data
+    muse_mcl_2d
+    nav_msgs
+    pluginlib
+    roscpp
+    rostest
+    tf
+    map_server
 )
-
-find_package(OpenCV REQUIRED)
-find_package(Eigen3 REQUIRED)
-find_package(yaml-cpp REQUIRED)
 
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}_providers
-            ${PROJECT_NAME}_models
-            ${PROJECT_NAME}_maps
-  CATKIN_DEPENDS muse_mcl_2d cslibs_math_2d cslibs_gridmaps cslibs_plugins_data
+  INCLUDE_DIRS
+    include
+  LIBRARIES
+    ${PROJECT_NAME}_models
+    ${PROJECT_NAME}_maps
+    ${PROJECT_NAME}_providers
+  CATKIN_DEPENDS
+    cslibs_gridmaps
+    cslibs_math_2d
+    cslibs_plugins_data
+    muse_mcl_2d
 )
 
-include_directories(
-  include
-  ${Eigen3_INCLUDE_DIR}
-  ${catkin_INCLUDE_DIRS}
-  ${OpenCV_INCLUDE_DIRS}
+
+if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    set(TARGET_COMPILE_DEFINITIONS
+        -Wall -WError -Ofast -ffastmath
+    )
+    # enabling -march=native my result in problems on some machines,
+    # my try -mtune=native
+
+    message(STATUS "[${PROJECT_NAME}]: Compiling with optimization!")
+endif()
+
+find_package(yaml-cpp REQUIRED)
+
+set(TARGET_INCLUDE_DIRS
+    include/
+    ${catkin_INCLUDE_DIRS}
 )
 
 add_library(${PROJECT_NAME}_maps SHARED
@@ -40,9 +53,20 @@ add_library(${PROJECT_NAME}_maps SHARED
     src/maps/probability_gridmap.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_maps
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_definitions(${PROJECT_NAME}_maps
+    PRIVATE
+        ${TARGET_COMPILE_DEFINITIONS}
+)
+
 target_link_libraries(${PROJECT_NAME}_maps
-    ${catkin_LIBRARIES}
-    ${YAML_CPP_LIBRARIES}
+    PRIVATE
+        ${catkin_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_providers SHARED
@@ -60,9 +84,20 @@ add_library(${PROJECT_NAME}_providers SHARED
     src/providers/likelihood_field_gridmap_load_provider.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_providers
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_definitions(${PROJECT_NAME}_providers
+    PRIVATE
+        ${TARGET_COMPILE_DEFINITIONS}
+)
+
 target_link_libraries(${PROJECT_NAME}_providers
-    ${catkin_LIBRARIES}
-    ${PROJECT_NAME}_maps
+    PRIVATE
+        ${catkin_LIBRARIES}
+        ${PROJECT_NAME}_maps
 )
 
 add_library(${PROJECT_NAME}_models SHARED
@@ -82,24 +117,46 @@ add_library(${PROJECT_NAME}_models SHARED
     src/models/likelihood_field_model_pc_log.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}_models
-    ${catkin_LIBRARIES}
-    ${PROJECT_NAME}_maps
+target_include_directories(${PROJECT_NAME}_models
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
 )
 
-set(MUSE_MCL_2D_GRIDMAPS_PERF_TESTS True)
+target_compile_definitions(${PROJECT_NAME}_models
+    PRIVATE
+        ${TARGET_COMPILE_DEFINITIONS}
+)
 
-if(${MUSE_MCL_2D_GRIDMAPS_PERF_TESTS})
+target_link_libraries(${PROJECT_NAME}_models
+    PRIVATE
+        ${catkin_LIBRARIES}
+        ${PROJECT_NAME}_maps
+)
+
+set(MUSE_MCL_2D_GRIDMAPS_ADDITIONALS True)
+
+if(${MUSE_MCL_2D_GRIDMAPS_ADDITIONALS})
     add_executable(${PROJECT_NAME}_perf_runtimes_exp
         test/perf_runtimes_exp.cpp
+    )
+
+    target_include_directories(${PROJECT_NAME}_perf_runtimes_exp
+        PRIVATE
+            ${TARGET_INCLUDE_DIRS}
+    )
+
+    target_compile_definitions(${PROJECT_NAME}_perf_runtimes_exp
+        PRIVATE
+            ${TARGET_COMPILE_DEFINITIONS}
     )
 endif()
 
 install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-install(TARGETS ${PROJECT_NAME}_providers
-                ${PROJECT_NAME}_models
-                ${PROJECT_NAME}_maps
+install(TARGETS
+            ${PROJECT_NAME}_models
+            ${PROJECT_NAME}_maps
+            ${PROJECT_NAME}_providers
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
