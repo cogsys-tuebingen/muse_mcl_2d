@@ -9,9 +9,6 @@ find_package(catkin REQUIRED COMPONENTS
     nav_msgs
     pluginlib
     roscpp
-    rostest
-    tf
-    map_server
 )
 
 catkin_package(
@@ -30,8 +27,8 @@ catkin_package(
 
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    set(TARGET_COMPILE_DEFINITIONS
-        -Wall -WError -Ofast -ffastmath
+    set(TARGET_COMPILE_OPTIONS
+        -Wall -Werror -Ofast -ffast-math
     )
     # enabling -march=native my result in problems on some machines,
     # my try -mtune=native
@@ -58,9 +55,9 @@ target_include_directories(${PROJECT_NAME}_maps
         ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_maps
+target_compile_options(${PROJECT_NAME}_maps
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_maps
@@ -89,15 +86,16 @@ target_include_directories(${PROJECT_NAME}_providers
         ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_providers
+target_compile_options(${PROJECT_NAME}_providers
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_providers
     PRIVATE
         ${catkin_LIBRARIES}
         ${PROJECT_NAME}_maps
+        ${YAML_CPP_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_models SHARED
@@ -122,9 +120,9 @@ target_include_directories(${PROJECT_NAME}_models
         ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_models
+target_compile_options(${PROJECT_NAME}_models
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_models
@@ -145,9 +143,9 @@ if(${MUSE_MCL_2D_GRIDMAPS_ADDITIONALS})
             ${TARGET_INCLUDE_DIRS}
     )
 
-    target_compile_definitions(${PROJECT_NAME}_perf_runtimes_exp
+    target_compile_options(${PROJECT_NAME}_perf_runtimes_exp
         PRIVATE
-            ${TARGET_COMPILE_DEFINITIONS}
+            ${TARGET_COMPILE_OPTIONS}
     )
 endif()
 

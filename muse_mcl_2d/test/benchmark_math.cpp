@@ -17,6 +17,7 @@ void constructors()
 
     cslibs_time::Time start = cslibs_time::Time::now();
     double yaw = 0.0;
+    static_cast<void>(yaw);
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
         cslibs_math_2d::Transform2d t;
         yaw = t.yaw();
@@ -178,6 +179,10 @@ void assign()
     double mean_ms_tl= 0.0;
     double mean_ms_tf= 0.0;
 
+    static_cast<void>(mean_ms_t);
+    static_cast<void>(mean_ms_tl);
+    static_cast<void>(mean_ms_tf);
+
     cslibs_math_2d::Transform2d t;
     tf::Transform tf;
     for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
@@ -249,6 +254,8 @@ void length()
         cslibs_time::Time start = cslibs_time::Time::now();
         cslibs_math_2d::Vector2d tv(rng.get(), rng.get());
         double length = 0.0;
+        static_cast<void>(length);
+
         for(std::size_t i = 0 ; i < ITERATIONS ; ++i) {
             length = tv.length();
         }

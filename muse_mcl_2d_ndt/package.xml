@@ -23,9 +23,6 @@
   <depend>cslibs_plugins_data</depend>
   <depend>pluginlib</depend>
   <depend>roscpp</depend>
-  <depend>rostest</depend>
-  <depend>tf</depend>
-  <depend>yaml-cpp</depend>
 
   <export>
     <muse_mcl_2d plugin="${prefix}/plugins.xml" />

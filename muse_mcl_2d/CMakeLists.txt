@@ -16,10 +16,8 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   nav_msgs
   sensor_msgs
-  pcl_ros
   pluginlib
   roscpp
-  rostest
   std_msgs
   visualization_msgs
 )
@@ -65,8 +63,8 @@ set(TARGET_INCLUDE_DIRS
 )
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    set(TARGET_COMPILE_DEFINITIONS
-        -Wall -WError -Ofast -ffastmath
+    set(TARGET_COMPILE_OPTIONS
+        -Wall -Werror -Ofast -ffast-math
     )
     # enabling -march=native my result in problems on some machines,
     # my try -mtune=native
@@ -105,9 +103,9 @@ target_include_directories(${PROJECT_NAME}_resampling
         ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_resampling
+target_compile_options(${PROJECT_NAME}_resampling
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_resampling
@@ -127,9 +125,9 @@ target_include_directories(${PROJECT_NAME}_sampling
         ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_sampling
+target_compile_options(${PROJECT_NAME}_sampling
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_sampling
@@ -147,9 +145,9 @@ target_include_directories(${PROJECT_NAME}_density
         ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_density
+target_compile_options(${PROJECT_NAME}_density
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_density
@@ -171,9 +169,9 @@ target_include_directories(${PROJECT_NAME}_scheduling
         ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_scheduling
+target_compile_options(${PROJECT_NAME}_scheduling
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_scheduling
@@ -191,9 +189,9 @@ target_include_directories(${PROJECT_NAME}_helper
         ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_helper
+target_compile_options(${PROJECT_NAME}_helper
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_helper
@@ -214,9 +212,9 @@ target_include_directories(${PROJECT_NAME}_node
 )
 
 
-target_compile_definitions(${PROJECT_NAME}_node
+target_compile_options(${PROJECT_NAME}_node
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_node
@@ -253,9 +251,9 @@ if(${MUSE_MCL_2D_ADDTIONALS})
             ${TARGET_INCLUDE_DIRS}
     )
 
-    target_compile_definitions(${PROJECT_NAME}_benchmark_math
+    target_compile_options(${PROJECT_NAME}_benchmark_math
     PRIVATE
-        ${TARGET_COMPILE_DEFINITIONS}
+        ${TARGET_COMPILE_OPTIONS}
     )
 
     target_link_libraries(${PROJECT_NAME}_benchmark_math

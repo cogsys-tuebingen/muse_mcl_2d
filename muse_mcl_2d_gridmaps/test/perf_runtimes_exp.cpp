@@ -11,6 +11,8 @@ void std_exp()
 
     double ms = 0;
     double y = 0.0;
+    static_cast<void>(ms);
+    static_cast<void>(y);
     for(int i = 0 ; i < ITERATIONS ; ++i) {
         double x = rng.get();
 
@@ -27,6 +29,8 @@ void c_exp()
 
     double ms = 0;
     double y = 0.0;
+    static_cast<void>(ms);
+    static_cast<void>(y);
     for(int i = 0 ; i < ITERATIONS ; ++i) {
         double x = rng.get();
 
@@ -43,6 +47,8 @@ void std_log()
 
     double ms = 0;
     double y = 0.0;
+    static_cast<void>(ms);
+    static_cast<void>(y);
     for(int i = 0 ; i < ITERATIONS ; ++i) {
         double x = rng.get();
 
@@ -59,6 +65,8 @@ void c_log()
 
     double ms = 0;
     double y = 0.0;
+    static_cast<void>(ms);
+    static_cast<void>(y);
     for(int i = 0 ; i < ITERATIONS ; ++i) {
         double x = rng.get();
 

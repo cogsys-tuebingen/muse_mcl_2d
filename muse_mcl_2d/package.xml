@@ -18,10 +18,8 @@
   <depend>cslibs_plugins</depend>
   <depend>cslibs_plugins_data</depend>
   <depend>nav_msgs</depend>
-  <depend>pcl_ros</depend>
   <depend>pluginlib</depend>
   <depend>roscpp</depend>
-  <depend>rostest</depend>
   <depend>sensor_msgs</depend>
   <depend>muse_smc</depend>
   <depend>visualization_msgs</depend>

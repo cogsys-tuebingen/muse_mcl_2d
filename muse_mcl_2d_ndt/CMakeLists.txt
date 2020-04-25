@@ -12,8 +12,6 @@ find_package(catkin REQUIRED COMPONENTS
   muse_mcl_2d_gridmaps
   pluginlib
   roscpp
-  rostest
-  tf
 )
 
 catkin_package(
@@ -32,8 +30,8 @@ catkin_package(
 )
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
-    set(TARGET_COMPILE_DEFINITIONS
-        -Wall -WError -Ofast -ffastmath
+    set(TARGET_COMPILE_OPTIONS
+        -Wall -Werror -Ofast -ffast-math
     )
     # enabling -march=native my result in problems on some machines,
     # my try -mtune=native
@@ -59,9 +57,9 @@ target_include_directories(${PROJECT_NAME}_maps
     ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_maps
+target_compile_options(${PROJECT_NAME}_maps
   PRIVATE
-    ${TARGET_COMPILE_DEFINITIONS}
+    ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_maps
@@ -88,9 +86,9 @@ target_include_directories(${PROJECT_NAME}_providers
     ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_providers
+target_compile_options(${PROJECT_NAME}_providers
   PRIVATE
-    ${TARGET_COMPILE_DEFINITIONS}
+    ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_providers
@@ -112,9 +110,9 @@ target_include_directories(${PROJECT_NAME}_models
     ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_definitions(${PROJECT_NAME}_models
+target_compile_options(${PROJECT_NAME}_models
   PRIVATE
-    ${TARGET_COMPILE_DEFINITIONS}
+    ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_models
