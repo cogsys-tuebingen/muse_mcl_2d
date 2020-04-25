@@ -10,25 +10,50 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 catkin_package(
-    INCLUDE_DIRS    include
-    LIBRARIES ${PROJECT_NAME}_models
-    CATKIN_DEPENDS muse_mcl_2d
+    LIBRARIES
+        ${PROJECT_NAME}_models
+    CATKIN_DEPENDS
+        muse_mcl_2d
 )
 
-include_directories(
-    include
+
+if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    set(TARGET_COMPILE_DEFINITIONS
+        -Wall -WError -Ofast -ffastmath
+    )
+    # enabling -march=native my result in problems on some machines,
+    # my try -mtune=native
+
+    message(STATUS "[${PROJECT_NAME}]: Compiling with optimization!")
+endif()
+
+set(TARGET_INCLUDE_DIRS
+    include/
     ${catkin_INCLUDE_DIRS}
 )
 
-add_library(${PROJECT_NAME}_models
+
+add_library(${PROJECT_NAME}_models SHARED
     src/models/differential_drive.cpp
     src/models/differential_drive_abs.cpp
     src/models/differential_drive_box_muller.cpp
     src/models/differential_drive_uncorrected.cpp
     src/models/omni_drive.cpp
 )
+
+target_include_directories(${PROJECT_NAME}_models
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_definitions(${PROJECT_NAME}_models
+    PRIVATE
+        ${TARGET_COMPILE_DEFINITIONS}
+)
+
 target_link_libraries(${PROJECT_NAME}_models
-    ${catkin_LIBRARIES}
+    PRIVATE
+        ${catkin_LIBRARIES}
 )
 install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
