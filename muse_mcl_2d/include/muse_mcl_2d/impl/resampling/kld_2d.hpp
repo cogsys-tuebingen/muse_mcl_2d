@@ -21,7 +21,7 @@ protected:
     cslibs_math::random::Uniform<double,1> rng_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;
-    void doApply(sample_set_t &sample_set);
-    void doApplyRecovery(sample_set_t &sample_set);
+    void doApply(sample_set_t &sample_set) override;
+    void doApplyRecovery(sample_set_t &sample_set) override;
 };
 }

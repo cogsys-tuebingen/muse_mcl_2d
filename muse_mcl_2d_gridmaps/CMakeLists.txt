@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package(OpenCV REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 catkin_package(
   INCLUDE_DIRS include
@@ -41,6 +42,7 @@ add_library(${PROJECT_NAME}_maps SHARED
 
 target_link_libraries(${PROJECT_NAME}_maps
     ${catkin_LIBRARIES}
+    ${YAML_CPP_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_providers SHARED

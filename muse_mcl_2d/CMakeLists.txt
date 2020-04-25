@@ -143,7 +143,7 @@ target_link_libraries(${PROJECT_NAME}_box_muller
 
 set(MUSE_MCL_2D_PERF_TESTS True)
 if(${MUSE_MCL_2D_PERF_TESTS})
-    message("[muse_mcl_2d]: Building with performance tests!")
+    message(STATUS "[muse_mcl_2d]: Building with performance tests!")
     add_executable(${PROJECT_NAME}_perf_runtimes_math_operations
         test/perf_runtimes_math_operations.cpp
     )

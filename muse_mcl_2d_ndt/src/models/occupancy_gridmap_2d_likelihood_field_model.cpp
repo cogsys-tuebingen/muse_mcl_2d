@@ -65,7 +65,7 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr       
 
         return ndt;
     };
-    auto bundle_likelihood = [this, &gridmap, &to_bundle_index, &occupancy_likelihood](const point_t &p) {
+    auto bundle_likelihood = [&gridmap, &to_bundle_index, &occupancy_likelihood](const point_t &p) {
         const auto &bundle = gridmap.getDistributionBundle(to_bundle_index(p));
         return 0.25 * (occupancy_likelihood(p, bundle->at(0)) +
                        occupancy_likelihood(p, bundle->at(1)) +
