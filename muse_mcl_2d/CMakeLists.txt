@@ -7,64 +7,87 @@ project(muse_mcl_2d)
 
 find_package(catkin REQUIRED COMPONENTS
   cslibs_indexed_storage
+  cslibs_math_2d
+  cslibs_math_ros
+  cslibs_plugins
+  cslibs_plugins_data
+  muse_smc
+  geometry_msgs
+  message_generation
   nav_msgs
   sensor_msgs
   pcl_ros
   pluginlib
   roscpp
   rostest
-  muse_smc
-  cslibs_math_2d
-  cslibs_math_ros
-  cslibs_plugins
-  cslibs_plugins_data
-  visualization_msgs
-  geometry_msgs
-  message_generation
   std_msgs
+  visualization_msgs
 )
 
-find_package(Eigen3 REQUIRED)
+if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    set(TARGET_COMPILE_DEFINITIONS
+        -Wall -WError -Ofast -ffastmath
+    )
+    # enabling -march=native my result in problems on some machines,
+    # my try -mtune=native
+
+    message(STATUS "[${PROJECT_NAME}]: Compiling with optimization!")
+endif()
 
 add_service_files(
    FILES
-   GlobalInitialization.srv
-   PoseInitialization.srv
+       GlobalInitialization.srv
+       PoseInitialization.srv
 )
 
 add_message_files(
     FILES
-    SampleMsg.msg
-    SampleSetMsg.msg
+        SampleMsg.msg
+       SampleSetMsg.msg
 )
 
 generate_messages(
    DEPENDENCIES
-   std_msgs
-   geometry_msgs
+       std_msgs
+       geometry_msgs
 )
 
 catkin_package(
-    INCLUDE_DIRS    include
-    LIBRARIES       ${PROJECT_NAME}_resampling ${PROJECT_NAME}_sampling ${PROJECT_NAME}_scheduling ${PROJECT_NAME}_density ${PROJECT_NAME}_helper
-    CATKIN_DEPENDS  muse_smc cslibs_math_ros cslibs_math_2d cslibs_plugins cslibs_plugins_data
+    INCLUDE_DIRS
+        include/
+    LIBRARIES
+        ${PROJECT_NAME}_density
+        ${PROJECT_NAME}_helper
+        ${PROJECT_NAME}_resampling
+        ${PROJECT_NAME}_sampling
+        ${PROJECT_NAME}_scheduling
+    CATKIN_DEPENDS
+        muse_smc
+        cslibs_math_2d
+        cslibs_math_ros
+        cslibs_plugins
+        cslibs_plugins_data
 )
 
-include_directories(
-    include
-    ${Eigen3_INCLUDE_DIR}
+set(TARGET_INCLUDE_DIRS
+    include/
     ${catkin_INCLUDE_DIRS}
 )
 
 find_package(OpenCV 3.4 QUIET)
 if(${OpenCV_FOUND})
-include_directories(${OpenCV_INCLUDE_DIRS})
-add_executable(${PROJECT_NAME}_statistics_plotter
-    src/tools/statistics_plotter.cpp
-)
-target_link_libraries(${PROJECT_NAME}_statistics_plotter
-    ${OpenCV_LIBRARIES}
-)
+    add_executable(${PROJECT_NAME}_statistics_plotter
+        src/tools/statistics_plotter.cpp
+    )
+    target_include_directories(${PROJECT_NAME}_statistics_plotter
+        PRIVATE
+            ${OpenCV_INCLUDE_DIRS}
+            ${TARGET_INCLUDE_DIRS}
+    )
+    target_link_libraries(${PROJECT_NAME}_statistics_plotter
+        PRIVATE
+            ${OpenCV_LIBRARIES}
+    )
 endif()
 
 add_library(${PROJECT_NAME}_resampling
@@ -77,19 +100,31 @@ add_library(${PROJECT_NAME}_resampling
     src/resampling/wheel_2d.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_resampling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
 target_link_libraries(${PROJECT_NAME}_resampling
-    ${catkin_LIBRARIES}
-    ${OpenCV_LIBRARIES}
+    PRIVATE
+        ${catkin_LIBRARIES}
+        ${OpenCV_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_sampling
-  src/sampling/normal_sampling_2d.cpp
+    src/sampling/normal_sampling_2d.cpp
     src/sampling/uniform_primary_map_2d.cpp
     src/sampling/uniform_all_maps_2d.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_sampling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
 target_link_libraries(${PROJECT_NAME}_sampling
-    ${catkin_LIBRARIES}
+    PRIVATE
+        ${catkin_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_density
@@ -97,8 +132,14 @@ add_library(${PROJECT_NAME}_density
     src/density/mean_centered_sample_density_2d.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_density
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
 target_link_libraries(${PROJECT_NAME}_density
-    ${catkin_LIBRARIES}
+    PRIVATE
+        ${catkin_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_scheduling
@@ -110,44 +151,78 @@ add_library(${PROJECT_NAME}_scheduling
     src/scheduling/cfs_laggy.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}_scheduling
-    ${catkin_LIBRARIES}
+target_include_directories(${PROJECT_NAME}_scheduling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
 )
 
+target_link_libraries(${PROJECT_NAME}_scheduling
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
 
 add_library(${PROJECT_NAME}_helper
     src/node/state_publisher_2d.cpp
     src/node/sample_set_publisher_2d.cpp
 )
-target_link_libraries(${PROJECT_NAME}_helper
-    ${catkin_LIBRARIES}
+
+target_include_directories(${PROJECT_NAME}_helper
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
 )
-add_dependencies(${PROJECT_NAME}_helper ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+target_link_libraries(${PROJECT_NAME}_helper
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
+add_dependencies(${PROJECT_NAME}_helper
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
+)
 
 add_executable(${PROJECT_NAME}_node
     src/node/muse_mcl_2d_node.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_node
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
 target_link_libraries(${PROJECT_NAME}_node
-    ${catkin_LIBRARIES}
-    ${PROJECT_NAME}_helper
+    PRIVATE
+        ${catkin_LIBRARIES}
+        ${PROJECT_NAME}_helper
 )
 
-add_executable(${PROJECT_NAME}_box_muller
-    test/test_box_muller.cpp
-)
 
-target_link_libraries(${PROJECT_NAME}_box_muller
-    ${catkin_LIBRARIES}
-)
+set(MUSE_MCL_2D_ADDTIONALS True)
+if(${MUSE_MCL_2D_ADDTIONALS})
+    message(STATUS "[muse_mcl_2d]: Building additional executables!")
 
-set(MUSE_MCL_2D_PERF_TESTS True)
-if(${MUSE_MCL_2D_PERF_TESTS})
-    message(STATUS "[muse_mcl_2d]: Building with performance tests!")
-    add_executable(${PROJECT_NAME}_perf_runtimes_math_operations
-        test/perf_runtimes_math_operations.cpp
+    add_executable(${PROJECT_NAME}_box_muller
+        test/test_box_muller.cpp
     )
-    target_link_libraries(${PROJECT_NAME}_perf_runtimes_math_operations
+
+    target_include_directories(${PROJECT_NAME}_box_muller
+        PRIVATE
+            ${TARGET_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(${PROJECT_NAME}_box_muller
+        PRIVATE
+            ${catkin_LIBRARIES}
+    )
+
+    add_executable(${PROJECT_NAME}_benchmark_math
+        test/benchmark_math.cpp
+    )
+
+    target_include_directories(${PROJECT_NAME}_benchmark_math
+        PRIVATE
+            ${TARGET_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(${PROJECT_NAME}_benchmark_math
         ${catkin_LIBRARIES}
     )
 endif()
