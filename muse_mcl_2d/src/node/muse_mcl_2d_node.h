@@ -63,8 +63,8 @@ private:
     using smc_t                  = muse_smc::SMC<Sample2D>;
     using UpdateRelay2D          = muse_smc::UpdateRelay<smc_t>;
     using PredictionRelay2D      = muse_smc::PredictionRelay<smc_t>;
-    using sample_set_t           = smc_t::sample_set_t;
-    using prediction_integrals_t = smc_t::prediction_integrals_t;
+    using sample_set_t           = muse_smc::Types<Sample2D>::sample_set_t;
+    using prediction_integrals_t = muse_smc::Types<Sample2D>::prediction_integrals_t;
 
     using update_model_mapping_t = UpdateRelay2D::map_t;
 

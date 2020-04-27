@@ -6,12 +6,12 @@ namespace muse_mcl_2d {
 
 void Residual::doApply(sample_set_t& sample_set)
 {
-    muse_smc::impl::Residual<muse_smc::SMC<Sample2D>>::apply(sample_set);
+    muse_smc::impl::Residual<muse_smc::Types<Sample2D>>::apply(sample_set);
 }
 
 void Residual::doApplyRecovery(sample_set_t& sample_set)
 {
-    muse_smc::impl::Residual<muse_smc::SMC<Sample2D>>::applyRecovery(uniform_pose_sampler_,
+    muse_smc::impl::Residual<muse_smc::Types<Sample2D>>::applyRecovery(uniform_pose_sampler_,
             recovery_random_pose_probability_,
             sample_set);
 }

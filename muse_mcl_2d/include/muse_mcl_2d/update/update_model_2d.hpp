@@ -12,7 +12,7 @@
 #include <ros/node_handle.h>
 
 namespace muse_mcl_2d {
-class UpdateModel2D : public muse_smc::SMC<Sample2D>::update_model_t,
+class UpdateModel2D : public muse_smc::Types<Sample2D>::update_model_t,
                       public cslibs_plugins::Plugin
 {
 public:

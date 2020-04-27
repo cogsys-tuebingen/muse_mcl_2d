@@ -8,7 +8,7 @@
 #include <cslibs_plugins_data/data.hpp>
 
 namespace muse_mcl_2d {
-class PredictionIntegralAMCL2D : public muse_smc::SMC<Sample2D>::prediction_integral_t
+class PredictionIntegralAMCL2D : public muse_smc::Types<Sample2D>::prediction_integral_t
 {
 public:
     using pose_t = muse_smc::traits::Transform<Sample2D>::type;

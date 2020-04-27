@@ -131,6 +131,22 @@ target_link_libraries(${PROJECT_NAME}_models
         ${PROJECT_NAME}_maps
 )
 
+muse_mcl_2d_gridmaps_add_unit_test_ros(test_load_plugins
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    LAUNCH_FILE
+        test/plugins.test
+    SOURCE_FILES
+        test/plugins.cpp
+    LINK_LIBRARIES
+        ${catkin_LIBRARIES}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+    DEPENDS
+        ${PROJECT_NAME}_models
+        ${PROJECT_NAME}_providers
+)
+
 set(MUSE_MCL_2D_GRIDMAPS_ADDITIONALS True)
 
 if(${MUSE_MCL_2D_GRIDMAPS_ADDITIONALS})

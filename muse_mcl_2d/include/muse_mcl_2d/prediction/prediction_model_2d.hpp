@@ -3,7 +3,7 @@
 
 #include <muse_mcl_2d/samples/sample_2d.hpp>
 
-#include <muse_smc/smc/smc.hpp>
+#include <muse_smc/smc/smc_types.hpp>
 
 #include <cslibs_math_ros/tf/tf_provider.hpp>
 
@@ -13,7 +13,7 @@
 #include <ros/node_handle.h>
 
 namespace muse_mcl_2d {
-class PredictionModel2D : public muse_smc::SMC<Sample2D>::prediction_model_t,
+class PredictionModel2D : public muse_smc::Types<Sample2D>::prediction_model_t,
                           public cslibs_plugins::Plugin
 {
 public:

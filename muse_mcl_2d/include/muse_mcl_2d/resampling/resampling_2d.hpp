@@ -6,15 +6,15 @@
 
 #include <ros/ros.h>
 #include <class_loader/register_macro.hpp>
-#include <muse_smc/smc/smc.hpp>
+#include <muse_smc/smc/smc_types.hpp>
 
 namespace muse_mcl_2d {
-class Resampling2D : public muse_smc::SMC<Sample2D>::resampling_t,
+class Resampling2D : public muse_smc::Types<Sample2D>::resampling_t,
                      public cslibs_plugins::Plugin
 {
 public:
     using Ptr    = std::shared_ptr<Resampling2D>;
-    using base_t = muse_smc::SMC<Sample2D>::resampling_t;
+    using base_t = muse_smc::Types<Sample2D>::resampling_t;
 
     inline const static std::string Type()
     {
@@ -30,7 +30,7 @@ public:
                       normal_pose_sampler,
                       nh.param(param_name("recovery_alpha_fast"), 0.0),
                       nh.param(param_name("recovery_alpha_slow"), 0.0),
-                      nh.param(param_name("variance_thresold"), 0.0));
+                      nh.param(param_name("variance_threshold"), 0.0));
         doSetup(nh);
     }
 

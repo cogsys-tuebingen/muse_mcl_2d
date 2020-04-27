@@ -56,11 +56,11 @@ public:
 
     using Ptr                 = std::shared_ptr<CFSDropStatistic>;
     using rate_t              = cslibs_time::Rate;
-    using update_t            = muse_smc::SMC<Sample2D>::update_t;
+    using update_t            = muse_smc::Types<Sample2D>::update_t;
     using queue_t             = __gnu_pbds::priority_queue<Entry, typename Entry::Greater, __gnu_pbds::rc_binomial_heap_tag>;
     using time_priority_map_t = std::unordered_map<id_t, double>;
-    using resampling_t        = muse_smc::SMC<Sample2D>::resampling_t;
-    using sample_set_t        = muse_smc::SMC<Sample2D>::sample_set_t;
+    using resampling_t        = muse_smc::Types<Sample2D>::resampling_t;
+    using sample_set_t        = muse_smc::Types<Sample2D>::sample_set_t;
     using nice_map_t          = std::unordered_map<id_t, double>;
     using count_map_t          = std::unordered_map<id_t, std::size_t>;
     using name_map_t          = std::unordered_map<id_t, std::string>;

@@ -2,9 +2,9 @@
 #define SCHEDULER_2D_HPP
 
 #include <muse_mcl_2d/samples/sample_2d.hpp>
-
-#include <muse_smc/scheduling/scheduler.hpp>
 #include <muse_mcl_2d/update/update_model_2d.hpp>
+
+#include <muse_smc/smc/smc_types.hpp>
 
 #include <cslibs_plugins/plugin.hpp>
 #include <cslibs_plugins_data/data.hpp>
@@ -14,7 +14,7 @@
 
 
 namespace muse_mcl_2d {
-class Scheduler2D : public muse_smc::Scheduler<muse_smc::SMC<Sample2D>>,
+class Scheduler2D : public muse_smc::Types<Sample2D>::scheduler_t,
                     public cslibs_plugins::Plugin
 {
 public:
