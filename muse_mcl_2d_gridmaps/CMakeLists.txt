@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
     nav_msgs
     pluginlib
     roscpp
+    map_server
 )
 
 catkin_package(
@@ -22,6 +23,7 @@ catkin_package(
     cslibs_gridmaps
     cslibs_math_2d
     cslibs_plugins_data
+    map_server
     muse_mcl_2d
 )
 
