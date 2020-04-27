@@ -8,7 +8,7 @@
 #include <cslibs_math_2d/linear/covariance.hpp>
 #include <cslibs_plugins_data/data_provider.hpp>
 
-#include <muse_smc/smc/smc_traits.hpp>
+#include <muse_smc/smc/traits.hpp>
 
 namespace muse_mcl_2d {
 struct EIGEN_ALIGN16 Sample2D {

@@ -3,7 +3,7 @@
 
 #include <muse_mcl_2d/samples/sample_2d.hpp>
 
-#include <muse_smc/smc/smc.hpp>
+#include <muse_smc/smc/smc_types.hpp>
 
 #include <cslibs_math_ros/tf/tf_provider.hpp>
 

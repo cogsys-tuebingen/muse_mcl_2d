@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
 )
 
+find_package(yaml-cpp REQUIRED)
+
 catkin_package(
   LIBRARIES
     ${PROJECT_NAME}_providers
@@ -94,6 +96,7 @@ target_compile_options(${PROJECT_NAME}_providers
 target_link_libraries(${PROJECT_NAME}_providers
   PRIVATE
     ${catkin_LIBRARIES}
+    ${YAML_CPP_LIBRARIES}
     ${PROJECT_NAME}_maps
 )
 

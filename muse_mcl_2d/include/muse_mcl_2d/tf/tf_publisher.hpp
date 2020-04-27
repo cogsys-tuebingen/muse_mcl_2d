@@ -12,7 +12,7 @@
 #include <cslibs_math_ros/tf/tf_listener.hpp>
 #include <cslibs_math_ros/tf/conversion_2d.hpp>
 
-#include <muse_smc/smc/smc_traits.hpp>
+#include <muse_smc/smc/traits.hpp>
 
 #include <tf/tf.h>
 #include <tf/transform_broadcaster.h>

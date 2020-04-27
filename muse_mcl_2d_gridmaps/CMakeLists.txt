@@ -140,6 +140,7 @@ muse_mcl_2d_gridmaps_add_unit_test_ros(test_load_plugins
         test/plugins.cpp
     LINK_LIBRARIES
         ${catkin_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
     COMPILE_OPTIONS
         ${TARGET_COMPILE_OPTIONS}
     DEPENDS

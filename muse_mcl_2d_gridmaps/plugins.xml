@@ -72,7 +72,7 @@
    <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModelPC" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description>Likelihoodfield model update function.</description>
    </class>
-   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModelPCNormalized" base_class_type="muse_mcl_2d::UpdateModel2D">
+   <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModelPCLog" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description>Likelihoodfield model update function.</description>
    </class>
 </library>

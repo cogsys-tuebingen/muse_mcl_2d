@@ -32,7 +32,7 @@ public:
     }
 
 
-    virtual void add(const typename prediction_model_t::Result::ConstPtr &step) override
+    virtual void add(const Result::ConstPtr &step) override
     {
         if(step->isType<PredictionModel2D::Result2D>()) {
             const PredictionModel2D::Result2D &step_2d = step->as<PredictionModel2D::Result2D>();
