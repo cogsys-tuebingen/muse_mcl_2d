@@ -52,8 +52,6 @@
    <class type="muse_mcl_2d_gridmaps::BeamModelAMCLNormalized" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description>Beam model update function.</description>
    </class>
-
-
    <class type="muse_mcl_2d_gridmaps::LikelihoodFieldModel" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description>Likelihoodfield model update function.</description>
    </class>

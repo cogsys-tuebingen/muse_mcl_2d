@@ -36,13 +36,9 @@ public:
         const double angular_distance_abs;
     };
 
-    PredictionModel2D()
-    {
-    }
+    PredictionModel2D() = default;
 
-    virtual ~PredictionModel2D()
-    {
-    }
+    virtual ~PredictionModel2D() = default;
 
     inline const static std::string Type()
     {

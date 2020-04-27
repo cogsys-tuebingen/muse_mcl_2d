@@ -143,9 +143,6 @@ muse_mcl_2d_gridmaps_add_unit_test_ros(test_load_plugins
         ${YAML_CPP_LIBRARIES}
     COMPILE_OPTIONS
         ${TARGET_COMPILE_OPTIONS}
-    DEPENDS
-        ${PROJECT_NAME}_models
-        ${PROJECT_NAME}_providers
 )
 
 set(MUSE_MCL_2D_GRIDMAPS_ADDITIONALS True)

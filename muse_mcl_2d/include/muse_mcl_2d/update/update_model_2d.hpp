@@ -23,13 +23,15 @@ public:
     using state_t       = muse_smc::traits::State<sample_t>::type;
     using point_t       = muse_smc::traits::StateSpaceBoundary<sample_t>::type;
 
+    UpdateModel2D() = default;
+    virtual ~UpdateModel2D() = default;
 
     inline const static std::string Type()
     {
         return "muse_mcl_2d::UpdateModel2D";
     }
 
-    virtual inline std::size_t getId() const override
+    virtual inline std::size_t getModelId() const override
     {
         return cslibs_plugins::Plugin::getId();
     }

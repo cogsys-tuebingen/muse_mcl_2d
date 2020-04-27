@@ -15,7 +15,8 @@ namespace muse_mcl_2d_ndt {
 class NDTOccupancyGridmap3dServiceProvider : public muse_mcl_2d::MapProvider2D
 {
 public:
-    NDTOccupancyGridmap3dServiceProvider();
+    NDTOccupancyGridmap3dServiceProvider() = default;
+    virtual ~NDTOccupancyGridmap3dServiceProvider() = default;
 
     state_space_t::ConstPtr getStateSpace() const override;
     void setup(ros::NodeHandle &nh) override;
