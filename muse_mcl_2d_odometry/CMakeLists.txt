@@ -54,6 +54,21 @@ target_link_libraries(${PROJECT_NAME}_models
     PRIVATE
         ${catkin_LIBRARIES}
 )
+
+muse_mcl_2d_odometry_add_unit_test_ros(test_load_plugins
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    LAUNCH_FILE
+        test/plugins.test
+    SOURCE_FILES
+        test/plugins.cpp
+    LINK_LIBRARIES
+        ${catkin_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
 install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 install(TARGETS ${PROJECT_NAME}_models
