@@ -147,24 +147,6 @@ muse_mcl_2d_gridmaps_add_unit_test_ros(test_load_plugins
         ${TARGET_COMPILE_OPTIONS}
 )
 
-set(MUSE_MCL_2D_GRIDMAPS_ADDITIONALS True)
-
-if(${MUSE_MCL_2D_GRIDMAPS_ADDITIONALS})
-    add_executable(${PROJECT_NAME}_perf_runtimes_exp
-        test/perf_runtimes_exp.cpp
-    )
-
-    target_include_directories(${PROJECT_NAME}_perf_runtimes_exp
-        PRIVATE
-            ${TARGET_INCLUDE_DIRS}
-    )
-
-    target_compile_options(${PROJECT_NAME}_perf_runtimes_exp
-        PRIVATE
-            ${TARGET_COMPILE_OPTIONS}
-    )
-endif()
-
 install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 install(TARGETS
