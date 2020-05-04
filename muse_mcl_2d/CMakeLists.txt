@@ -114,23 +114,41 @@ target_link_libraries(${PROJECT_NAME}_resampling
         ${OpenCV_LIBRARIES}
 )
 
-add_library(${PROJECT_NAME}_sampling
+add_library(${PROJECT_NAME}_normal_sampling
     src/sampling/normal_sampling_2d.cpp
-    src/sampling/uniform_primary_map_2d.cpp
-    src/sampling/uniform_all_maps_2d.cpp
 )
 
-target_include_directories(${PROJECT_NAME}_sampling
+target_include_directories(${PROJECT_NAME}_normal_sampling
     PRIVATE
         ${TARGET_INCLUDE_DIRS}
 )
 
-target_compile_options(${PROJECT_NAME}_sampling
+target_compile_options(${PROJECT_NAME}_normal_sampling
     PRIVATE
         ${TARGET_COMPILE_OPTIONS}
 )
 
-target_link_libraries(${PROJECT_NAME}_sampling
+target_link_libraries(${PROJECT_NAME}_normal_sampling
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
+
+add_library(${PROJECT_NAME}_uniform_sampling
+    src/sampling/uniform_primary_map_2d.cpp
+    src/sampling/uniform_all_maps_2d.cpp
+)
+
+target_include_directories(${PROJECT_NAME}_uniform_sampling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_options(${PROJECT_NAME}_uniform_sampling
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
+
+target_link_libraries(${PROJECT_NAME}_uniform_sampling
     PRIVATE
         ${catkin_LIBRARIES}
 )
@@ -263,7 +281,10 @@ endif()
 
 install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-install(TARGETS ${PROJECT_NAME}_resampling ${PROJECT_NAME}_sampling
+install(TARGETS
+            ${PROJECT_NAME}_resampling
+            ${PROJECT_NAME}_normal_sampling
+            ${PROJECT_NAME}_uniform_sampling
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
