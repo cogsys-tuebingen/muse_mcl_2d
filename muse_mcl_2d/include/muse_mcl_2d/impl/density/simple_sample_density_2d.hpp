@@ -47,7 +47,7 @@ public:
     using indexation_t              = SampleIndexation2D;
     using sample_data_t             = SampleDensityData2D;
     using clustering_t              = SampleClustering2D;
-    using distribution_t            = cslibs_math::statistics::WeightedDistribution<double,2,0>;
+    using distribution_t            = cslibs_math::statistics::StableWeightedDistribution<double,2,0>;
     using angular_mean_t            = cslibs_math::statistics::WeightedAngularMean<double>;
 
     using index_t                   = indexation_t::index_t;
