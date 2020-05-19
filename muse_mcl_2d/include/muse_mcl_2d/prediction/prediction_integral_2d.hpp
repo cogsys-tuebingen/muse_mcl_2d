@@ -5,7 +5,7 @@
 #include <muse_mcl_2d/prediction/prediction_model_2d.hpp>
 
 #include <cslibs_plugins_data/data.hpp>
-#include <muse_smc/smc/smc_types.hpp>
+#include <muse_smc/smc/types.hpp>
 
 namespace muse_mcl_2d {
 class PredictionIntegral2D : public muse_smc::Types<Sample2D>::prediction_integral_t

@@ -83,7 +83,7 @@ bool MuseMCL2DNode::requestPoseInitialization(muse_mcl_2d::PoseInitialization::R
         return cslibs_time::Time(ros::Time::now().toNSec());
     };
 
-    particle_filter_->requestStateInitialization(convert_pose(), convert_covariance(), get_time());
+    particle_filter_->requestStateInitialization(get_time(), convert_pose(), convert_covariance());
     res.success = true;
     return true;
 }
@@ -109,7 +109,7 @@ void MuseMCL2DNode::poseInitialization(const geometry_msgs::PoseWithCovarianceSt
         return cslibs_time::Time(msg->header.stamp.toNSec());
     };
 
-    particle_filter_->requestStateInitialization(convert_pose(), convert_covariance(), convert_time());
+    particle_filter_->requestStateInitialization(convert_time(), convert_pose(), convert_covariance());
 }
 
 bool MuseMCL2DNode::setup()
@@ -364,7 +364,7 @@ void MuseMCL2DNode::checkPoseInitialization()
         covariance(1,2) = get(1,2,3);
         covariance(2,2) = get(2,2,3);
 
-        particle_filter_->requestStateInitialization(pose, covariance, get_time());
+        particle_filter_->requestStateInitialization(get_time(), pose, covariance);
     } else {
         particle_filter_->requestUniformInitialization(get_time());
     }

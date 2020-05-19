@@ -6,7 +6,7 @@
 
 #include <ros/ros.h>
 #include <class_loader/register_macro.hpp>
-#include <muse_smc/smc/smc_types.hpp>
+#include <muse_smc/smc/types.hpp>
 
 namespace muse_mcl_2d {
 class Resampling2D : public muse_smc::Types<Sample2D>::resampling_t,
