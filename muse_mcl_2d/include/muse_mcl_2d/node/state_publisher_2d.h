@@ -11,7 +11,7 @@
 #include "sample_set_publisher_2d.h"
 
 namespace muse_mcl_2d {
-class EIGEN_ALIGN16 StatePublisher : public muse_smc::SMCState<Sample2D>
+class EIGEN_ALIGN16 StatePublisher : public muse_smc::StatePublisher<Sample2D>
 {
 public:
     EIGEN_MAKE_ALIGNED_OPERATOR_NEW

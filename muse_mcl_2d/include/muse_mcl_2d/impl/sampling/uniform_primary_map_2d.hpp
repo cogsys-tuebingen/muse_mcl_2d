@@ -4,7 +4,7 @@
 
 #include <muse_mcl_2d/sampling/uniform_sampling_2d.hpp>
 
-#include <muse_smc/smc/traits.hpp>
+#include <muse_smc/smc/traits/sample.hpp>
 
 #include <cslibs_math/sampling/uniform.hpp>
 #include <cslibs_math_ros/tf/conversion_2d.hpp>
