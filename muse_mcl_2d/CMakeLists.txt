@@ -115,24 +115,24 @@ target_link_libraries(${PROJECT_NAME}_resampling
         ${OpenCV_LIBRARIES}
 )
 
-# add_library(${PROJECT_NAME}_normal_sampling
-#     src/sampling/normal_sampling_2d.cpp
-# )
+add_library(${PROJECT_NAME}_normal_sampling
+    src/sampling/normal_sampling_2d.cpp
+)
 
-# target_include_directories(${PROJECT_NAME}_normal_sampling
-#     PRIVATE
-#         ${TARGET_INCLUDE_DIRS}
-# )
+target_include_directories(${PROJECT_NAME}_normal_sampling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
 
-# target_compile_options(${PROJECT_NAME}_normal_sampling
-#     PRIVATE
-#         ${TARGET_COMPILE_OPTIONS}
-# )
+target_compile_options(${PROJECT_NAME}_normal_sampling
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
 
-# target_link_libraries(${PROJECT_NAME}_normal_sampling
-#     PRIVATE
-#         ${catkin_LIBRARIES}
-# )
+target_link_libraries(${PROJECT_NAME}_normal_sampling
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
 
 # add_library(${PROJECT_NAME}_uniform_sampling
 #     src/sampling/uniform_primary_map_2d.cpp

@@ -5,6 +5,8 @@
 #include <cslibs_math/sampling/normal.hpp>
 
 #include <muse_mcl_2d/sampling/normal_sampling_2d.hpp>
+#include <muse_mcl_2d/map/map_2d.hpp>
+
 #include <cslibs_math_ros/tf/conversion_2d.hpp>
 
 namespace muse_mcl_2d {

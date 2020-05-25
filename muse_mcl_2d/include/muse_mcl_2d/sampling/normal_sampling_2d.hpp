@@ -17,6 +17,7 @@ class NormalSampling2D
   using Ptr = std::shared_ptr<NormalSampling2D>;
   using map_providers_t = std::map<std::string, MapProvider2D::Ptr>;
   using tf_provider_t = cslibs_math_ros::tf::TFProvider;
+  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
 
   static std::string Type() { return "muse_mcl_2d::NormalSampling2D"; }
 
