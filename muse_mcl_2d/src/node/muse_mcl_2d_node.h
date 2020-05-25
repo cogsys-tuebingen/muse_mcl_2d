@@ -4,7 +4,7 @@
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <muse_mcl_2d/GlobalInitialization.h>
 #include <muse_mcl_2d/PoseInitialization.h>
-#include <muse_mcl_2d/node/state_publisher_2d.h>
+#include <muse_mcl_2d/instance/state_publisher_2d.h>
 #include <ros/ros.h>
 #include <tf/time_cache.h>
 
@@ -17,14 +17,14 @@
 #include <muse_mcl_2d/prediction/prediction_integral_amcl_2d.hpp>
 #include <muse_mcl_2d/prediction/prediction_model_2d.hpp>
 #include <muse_mcl_2d/resampling/resampling_2d.hpp>
-#include <muse_mcl_2d/samples/sample_2d.hpp>
+#include <muse_mcl_2d/instance/sample_2d.hpp>
 #include <muse_mcl_2d/sampling/normal_sampling_2d.hpp>
 #include <muse_mcl_2d/sampling/uniform_sampling_2d.hpp>
 #include <muse_mcl_2d/scheduling/scheduler_2d.hpp>
 #include <muse_mcl_2d/update/update_model_2d.hpp>
-#include <muse_smc/prediction/prediction_relay.hpp>
 #include <muse_smc/smc/smc.hpp>
-#include <muse_smc/update/update_relay.hpp>
+#include <muse_smc/smc/traits/update_relay.hpp>
+#include <muse_smc/smc/traits/prediction_relay.hpp>
 
 namespace muse_mcl_2d {
 class MuseMCL2DNode {
@@ -58,14 +58,11 @@ class MuseMCL2DNode {
   using update_model_map_t = std::map<std::string, UpdateModel2D::Ptr>;
 
   using smc_t = muse_smc::SMC<Sample2D>;
-  using UpdateRelay2D = muse_smc::UpdateRelay<smc_t>;
-  using PredictionRelay2D = muse_smc::PredictionRelay<
-      smc_t, muse_smc::Types<Sample2D>::prediction_model_t,
-      data_provider_t,
-      muse_smc::Types<Sample2D>::state_space_provider_t>;
-  using sample_set_t = muse_smc::Types<Sample2D>::sample_set_t;
+  using UpdateRelay2D = muse_smc::traits::UpdateRelay<Sample2D>::type;
+  using PredictionRelay2D = muse_smc::traits::PredictionRelay<Sample2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
   using prediction_integrals_t =
-      muse_smc::Types<Sample2D>::prediction_integrals_t;
+      muse_smc::traits::PredictionIntegrals<Sample2D>::type;
 
   using update_model_mapping_t = UpdateRelay2D::map_t;
 

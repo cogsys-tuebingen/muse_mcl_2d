@@ -221,26 +221,26 @@ add_dependencies(${PROJECT_NAME}_helper
     ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
 )
 
-# add_executable(${PROJECT_NAME}_node
-#     src/node/muse_mcl_2d_node.cpp
-# )
+add_executable(${PROJECT_NAME}_node
+    src/node/muse_mcl_2d_node.cpp
+)
 
-# target_include_directories(${PROJECT_NAME}_node
-#     PRIVATE
-#         ${TARGET_INCLUDE_DIRS}
-# )
+target_include_directories(${PROJECT_NAME}_node
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
 
 
-# target_compile_options(${PROJECT_NAME}_node
-#     PRIVATE
-#         ${TARGET_COMPILE_OPTIONS}
-# )
+target_compile_options(${PROJECT_NAME}_node
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
 
-# target_link_libraries(${PROJECT_NAME}_node
-#     PRIVATE
-#         ${catkin_LIBRARIES}
-#         ${PROJECT_NAME}_helper
-# )
+target_link_libraries(${PROJECT_NAME}_node
+    PRIVATE
+        ${catkin_LIBRARIES}
+        ${PROJECT_NAME}_helper
+)
 
 
 set(MUSE_MCL_2D_ADDTIONALS True)

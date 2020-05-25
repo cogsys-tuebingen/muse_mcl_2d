@@ -8,7 +8,7 @@
 
 namespace muse_mcl_2d {
 class PredictionIntegralAMCL2D : public muse_smc::traits::PredictionIntegrals<
-                                     Sample2D>::prediction_integral_t {
+                                     Sample2D>::type::prediction_integral_t {
  public:
   using pose_t = muse_smc::traits::Transform<Sample2D>::type;
 
@@ -17,8 +17,8 @@ class PredictionIntegralAMCL2D : public muse_smc::traits::PredictionIntegrals<
   inline explicit PredictionIntegralAMCL2D(const double linear_threshold,
                                            const double angular_threshold,
                                            const bool exceed_both = false)
-      : linear_threshold_{linear_threshold} angular_threshold_{
-            angular_threshold} exceed_both_{exceed_both} {}
+      : linear_threshold_{linear_threshold}, angular_threshold_{
+            angular_threshold}, exceed_both_{exceed_both} {}
 
   virtual ~PredictionIntegralAMCL2D() = default;
 
