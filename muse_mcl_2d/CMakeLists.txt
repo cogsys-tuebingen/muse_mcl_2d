@@ -134,25 +134,25 @@ target_link_libraries(${PROJECT_NAME}_normal_sampling
         ${catkin_LIBRARIES}
 )
 
-# add_library(${PROJECT_NAME}_uniform_sampling
-#     src/sampling/uniform_primary_map_2d.cpp
-#     src/sampling/uniform_all_maps_2d.cpp
-# )
+add_library(${PROJECT_NAME}_uniform_sampling
+    src/sampling/uniform_primary_map_2d.cpp
+    src/sampling/uniform_all_maps_2d.cpp
+)
 
-# target_include_directories(${PROJECT_NAME}_uniform_sampling
-#     PRIVATE
-#         ${TARGET_INCLUDE_DIRS}
-# )
+target_include_directories(${PROJECT_NAME}_uniform_sampling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
 
-# target_compile_options(${PROJECT_NAME}_uniform_sampling
-#     PRIVATE
-#         ${TARGET_COMPILE_OPTIONS}
-# )
+target_compile_options(${PROJECT_NAME}_uniform_sampling
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
 
-# target_link_libraries(${PROJECT_NAME}_uniform_sampling
-#     PRIVATE
-#         ${catkin_LIBRARIES}
-# )
+target_link_libraries(${PROJECT_NAME}_uniform_sampling
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
 
 # add_library(${PROJECT_NAME}_density
 #     src/density/simple_sample_density_2d.cpp
