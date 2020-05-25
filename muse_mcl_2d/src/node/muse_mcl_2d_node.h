@@ -99,7 +99,7 @@ class MuseMCL2DNode {
   Scheduler2D::Ptr scheduler_;
 
   UpdateRelay2D::Ptr update_forwarder_;
-  PredictionRelay2D::Ptr predicition_forwarder_;
+  PredictionRelay2D::Ptr prediction_forwarder_;
 
   void checkPoseInitialization();
   bool getUpdateModelProviderMapping(update_model_mapping_t &update_mapping);
