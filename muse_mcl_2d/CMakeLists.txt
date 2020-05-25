@@ -243,42 +243,42 @@ add_dependencies(${PROJECT_NAME}_helper
 # )
 
 
-# set(MUSE_MCL_2D_ADDTIONALS True)
-# if(${MUSE_MCL_2D_ADDTIONALS})
-#     message(STATUS "[muse_mcl_2d]: Building additional executables!")
+set(MUSE_MCL_2D_ADDTIONALS True)
+if(${MUSE_MCL_2D_ADDTIONALS})
+    message(STATUS "[muse_mcl_2d]: Building additional executables!")
 
-#     add_executable(${PROJECT_NAME}_box_muller
-#         test/test_box_muller.cpp
-#     )
+    add_executable(${PROJECT_NAME}_box_muller
+        test/test_box_muller.cpp
+    )
 
-#     target_include_directories(${PROJECT_NAME}_box_muller
-#         PRIVATE
-#             ${TARGET_INCLUDE_DIRS}
-#     )
+    target_include_directories(${PROJECT_NAME}_box_muller
+        PRIVATE
+            ${TARGET_INCLUDE_DIRS}
+    )
 
-#     target_link_libraries(${PROJECT_NAME}_box_muller
-#         PRIVATE
-#             ${catkin_LIBRARIES}
-#     )
+    target_link_libraries(${PROJECT_NAME}_box_muller
+        PRIVATE
+            ${catkin_LIBRARIES}
+    )
 
-#     add_executable(${PROJECT_NAME}_benchmark_math
-#         test/benchmark_math.cpp
-#     )
+    add_executable(${PROJECT_NAME}_benchmark_math
+        test/benchmark_math.cpp
+    )
 
-#     target_include_directories(${PROJECT_NAME}_benchmark_math
-#         PRIVATE
-#             ${TARGET_INCLUDE_DIRS}
-#     )
+    target_include_directories(${PROJECT_NAME}_benchmark_math
+        PRIVATE
+            ${TARGET_INCLUDE_DIRS}
+    )
 
-#     target_compile_options(${PROJECT_NAME}_benchmark_math
-#     PRIVATE
-#         ${TARGET_COMPILE_OPTIONS}
-#     )
+    target_compile_options(${PROJECT_NAME}_benchmark_math
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+    )
 
-#     target_link_libraries(${PROJECT_NAME}_benchmark_math
-#         ${catkin_LIBRARIES}
-#     )
-# endif()
+    target_link_libraries(${PROJECT_NAME}_benchmark_math
+        ${catkin_LIBRARIES}
+    )
+endif()
 
 # install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
