@@ -70,7 +70,7 @@ class EIGEN_ALIGN16 TFPublisher {
 
   inline void start() {
     if (worker_thread_.joinable()) {
-      return
+      return;
     }
 
     worker_thread_ = std::thread([this] { loop(); });
@@ -78,7 +78,7 @@ class EIGEN_ALIGN16 TFPublisher {
 
   inline void end() {
     if (!worker_thread_.joinable()) {
-      return
+      return;
     }
 
     stop_ = true;
@@ -145,7 +145,6 @@ class EIGEN_ALIGN16 TFPublisher {
       tf_renew_time_ = false;
     };
 
-    running_ = true;
     lock_t notify_event_mutex_lock(notify_event_mutex_);
     while (!stop_) {
       notify_event_.wait(notify_event_mutex_lock);
@@ -169,7 +168,6 @@ class EIGEN_ALIGN16 TFPublisher {
         }
       }
     }
-    running_ = false;
   }
 };
 }  // namespace muse_mcl_2d

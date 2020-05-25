@@ -53,9 +53,6 @@ namespace color {
 /// 0 - 120 deg
 }  // namespace color
 
-SampleSetPublisher2D::SampleSetPublisher2D()
-    : running_(false), stop_(false), marker_count_(0) {}
-
 SampleSetPublisher2D::~SampleSetPublisher2D() { end(); }
 
 void SampleSetPublisher2D::setup(ros::NodeHandle &nh) {
@@ -93,7 +90,7 @@ void SampleSetPublisher2D::setup(ros::NodeHandle &nh) {
 }
 
 bool SampleSetPublisher2D::start() {
-  if (!running_) {
+  if (!worker_thread_.joinable()) {
     stop_ = false;
     worker_thread_ = std::thread([this]() { loop(); });
     return true;
@@ -102,10 +99,10 @@ bool SampleSetPublisher2D::start() {
 }
 
 bool SampleSetPublisher2D::end() {
-  if (running_) {
+  if (worker_thread_.joinable()) {
     stop_ = true;
     notify_.notify_one();
-    if (worker_thread_.joinable()) worker_thread_.join();
+    worker_thread_.join();
     return true;
   }
   return false;
@@ -172,7 +169,6 @@ void SampleSetPublisher2D::loop() {
     return msg;
   };
 
-  running_ = true;
   lock_t notify_lock(notify_mutex_);
 
   time_t stamp;
@@ -278,7 +274,5 @@ void SampleSetPublisher2D::loop() {
       pub_mean_.publish(mean_msg);
     }
   }
-
-  running_ = false;
 }
 }  // namespace muse_mcl_2d

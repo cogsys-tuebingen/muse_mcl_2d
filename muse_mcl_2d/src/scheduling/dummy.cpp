@@ -5,12 +5,12 @@ namespace muse_mcl_2d {
 class Dummy : public muse_mcl_2d::Scheduler2D {
  public:
   using Ptr = std::shared_ptr<Dummy>;
-  using rate_t = cslibs_time::Rate;
-  using update_t = muse_smc::Types<Sample2D>::update_t;
-  using resampling_t = muse_smc::Types<Sample2D>::resampling_t;
-  using sample_set_t = muse_smc::Types<Sample2D>::sample_set_t;
-  using time_t = cslibs_time::Time;
-  using duration_t = cslibs_time::Duration;
+  using update_t = muse_smc::traits::Update<Sample2D>::type;
+  using resampling_t = muse_smc::traits::Resampling<Sample2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using time_t = muse_smc::traits::Time<Sample2D>::type;
+  using rate_t = muse_smc::traits::Rate<Sample2D>::type;
+  using duration_t = muse_smc::traits::Duration<Sample2D>::type;
   using update_model_map_t = std::map<std::string, UpdateModel2D::Ptr>;
 
   Dummy() : may_resample_(false) {}

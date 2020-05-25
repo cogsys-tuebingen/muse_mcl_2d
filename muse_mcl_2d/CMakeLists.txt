@@ -154,72 +154,72 @@ target_link_libraries(${PROJECT_NAME}_uniform_sampling
         ${catkin_LIBRARIES}
 )
 
-# add_library(${PROJECT_NAME}_density
-#     src/density/simple_sample_density_2d.cpp
-#     src/density/mean_centered_sample_density_2d.cpp
-# )
+add_library(${PROJECT_NAME}_density
+    src/density/simple_sample_density_2d.cpp
+    src/density/mean_centered_sample_density_2d.cpp
+)
 
-# target_include_directories(${PROJECT_NAME}_density
-#     PRIVATE
-#         ${TARGET_INCLUDE_DIRS}
-# )
+target_include_directories(${PROJECT_NAME}_density
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
 
-# target_compile_options(${PROJECT_NAME}_density
-#     PRIVATE
-#         ${TARGET_COMPILE_OPTIONS}
-# )
+target_compile_options(${PROJECT_NAME}_density
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
 
-# target_link_libraries(${PROJECT_NAME}_density
-#     PRIVATE
-#         ${catkin_LIBRARIES}
-# )
+target_link_libraries(${PROJECT_NAME}_density
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
 
-# add_library(${PROJECT_NAME}_scheduling
-#     src/scheduling/cfs.cpp
-#     src/scheduling/rate.cpp
-#     src/scheduling/cfs_drop_statistic.cpp
-#     src/scheduling/rate_drop_statistic.cpp
-#     src/scheduling/dummy.cpp
-#     src/scheduling/cfs_laggy.cpp
-# )
+add_library(${PROJECT_NAME}_scheduling
+    src/scheduling/cfs.cpp
+    src/scheduling/rate.cpp
+    src/scheduling/cfs_drop_statistic.cpp
+    src/scheduling/rate_drop_statistic.cpp
+    src/scheduling/dummy.cpp
+    src/scheduling/cfs_laggy.cpp
+)
 
-# target_include_directories(${PROJECT_NAME}_scheduling
-#     PRIVATE
-#         ${TARGET_INCLUDE_DIRS}
-# )
+target_include_directories(${PROJECT_NAME}_scheduling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
 
-# target_compile_options(${PROJECT_NAME}_scheduling
-#     PRIVATE
-#         ${TARGET_COMPILE_OPTIONS}
-# )
+target_compile_options(${PROJECT_NAME}_scheduling
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
 
-# target_link_libraries(${PROJECT_NAME}_scheduling
-#     PRIVATE
-#         ${catkin_LIBRARIES}
-# )
+target_link_libraries(${PROJECT_NAME}_scheduling
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
 
-# add_library(${PROJECT_NAME}_helper
-#     src/instance/state_publisher_2d.cpp
-#     src/instance/sample_set_publisher_2d.cpp
-# )
+add_library(${PROJECT_NAME}_helper
+    src/instance/state_publisher_2d.cpp
+    src/instance/sample_set_publisher_2d.cpp
+)
 
-# target_include_directories(${PROJECT_NAME}_helper
-#     PRIVATE
-#         ${TARGET_INCLUDE_DIRS}
-# )
+target_include_directories(${PROJECT_NAME}_helper
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
 
-# target_compile_options(${PROJECT_NAME}_helper
-#     PRIVATE
-#         ${TARGET_COMPILE_OPTIONS}
-# )
+target_compile_options(${PROJECT_NAME}_helper
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
 
-# target_link_libraries(${PROJECT_NAME}_helper
-#     PRIVATE
-#         ${catkin_LIBRARIES}
-# )
-# add_dependencies(${PROJECT_NAME}_helper
-#     ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
-# )
+target_link_libraries(${PROJECT_NAME}_helper
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
+add_dependencies(${PROJECT_NAME}_helper
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
+)
 
 # add_executable(${PROJECT_NAME}_node
 #     src/node/muse_mcl_2d_node.cpp

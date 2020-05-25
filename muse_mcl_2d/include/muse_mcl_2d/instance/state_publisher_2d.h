@@ -18,16 +18,17 @@ class EIGEN_ALIGN16 StatePublisher
   using transform_t = muse_smc::traits::Transform<Sample2D>::type;
   using covariance_t = muse_smc::traits::Covariance<Sample2D>::type;
   using stamped_t = cslibs_math::utility::Stamped<transform_t>;
+  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
 
   StatePublisher();
 
   void setup(ros::NodeHandle &nh);
 
-  void publish(const typename sample_set_t::ConstPtr &sample_set) override;
+  void publish(const sample_set_t::ConstPtr &sample_set) override;
   void publishIntermediate(
-      const typename sample_set_t::ConstPtr &sample_set) override;
+      const sample_set_t::ConstPtr &sample_set) override;
   void publishConstant(
-      const typename sample_set_t::ConstPtr &sample_set) override;
+      const sample_set_t::ConstPtr &sample_set) override;
 
  private:
   TFPublisher::Ptr tf_publisher_;

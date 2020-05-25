@@ -36,16 +36,16 @@ class CFSLaggy : public muse_mcl_2d::Scheduler2D {
   };
 
   using Ptr = std::shared_ptr<CFSLaggy>;
-  using rate_t = cslibs_time::Rate;
-  using update_t = muse_smc::Types<Sample2D>::update_t;
   using queue_t = __gnu_pbds::priority_queue<Entry, typename Entry::Greater,
                                              __gnu_pbds::rc_binomial_heap_tag>;
-  using time_priority_map_t = std::unordered_map<id_t, double>;
-  using resampling_t = muse_smc::Types<Sample2D>::resampling_t;
-  using sample_set_t = muse_smc::Types<Sample2D>::sample_set_t;
   using nice_map_t = std::unordered_map<id_t, double>;
-  using time_t = cslibs_time::Time;
-  using duration_t = cslibs_time::Duration;
+
+  using update_t = muse_smc::traits::Update<Sample2D>::type;
+  using resampling_t = muse_smc::traits::Resampling<Sample2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using time_t = muse_smc::traits::Time<Sample2D>::type;
+  using rate_t = muse_smc::traits::Rate<Sample2D>::type;
+  using duration_t = muse_smc::traits::Duration<Sample2D>::type;
   using update_model_map_t = std::map<std::string, UpdateModel2D::Ptr>;
 
   CFSLaggy() : may_resample_(false) {}
