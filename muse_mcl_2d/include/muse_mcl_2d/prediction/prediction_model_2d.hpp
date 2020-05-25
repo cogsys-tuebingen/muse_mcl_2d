@@ -17,6 +17,7 @@ class PredictionModel2D
  public:
   using Ptr = std::shared_ptr<PredictionModel2D>;
   using ConstPtr = std::shared_ptr<PredictionModel2D const>;
+  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
 
   struct Result2D : public Result {
     using odometry_t = cslibs_plugins_data::types::Odometry2d;

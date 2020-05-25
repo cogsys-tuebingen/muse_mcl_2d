@@ -297,13 +297,13 @@ bool MuseMCL2DNode::setup()
                                 enable_lag_correction);
     }
 
-    predicition_forwarder_.reset(new PredictionRelay2D(particle_filter_));
+    prediction_forwarder_.reset(new PredictionRelay2D(particle_filter_));
     cslibs_plugins_data::DataProvider::Ptr prediction_provider;
     if(!getPredictionProvider(prediction_provider)) {
         ROS_ERROR_STREAM("Setup is incomplete and is aborted!");
         return false;
     }
-    predicition_forwarder_->relay(prediction_model_, prediction_provider);
+    prediction_forwarder_->relay(prediction_model_, prediction_provider);
 
     update_forwarder_.reset(new UpdateRelay2D(particle_filter_));
     update_model_mapping_t update_mapping;

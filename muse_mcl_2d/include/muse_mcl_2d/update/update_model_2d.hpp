@@ -19,6 +19,8 @@ class UpdateModel2D : public muse_smc::traits::UpdateModel<Sample2D>::type,
   using transform_t = muse_smc::traits::Transform<sample_t>::type;
   using state_t = muse_smc::traits::State<sample_t>::type;
   using point_t = muse_smc::traits::StateSpaceBoundary<sample_t>::type;
+  using state_space_t = muse_smc::traits::StateSpace<sample_t>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<sample_t>::type;
 
   UpdateModel2D() = default;
   virtual ~UpdateModel2D() = default;
