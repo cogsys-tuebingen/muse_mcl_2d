@@ -1,38 +1,34 @@
 #pragma once
 
-#include <muse_mcl_2d/scheduling/scheduler_2d.hpp>
-
 #include <cslibs_plugins/plugin.hpp>
-
+#include <muse_mcl_2d/scheduling/scheduler_2d.hpp>
 #include <unordered_map>
 
 namespace muse_mcl_2d {
-class Rate : public muse_mcl_2d::Scheduler2D
-{
-public:
-    using Ptr                 = std::shared_ptr<Rate>;
-    using rate_t              = cslibs_time::Rate;
-    using update_t            = muse_smc::Types<Sample2D>::update_t;
-    using time_priority_map_t = std::unordered_map<id_t, double>;
-    using resampling_t        = muse_smc::Types<Sample2D>::resampling_t;
-    using sample_set_t        = muse_smc::Types<Sample2D>::sample_set_t;
-    using time_t              = cslibs_time::Time;
-    using duration_t          = cslibs_time::Duration;
-    using update_model_map_t  = std::map<std::string, UpdateModel2D::Ptr>;
+class Rate : public muse_mcl_2d::Scheduler2D {
+ public:
+  using Ptr = std::shared_ptr<Rate>;
+  using rate_t = cslibs_time::Rate;
+  using update_t = muse_smc::traits::Update<Sample2D>::type;
+  using time_priority_map_t = std::unordered_map<id_t, double>;
+  using resampling_t = muse_smc::traits::Resampling<Sample2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using time_t = cslibs_time::Time;
+  using duration_t = cslibs_time::Duration;
+  using update_model_map_t = std::map<std::string, UpdateModel2D::Ptr>;
 
-    Rate();
+  Rate();
 
-    inline void setup(const update_model_map_t &,
-                      ros::NodeHandle &nh) override;
-    virtual bool apply(typename update_t::Ptr     &u,
-                       typename sample_set_t::Ptr &s) override;
-    virtual bool apply(typename resampling_t::Ptr &r,
-                       typename sample_set_t::Ptr &s) override;
+  inline void setup(const update_model_map_t &, ros::NodeHandle &nh) override;
+  virtual bool apply(typename update_t::Ptr &u,
+                     typename sample_set_t::Ptr &s) override;
+  virtual bool apply(typename resampling_t::Ptr &r,
+                     typename sample_set_t::Ptr &s) override;
 
-protected:
-    time_t              next_update_time_;
-    time_t              resampling_time_;
-    duration_t          resampling_period_;
-    bool                may_resample_;
+ protected:
+  time_t next_update_time_;
+  time_t resampling_time_;
+  duration_t resampling_period_;
+  bool may_resample_;
 };
-}
+}  // namespace muse_mcl_2d

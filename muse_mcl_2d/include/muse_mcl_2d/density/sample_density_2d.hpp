@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <class_loader/register_macro.hpp>
 
-#include <muse_mcl_2d/samples/sample_2d.hpp>
+#include <muse_mcl_2d/instance/sample_2d.hpp>
 #include <muse_smc/samples/sample_density.hpp>
 
 #include <cslibs_math/statistics/weighted_angular_mean.hpp>

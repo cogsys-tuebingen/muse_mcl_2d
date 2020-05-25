@@ -1,5 +1,5 @@
-#ifndef SAMPLE_SET_PUBLISHER_2D_H
-#define SAMPLE_SET_PUBLISHER_2D_H
+#ifndef MUSE_MCL_2D_SAMPLE_SET_PUBLISHER_2D_H
+#define MUSE_MCL_2D_SAMPLE_SET_PUBLISHER_2D_H
 
 
 #include <memory>
@@ -41,7 +41,6 @@ public:
              const time_t           &stamp);
 
 private:
-    std::atomic_bool                    running_;
     std::atomic_bool                    stop_;
     std::thread                         worker_thread_;
     std::condition_variable             notify_;
@@ -62,13 +61,13 @@ private:
 
     std::string                         world_frame_;
 
-    bool publish_poses_;
-    bool publish_markers_;
-    bool publish_samples_;
-    bool publish_mean_;
+    bool publish_poses_{false};
+    bool publish_markers_{false};
+    bool publish_samples_{false};
+    bool publish_mean_{false};
 
     void loop();
 };
 }
 
-#endif // SAMPLE_SET_PUBLISHER_2D_H
+#endif // MUSE_MCL_2D_SAMPLE_SET_PUBLISHER_2D_H

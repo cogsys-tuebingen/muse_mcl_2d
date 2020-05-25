@@ -3,9 +3,9 @@
 #include <muse_mcl_2d/resampling/resampling_2d.hpp>
 
 namespace muse_mcl_2d {
-class Systematic : public Resampling2D {
+class Multinomial : public Resampling2D {
  public:
-    Systematic() = default;
+    Multinomial() = default;
  protected:
   virtual void doSetup(ros::NodeHandle &nh) override {}
   virtual void doApply(sample_set_t &sample_set) override;

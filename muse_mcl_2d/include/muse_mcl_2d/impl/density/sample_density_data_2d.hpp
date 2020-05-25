@@ -1,7 +1,7 @@
 #ifndef SAMPLE_DENSITY_DATA_2D_HPP
 #define SAMPLE_DENSITY_DATA_2D_HPP
 
-#include <muse_mcl_2d/samples/sample_2d.hpp>
+#include <muse_mcl_2d/instance/sample_2d.hpp>
 
 #include <cslibs_math/statistics/stable_weighted_distribution.hpp>
 #include <cslibs_math/statistics/weighted_angular_mean.hpp>

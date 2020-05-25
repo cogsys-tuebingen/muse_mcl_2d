@@ -3,7 +3,7 @@
 
 #include <cslibs_math/common/index.hpp>
 
-#include <muse_mcl_2d/samples/sample_2d.hpp>
+#include <muse_mcl_2d/instance/sample_2d.hpp>
 
 namespace muse_mcl_2d {
 class SampleIndexation2D {

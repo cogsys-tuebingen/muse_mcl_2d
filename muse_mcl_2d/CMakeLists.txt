@@ -96,6 +96,7 @@ add_library(${PROJECT_NAME}_resampling
     src/resampling/residual_2d.cpp
     src/resampling/stratified_2d.cpp
     src/resampling/wheel_2d.cpp
+    src/resampling/multinomial.cpp
 )
 
 target_include_directories(${PROJECT_NAME}_resampling
@@ -114,180 +115,180 @@ target_link_libraries(${PROJECT_NAME}_resampling
         ${OpenCV_LIBRARIES}
 )
 
-add_library(${PROJECT_NAME}_normal_sampling
-    src/sampling/normal_sampling_2d.cpp
-)
+# add_library(${PROJECT_NAME}_normal_sampling
+#     src/sampling/normal_sampling_2d.cpp
+# )
 
-target_include_directories(${PROJECT_NAME}_normal_sampling
-    PRIVATE
-        ${TARGET_INCLUDE_DIRS}
-)
+# target_include_directories(${PROJECT_NAME}_normal_sampling
+#     PRIVATE
+#         ${TARGET_INCLUDE_DIRS}
+# )
 
-target_compile_options(${PROJECT_NAME}_normal_sampling
-    PRIVATE
-        ${TARGET_COMPILE_OPTIONS}
-)
+# target_compile_options(${PROJECT_NAME}_normal_sampling
+#     PRIVATE
+#         ${TARGET_COMPILE_OPTIONS}
+# )
 
-target_link_libraries(${PROJECT_NAME}_normal_sampling
-    PRIVATE
-        ${catkin_LIBRARIES}
-)
+# target_link_libraries(${PROJECT_NAME}_normal_sampling
+#     PRIVATE
+#         ${catkin_LIBRARIES}
+# )
 
-add_library(${PROJECT_NAME}_uniform_sampling
-    src/sampling/uniform_primary_map_2d.cpp
-    src/sampling/uniform_all_maps_2d.cpp
-)
+# add_library(${PROJECT_NAME}_uniform_sampling
+#     src/sampling/uniform_primary_map_2d.cpp
+#     src/sampling/uniform_all_maps_2d.cpp
+# )
 
-target_include_directories(${PROJECT_NAME}_uniform_sampling
-    PRIVATE
-        ${TARGET_INCLUDE_DIRS}
-)
+# target_include_directories(${PROJECT_NAME}_uniform_sampling
+#     PRIVATE
+#         ${TARGET_INCLUDE_DIRS}
+# )
 
-target_compile_options(${PROJECT_NAME}_uniform_sampling
-    PRIVATE
-        ${TARGET_COMPILE_OPTIONS}
-)
+# target_compile_options(${PROJECT_NAME}_uniform_sampling
+#     PRIVATE
+#         ${TARGET_COMPILE_OPTIONS}
+# )
 
-target_link_libraries(${PROJECT_NAME}_uniform_sampling
-    PRIVATE
-        ${catkin_LIBRARIES}
-)
+# target_link_libraries(${PROJECT_NAME}_uniform_sampling
+#     PRIVATE
+#         ${catkin_LIBRARIES}
+# )
 
-add_library(${PROJECT_NAME}_density
-    src/density/simple_sample_density_2d.cpp
-    src/density/mean_centered_sample_density_2d.cpp
-)
+# add_library(${PROJECT_NAME}_density
+#     src/density/simple_sample_density_2d.cpp
+#     src/density/mean_centered_sample_density_2d.cpp
+# )
 
-target_include_directories(${PROJECT_NAME}_density
-    PRIVATE
-        ${TARGET_INCLUDE_DIRS}
-)
+# target_include_directories(${PROJECT_NAME}_density
+#     PRIVATE
+#         ${TARGET_INCLUDE_DIRS}
+# )
 
-target_compile_options(${PROJECT_NAME}_density
-    PRIVATE
-        ${TARGET_COMPILE_OPTIONS}
-)
+# target_compile_options(${PROJECT_NAME}_density
+#     PRIVATE
+#         ${TARGET_COMPILE_OPTIONS}
+# )
 
-target_link_libraries(${PROJECT_NAME}_density
-    PRIVATE
-        ${catkin_LIBRARIES}
-)
+# target_link_libraries(${PROJECT_NAME}_density
+#     PRIVATE
+#         ${catkin_LIBRARIES}
+# )
 
-add_library(${PROJECT_NAME}_scheduling
-    src/scheduling/cfs.cpp
-    src/scheduling/rate.cpp
-    src/scheduling/cfs_drop_statistic.cpp
-    src/scheduling/rate_drop_statistic.cpp
-    src/scheduling/dummy.cpp
-    src/scheduling/cfs_laggy.cpp
-)
+# add_library(${PROJECT_NAME}_scheduling
+#     src/scheduling/cfs.cpp
+#     src/scheduling/rate.cpp
+#     src/scheduling/cfs_drop_statistic.cpp
+#     src/scheduling/rate_drop_statistic.cpp
+#     src/scheduling/dummy.cpp
+#     src/scheduling/cfs_laggy.cpp
+# )
 
-target_include_directories(${PROJECT_NAME}_scheduling
-    PRIVATE
-        ${TARGET_INCLUDE_DIRS}
-)
+# target_include_directories(${PROJECT_NAME}_scheduling
+#     PRIVATE
+#         ${TARGET_INCLUDE_DIRS}
+# )
 
-target_compile_options(${PROJECT_NAME}_scheduling
-    PRIVATE
-        ${TARGET_COMPILE_OPTIONS}
-)
+# target_compile_options(${PROJECT_NAME}_scheduling
+#     PRIVATE
+#         ${TARGET_COMPILE_OPTIONS}
+# )
 
-target_link_libraries(${PROJECT_NAME}_scheduling
-    PRIVATE
-        ${catkin_LIBRARIES}
-)
+# target_link_libraries(${PROJECT_NAME}_scheduling
+#     PRIVATE
+#         ${catkin_LIBRARIES}
+# )
 
-add_library(${PROJECT_NAME}_helper
-    src/node/state_publisher_2d.cpp
-    src/node/sample_set_publisher_2d.cpp
-)
+# add_library(${PROJECT_NAME}_helper
+#     src/instance/state_publisher_2d.cpp
+#     src/instance/sample_set_publisher_2d.cpp
+# )
 
-target_include_directories(${PROJECT_NAME}_helper
-    PRIVATE
-        ${TARGET_INCLUDE_DIRS}
-)
+# target_include_directories(${PROJECT_NAME}_helper
+#     PRIVATE
+#         ${TARGET_INCLUDE_DIRS}
+# )
 
-target_compile_options(${PROJECT_NAME}_helper
-    PRIVATE
-        ${TARGET_COMPILE_OPTIONS}
-)
+# target_compile_options(${PROJECT_NAME}_helper
+#     PRIVATE
+#         ${TARGET_COMPILE_OPTIONS}
+# )
 
-target_link_libraries(${PROJECT_NAME}_helper
-    PRIVATE
-        ${catkin_LIBRARIES}
-)
-add_dependencies(${PROJECT_NAME}_helper
-    ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
-)
+# target_link_libraries(${PROJECT_NAME}_helper
+#     PRIVATE
+#         ${catkin_LIBRARIES}
+# )
+# add_dependencies(${PROJECT_NAME}_helper
+#     ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
+# )
 
-add_executable(${PROJECT_NAME}_node
-    src/node/muse_mcl_2d_node.cpp
-)
+# add_executable(${PROJECT_NAME}_node
+#     src/node/muse_mcl_2d_node.cpp
+# )
 
-target_include_directories(${PROJECT_NAME}_node
-    PRIVATE
-        ${TARGET_INCLUDE_DIRS}
-)
-
-
-target_compile_options(${PROJECT_NAME}_node
-    PRIVATE
-        ${TARGET_COMPILE_OPTIONS}
-)
-
-target_link_libraries(${PROJECT_NAME}_node
-    PRIVATE
-        ${catkin_LIBRARIES}
-        ${PROJECT_NAME}_helper
-)
+# target_include_directories(${PROJECT_NAME}_node
+#     PRIVATE
+#         ${TARGET_INCLUDE_DIRS}
+# )
 
 
-set(MUSE_MCL_2D_ADDTIONALS True)
-if(${MUSE_MCL_2D_ADDTIONALS})
-    message(STATUS "[muse_mcl_2d]: Building additional executables!")
+# target_compile_options(${PROJECT_NAME}_node
+#     PRIVATE
+#         ${TARGET_COMPILE_OPTIONS}
+# )
 
-    add_executable(${PROJECT_NAME}_box_muller
-        test/test_box_muller.cpp
-    )
+# target_link_libraries(${PROJECT_NAME}_node
+#     PRIVATE
+#         ${catkin_LIBRARIES}
+#         ${PROJECT_NAME}_helper
+# )
 
-    target_include_directories(${PROJECT_NAME}_box_muller
-        PRIVATE
-            ${TARGET_INCLUDE_DIRS}
-    )
 
-    target_link_libraries(${PROJECT_NAME}_box_muller
-        PRIVATE
-            ${catkin_LIBRARIES}
-    )
+# set(MUSE_MCL_2D_ADDTIONALS True)
+# if(${MUSE_MCL_2D_ADDTIONALS})
+#     message(STATUS "[muse_mcl_2d]: Building additional executables!")
 
-    add_executable(${PROJECT_NAME}_benchmark_math
-        test/benchmark_math.cpp
-    )
+#     add_executable(${PROJECT_NAME}_box_muller
+#         test/test_box_muller.cpp
+#     )
 
-    target_include_directories(${PROJECT_NAME}_benchmark_math
-        PRIVATE
-            ${TARGET_INCLUDE_DIRS}
-    )
+#     target_include_directories(${PROJECT_NAME}_box_muller
+#         PRIVATE
+#             ${TARGET_INCLUDE_DIRS}
+#     )
 
-    target_compile_options(${PROJECT_NAME}_benchmark_math
-    PRIVATE
-        ${TARGET_COMPILE_OPTIONS}
-    )
+#     target_link_libraries(${PROJECT_NAME}_box_muller
+#         PRIVATE
+#             ${catkin_LIBRARIES}
+#     )
 
-    target_link_libraries(${PROJECT_NAME}_benchmark_math
-        ${catkin_LIBRARIES}
-    )
-endif()
+#     add_executable(${PROJECT_NAME}_benchmark_math
+#         test/benchmark_math.cpp
+#     )
 
-install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+#     target_include_directories(${PROJECT_NAME}_benchmark_math
+#         PRIVATE
+#             ${TARGET_INCLUDE_DIRS}
+#     )
 
-install(TARGETS
-            ${PROJECT_NAME}_resampling
-            ${PROJECT_NAME}_normal_sampling
-            ${PROJECT_NAME}_uniform_sampling
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+#     target_compile_options(${PROJECT_NAME}_benchmark_math
+#     PRIVATE
+#         ${TARGET_COMPILE_OPTIONS}
+#     )
 
-install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+#     target_link_libraries(${PROJECT_NAME}_benchmark_math
+#         ${catkin_LIBRARIES}
+#     )
+# endif()
+
+# install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+
+# install(TARGETS
+#             ${PROJECT_NAME}_resampling
+#             ${PROJECT_NAME}_normal_sampling
+#             ${PROJECT_NAME}_uniform_sampling
+#         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+
+# install(DIRECTORY include/${PROJECT_NAME}/
+#         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

@@ -1,11 +1,14 @@
-#ifndef SAMPLE_2D_HPP
-#define SAMPLE_2D_HPP
+#ifndef MUSE_MCL_2D_SAMPLE_2D_HPP
+#define MUSE_MCL_2D_SAMPLE_2D_HPP
 
 #include <memory>
 
 #include <cslibs_math_2d/linear/point.hpp>
 #include <cslibs_math_2d/linear/pose.hpp>
 #include <cslibs_math_2d/linear/covariance.hpp>
+
+#include <cslibs_time/rate.hpp>
+
 #include <cslibs_plugins_data/data_provider.hpp>
 
 #include <muse_smc/smc/traits/sample.hpp>
@@ -19,44 +22,14 @@ public:
     using Ptr         = std::shared_ptr<Sample2D>;
     using state_t     = cslibs_math_2d::Pose2d;
 
-    double       weight;
+    double       weight{0.0};
     state_t      state;
 
-    inline Sample2D() :
-        weight(0.0),
-        state(state_t(0.0,0.0))
-    {
-    }
-
-    inline Sample2D(const Sample2D &other) :
-        weight(other.weight),
-        state(other.state)
-    {
-    }
-
-    inline Sample2D(Sample2D &&other) :
-        weight(other.weight),
-        state(other.state)
-    {
-    }
-
-    inline Sample2D& operator = (const Sample2D &other)
-    {
-        if(&other != this) {
-            weight = other.weight;
-            state  = other.state;
-        }
-        return *this;
-    }
-
-    inline Sample2D& operator = (Sample2D &&other)
-    {
-        if(&other != this) {
-            weight = other.weight;
-            state  = std::move(other.state);
-        }
-        return *this;
-    }
+    inline Sample2D() = default;
+    inline Sample2D(const Sample2D &other) = default;
+    inline Sample2D(Sample2D &&other)  = default;
+    inline Sample2D& operator = (const Sample2D &other) = default;
+    inline Sample2D& operator = (Sample2D &&other) = default;
 };
 }
 
@@ -116,6 +89,19 @@ template<>
 struct StateSpaceBoundary<muse_mcl_2d::Sample2D> {
     using type = cslibs_math_2d::Point2d;
 };
+template <>
+struct Time<muse_mcl_2d::Sample2D> {
+    using type = cslibs_time::Time;
+};
+template <>
+struct Duration<muse_mcl_2d::Sample2D> {
+  using type = cslibs_time::Duration;
+};
+
+template<>
+struct Rate<muse_mcl_2d::Sample2D> {
+ using type = cslibs_time::Rate;
+};
 }
 }
-#endif // SAMPLE_2D_HPP
+#endif // MUSE_MCL_2D_SAMPLE_2D_HPP
