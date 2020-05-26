@@ -47,7 +47,8 @@ catkin_package(
         ${PROJECT_NAME}_density
         ${PROJECT_NAME}_helper
         ${PROJECT_NAME}_resampling
-        ${PROJECT_NAME}_sampling
+        ${PROJECT_NAME}_normal_sampling
+        ${PROJECT_NAME}_uniform_sampling
         ${PROJECT_NAME}_scheduling
     CATKIN_DEPENDS
         muse_smc
