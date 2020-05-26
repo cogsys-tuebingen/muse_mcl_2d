@@ -94,6 +94,10 @@ struct Time<muse_mcl_2d::Sample2D> {
     using type = cslibs_time::Time;
 };
 template <>
+struct TimeFrame<muse_mcl_2d::Sample2D> {
+    using type = cslibs_time::TimeFrame;
+};
+template <>
 struct Duration<muse_mcl_2d::Sample2D> {
   using type = cslibs_time::Duration;
 };
