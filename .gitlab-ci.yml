@@ -52,10 +52,14 @@ kinetic:
   stage: build
   image: ros:kinetic
   script:
+    - sudo apt-get install -y software-properties-common
+    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    - sudo apt-get update
+    - sudo apt-get install -y g++-7 gcc-7
     - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
     - rosdep install -y -r -i --from-paths src
-    - catkin build
-    - catkin run_tests
+    - catkin build -DCMAKE_C_COMPILER=/usr/bin/gcc-7 -DCMAKE_CXX_COMPILER=/usr/bin/g++-7
+    - catkin run_tests muse_mcl_2d muse_mcl_2d_gridmaps muse_mcl_2d_ndt muse_mcl_2d_odometry --no-deps
 
 melodic:
   stage: build
@@ -64,4 +68,4 @@ melodic:
     - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
     - rosdep install -y -r -i --from-paths src
     - catkin build
-    - catkin run_tests
+    - catkin run_tests muse_mcl_2d muse_mcl_2d_gridmaps muse_mcl_2d_ndt muse_mcl_2d_odometry --no-deps
