@@ -20,13 +20,13 @@ class SampleSetPublisher2D
 {
 public:
     using Ptr = std::shared_ptr<SampleSetPublisher2D>;
-    using sample_set_t    = muse_smc::traits::SampleSet<Sample2D>::type;
+    using sample_set_t    = muse_smc::traits::SampleSet<Hypothesis2D>::type;
     using sample_vector_t = sample_set_t::sample_vector_t;
-    using time_t          = muse_smc::traits::Time<Sample2D>::type;
+    using time_t          = muse_smc::traits::Time<Hypothesis2D>::type;
     using lock_t          = std::unique_lock<std::mutex>;
 
-    using state_t         = muse_smc::traits::State<Sample2D>::type;
-    using covariance_t    = muse_smc::traits::Covariance<Sample2D>::type;
+    using state_t         = muse_smc::traits::State<Hypothesis2D>::type;
+    using covariance_t    = muse_smc::traits::Covariance<Hypothesis2D>::type;
 
     SampleSetPublisher2D() = default;
     virtual ~SampleSetPublisher2D();

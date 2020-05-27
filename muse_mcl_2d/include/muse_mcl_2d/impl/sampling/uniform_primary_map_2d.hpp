@@ -17,7 +17,7 @@ class EIGEN_ALIGN16 UniformPrimaryMap2D : public UniformSampling2D {
   using Radian = cslibs_math::sampling::Radian;
   using rng_t = cslibs_math::sampling::Uniform<double, Metric, Metric, Radian>;
 
-  using transform_t = muse_smc::traits::Transform<Sample2D>::type;
+  using transform_t = muse_smc::traits::Transform<Hypothesis2D>::type;
 
   UniformPrimaryMap2D() = default;
 

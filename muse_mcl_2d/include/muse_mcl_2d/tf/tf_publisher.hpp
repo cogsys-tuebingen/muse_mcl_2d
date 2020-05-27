@@ -32,7 +32,7 @@ namespace muse_mcl_2d {
 class EIGEN_ALIGN16 TFPublisher {
  public:
   using Ptr = std::shared_ptr<TFPublisher>;
-  using transform_t = muse_smc::traits::Transform<Sample2D>::type;
+  using transform_t = muse_smc::traits::Transform<Hypothesis2D>::type;
   using stamped_t = cslibs_math::utility::Stamped<transform_t>;
   using time_t = cslibs_time::Time;
   using queue_t = cslibs_utility::synchronized::queue<

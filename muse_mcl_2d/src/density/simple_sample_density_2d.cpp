@@ -28,8 +28,8 @@ void SimpleSampleDensity2D::clear()
 void SimpleSampleDensity2D::insert(const Sample2D& sample)
 {
     kdtree_->insert(indexation_.create(sample), sample_data_t(sample));
-    global_position_.add(sample.state.translation());
-    global_angle_.add(sample.state.yaw());
+    global_position_.add(sample.state().translation());
+    global_angle_.add(sample.state().yaw());
 }
 
 void SimpleSampleDensity2D::estimate()

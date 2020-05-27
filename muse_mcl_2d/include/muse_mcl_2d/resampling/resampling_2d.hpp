@@ -8,14 +8,14 @@
 #include <muse_smc/smc/traits/resampling.hpp>
 
 namespace muse_mcl_2d {
-class Resampling2D : public muse_smc::traits::Resampling<Sample2D>::type,
+class Resampling2D : public muse_smc::traits::Resampling<Hypothesis2D>::type,
                      public cslibs_plugins::Plugin {
  public:
   using Ptr = std::shared_ptr<Resampling2D>;
-  using base_t = muse_smc::traits::Resampling<Sample2D>::type;
-  using uniform_sampling_t = muse_smc::traits::UniformSampling<Sample2D>::type;
-  using normal_sampling_t = muse_smc::traits::NormalSampling<Sample2D>::type;
-  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using base_t = muse_smc::traits::Resampling<Hypothesis2D>::type;
+  using uniform_sampling_t = muse_smc::traits::UniformSampling<Hypothesis2D>::type;
+  using normal_sampling_t = muse_smc::traits::NormalSampling<Hypothesis2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
 
   static std::string Type() { return "muse_mcl_2d::Resampling2D"; }
 

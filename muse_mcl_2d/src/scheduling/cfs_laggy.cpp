@@ -40,12 +40,12 @@ class CFSLaggy : public muse_mcl_2d::Scheduler2D {
                                              __gnu_pbds::rc_binomial_heap_tag>;
   using nice_map_t = std::unordered_map<id_t, double>;
 
-  using update_t = muse_smc::traits::Update<Sample2D>::type;
-  using resampling_t = muse_smc::traits::Resampling<Sample2D>::type;
-  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
-  using time_t = muse_smc::traits::Time<Sample2D>::type;
-  using rate_t = muse_smc::traits::Rate<Sample2D>::type;
-  using duration_t = muse_smc::traits::Duration<Sample2D>::type;
+  using update_t = muse_smc::traits::Update<Hypothesis2D>::type;
+  using resampling_t = muse_smc::traits::Resampling<Hypothesis2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
+  using time_t = muse_smc::traits::Time<Hypothesis2D>::type;
+  using rate_t = muse_smc::traits::Rate<Hypothesis2D>::type;
+  using duration_t = muse_smc::traits::Duration<Hypothesis2D>::type;
   using update_model_map_t = std::map<std::string, UpdateModel2D::Ptr>;
 
   CFSLaggy() : may_resample_(false) {}

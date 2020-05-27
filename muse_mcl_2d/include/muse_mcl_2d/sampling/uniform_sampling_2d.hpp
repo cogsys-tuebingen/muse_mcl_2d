@@ -10,13 +10,13 @@
 
 namespace muse_mcl_2d {
 class UniformSampling2D
-    : public muse_smc::traits::UniformSampling<Sample2D>::type,
+    : public muse_smc::traits::UniformSampling<Hypothesis2D>::type,
       public cslibs_plugins::Plugin {
  public:
   using Ptr = std::shared_ptr<UniformSampling2D>;
   using map_providers_t = std::map<std::string, MapProvider2D::Ptr>;
   using tf_provider_t = cslibs_math_ros::tf::TFProvider;
-  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
 
   static std::string Type() { return "muse_mcl_2d::UniformSampling2D"; }
 

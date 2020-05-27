@@ -10,17 +10,16 @@
 #include <muse_smc/smc/traits/update_model.hpp>
 
 namespace muse_mcl_2d {
-class UpdateModel2D : public muse_smc::traits::UpdateModel<Sample2D>::type,
+class UpdateModel2D : public muse_smc::traits::UpdateModel<Hypothesis2D>::type,
                       public cslibs_plugins::Plugin {
  public:
   using Ptr = std::shared_ptr<UpdateModel2D>;
-  using sample_t = Sample2D;
-  using data_t = muse_smc::traits::Data<sample_t>::type;
-  using transform_t = muse_smc::traits::Transform<sample_t>::type;
-  using state_t = muse_smc::traits::State<sample_t>::type;
-  using point_t = muse_smc::traits::StateSpaceBoundary<sample_t>::type;
-  using state_space_t = muse_smc::traits::StateSpace<sample_t>::type;
-  using sample_set_t = muse_smc::traits::SampleSet<sample_t>::type;
+  using data_t = muse_smc::traits::Data<Hypothesis2D>::type;
+  using transform_t = muse_smc::traits::Transform<Hypothesis2D>::type;
+  using state_t = muse_smc::traits::State<Hypothesis2D>::type;
+  using point_t = muse_smc::traits::StateSpaceBoundary<Hypothesis2D>::type;
+  using state_space_t = muse_smc::traits::StateSpace<Hypothesis2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
 
   UpdateModel2D() = default;
   virtual ~UpdateModel2D() = default;

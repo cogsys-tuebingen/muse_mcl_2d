@@ -11,13 +11,13 @@
 
 namespace muse_mcl_2d {
 class NormalSampling2D
-    : public muse_smc::traits::NormalSampling<Sample2D>::type,
+    : public muse_smc::traits::NormalSampling<Hypothesis2D>::type,
       public cslibs_plugins::Plugin {
  public:
   using Ptr = std::shared_ptr<NormalSampling2D>;
   using map_providers_t = std::map<std::string, MapProvider2D::Ptr>;
   using tf_provider_t = cslibs_math_ros::tf::TFProvider;
-  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
 
   static std::string Type() { return "muse_mcl_2d::NormalSampling2D"; }
 

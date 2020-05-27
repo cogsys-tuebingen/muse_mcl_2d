@@ -10,10 +10,10 @@ class RateDropStatistic : public muse_mcl_2d::Scheduler2D {
  public:
   using Ptr = std::shared_ptr<RateDropStatistic>;
   using rate_t = cslibs_time::Rate;
-  using update_t = muse_smc::traits::Update<Sample2D>::type;
+  using update_t = muse_smc::traits::Update<Hypothesis2D>::type;
   using time_priority_map_t = std::unordered_map<id_t, double>;
-  using resampling_t = muse_smc::traits::Resampling<Sample2D>::type;
-  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using resampling_t = muse_smc::traits::Resampling<Hypothesis2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
   using count_map_t = std::unordered_map<id_t, std::size_t>;
   using name_map_t = std::unordered_map<id_t, std::string>;
   using time_t = cslibs_time::Time;

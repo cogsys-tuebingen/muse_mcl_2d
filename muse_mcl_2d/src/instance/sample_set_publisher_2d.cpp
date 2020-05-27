@@ -151,10 +151,10 @@ void SampleSetPublisher2D::loop() {
                            const Sample2D &sample,
                            const double maximum_weight) {
     visualization_msgs::Marker m = create_empty_marker();
-    m.pose = create_pose(sample.state);
+    m.pose = create_pose(sample.state());
     m.color.a = 1.f;
     if (maximum_weight > 0.0) {
-      __HSV2RGB__(120.0 * sample.weight / maximum_weight, 1.0, 1.0, m.color.r,
+      __HSV2RGB__(120.0 * sample.weight() / maximum_weight, 1.0, 1.0, m.color.r,
                   m.color.g, m.color.b);
     } else {
       __HSV2RGB__(0.0, 1.0, 1.0, m.color.r, m.color.g, m.color.b);
@@ -164,8 +164,8 @@ void SampleSetPublisher2D::loop() {
 
   auto create_sample = [&create_pose](const Sample2D &sample) {
     SampleMsg msg;
-    msg.pose = create_pose(sample.state);
-    msg.weight.data = sample.weight;
+    msg.pose = create_pose(sample.state());
+    msg.weight.data = sample.weight();
     return msg;
   };
 
@@ -242,7 +242,7 @@ void SampleSetPublisher2D::loop() {
           marker_array_msg->markers.emplace_back(m);
         }
         if (publish_poses_) {
-          auto p = create_pose(sample.state);
+          auto p = create_pose(sample.state());
           pose_array_msg->poses.emplace_back(p);
         }
         if (publish_samples_) {

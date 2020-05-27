@@ -10,7 +10,7 @@
 #include <muse_smc/smc/traits/scheduler.hpp>
 
 namespace muse_mcl_2d {
-class Scheduler2D : public muse_smc::traits::Scheduler<Sample2D>::type,
+class Scheduler2D : public muse_smc::traits::Scheduler<Hypothesis2D>::type,
                     public cslibs_plugins::Plugin {
  public:
   using Ptr = std::shared_ptr<Scheduler2D>;

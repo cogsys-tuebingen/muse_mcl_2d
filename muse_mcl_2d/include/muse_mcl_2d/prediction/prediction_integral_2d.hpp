@@ -8,7 +8,7 @@
 
 namespace muse_mcl_2d {
 class PredictionIntegral2D : public muse_smc::traits::PredictionIntegrals<
-                                 Sample2D>::type::prediction_integral_t {
+                                 Hypothesis2D>::type::prediction_integral_t {
  public:
   inline PredictionIntegral2D() = default;
 

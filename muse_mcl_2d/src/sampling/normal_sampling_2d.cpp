@@ -49,17 +49,17 @@ bool Normal2D::apply(const transform_t& pose, const covariance_t& covariance,
   const std::size_t map_count = maps_.size();
 
   Sample2D sample;
-  sample.weight = 1.0 / static_cast<double>(sample_size_);
+  sample.weight() = 1.0 / static_cast<double>(sample_size_);
   for (std::size_t i = 0; i < sample_size_; ++i) {
     bool valid = false;
     while (!valid) {
       ros::Time now = ros::Time::now();
       if (sampling_start + sampling_timeout_ < now) return false;
 
-      sample.state.setFrom(rng->get());
+      sample.state().setFrom(rng->get());
       valid = true;
       for (std::size_t i = 0; i < map_count; ++i)
-        valid &= maps_[i]->validate(maps_T_w_[i] * sample.state);
+        valid &= maps_[i]->validate(maps_T_w_[i] * sample.state());
     }
     insertion.insert(sample);
   }

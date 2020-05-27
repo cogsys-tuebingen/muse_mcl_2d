@@ -40,12 +40,12 @@ class CFS : public muse_mcl_2d::Scheduler2D {
 
   using Ptr = std::shared_ptr<CFS>;
   using rate_t = cslibs_time::Rate;
-  using update_t = muse_smc::traits::Update<Sample2D>::type;
+  using update_t = muse_smc::traits::Update<Hypothesis2D>::type;
   using queue_t = __gnu_pbds::priority_queue<Entry, typename Entry::Greater,
                                              __gnu_pbds::rc_binomial_heap_tag>;
   using time_priority_map_t = std::unordered_map<id_t, double>;
-  using resampling_t = muse_smc::traits::Resampling<Sample2D>::type;
-  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using resampling_t = muse_smc::traits::Resampling<Hypothesis2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
   using nice_map_t = std::unordered_map<id_t, double>;
   using time_t = cslibs_time::Time;
   using duration_t = cslibs_time::Duration;

@@ -10,15 +10,15 @@
 
 namespace muse_mcl_2d {
 class EIGEN_ALIGN16 StatePublisher
-    : public muse_smc::traits::StatePublisher<Sample2D>::type {
+    : public muse_smc::traits::StatePublisher<Hypothesis2D>::type {
  public:
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
   using Ptr = std::shared_ptr<StatePublisher>;
-  using transform_t = muse_smc::traits::Transform<Sample2D>::type;
-  using covariance_t = muse_smc::traits::Covariance<Sample2D>::type;
+  using transform_t = muse_smc::traits::Transform<Hypothesis2D>::type;
+  using covariance_t = muse_smc::traits::Covariance<Hypothesis2D>::type;
   using stamped_t = cslibs_math::utility::Stamped<transform_t>;
-  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
 
   StatePublisher();
 

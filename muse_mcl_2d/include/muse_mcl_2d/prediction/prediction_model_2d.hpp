@@ -12,12 +12,12 @@
 
 namespace muse_mcl_2d {
 class PredictionModel2D
-    : public muse_smc::traits::PredictionModel<Sample2D>::type,
+    : public muse_smc::traits::PredictionModel<Hypothesis2D>::type,
       public cslibs_plugins::Plugin {
  public:
   using Ptr = std::shared_ptr<PredictionModel2D>;
   using ConstPtr = std::shared_ptr<PredictionModel2D const>;
-  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
 
   struct Result2D : public Result {
     using odometry_t = cslibs_plugins_data::types::Odometry2d;

@@ -50,19 +50,19 @@ class MuseMCL2DNode {
  private:
   using data_t = cslibs_plugins_data::Data;
   using data_provider_t = cslibs_plugins_data::DataProvider;
-  using covariance_t = muse_smc::traits::Covariance<Sample2D>::type;
+  using covariance_t = muse_smc::traits::Covariance<Hypothesis2D>::type;
 
   using map_provider_map_t = std::map<std::string, MapProvider2D::Ptr>;
   using data_provider_map_t =
       std::map<std::string, typename data_provider_t::Ptr>;
   using update_model_map_t = std::map<std::string, UpdateModel2D::Ptr>;
 
-  using smc_t = muse_smc::SMC<Sample2D>;
-  using UpdateRelay2D = muse_smc::traits::UpdateRelay<Sample2D>::type;
-  using PredictionRelay2D = muse_smc::traits::PredictionRelay<Sample2D>::type;
-  using sample_set_t = muse_smc::traits::SampleSet<Sample2D>::type;
+  using smc_t = muse_smc::SMC<Hypothesis2D>;
+  using UpdateRelay2D = muse_smc::traits::UpdateRelay<Hypothesis2D>::type;
+  using PredictionRelay2D = muse_smc::traits::PredictionRelay<Hypothesis2D>::type;
+  using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
   using prediction_integrals_t =
-      muse_smc::traits::PredictionIntegrals<Sample2D>::type;
+      muse_smc::traits::PredictionIntegrals<Hypothesis2D>::type;
 
   using update_model_mapping_t = UpdateRelay2D::map_t;
 

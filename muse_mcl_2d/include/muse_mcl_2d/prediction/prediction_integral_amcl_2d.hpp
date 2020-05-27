@@ -8,9 +8,9 @@
 
 namespace muse_mcl_2d {
 class PredictionIntegralAMCL2D : public muse_smc::traits::PredictionIntegrals<
-                                     Sample2D>::type::prediction_integral_t {
+                                     Hypothesis2D>::type::prediction_integral_t {
  public:
-  using pose_t = muse_smc::traits::Transform<Sample2D>::type;
+  using pose_t = muse_smc::traits::Transform<Hypothesis2D>::type;
 
   inline PredictionIntegralAMCL2D() = default;
 

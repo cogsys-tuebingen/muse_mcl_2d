@@ -60,17 +60,17 @@ bool UniformAllMaps2D::apply(sample_set_t& particle_set) {
   const std::size_t map_count = maps_.size();
 
   Sample2D sample;
-  sample.weight = 1.0 / static_cast<double>(sample_size_);
+  sample.weight() = 1.0 / static_cast<double>(sample_size_);
   for (std::size_t i = 0; i < sample_size_; ++i) {
     bool valid = false;
     while (!valid) {
       ros::Time now = ros::Time::now();
       if (sampling_start + sampling_timeout_ < now) return false;
 
-      sample.state.setFrom(rng_->get());
+      sample.state().setFrom(rng_->get());
       valid = true;
       for (std::size_t i = 0; i < map_count; ++i)
-        valid &= maps_[i]->validate(maps_T_w_[i] * sample.state);
+        valid &= maps_[i]->validate(maps_T_w_[i] * sample.state());
     }
     insertion.insert(sample);
   }
@@ -87,10 +87,10 @@ void UniformAllMaps2D::apply(Sample2D& sample) {
     ros::Time now = ros::Time::now();
     if (sampling_start + sampling_timeout_ < now) break;
 
-    sample.state.setFrom(rng_->get());
+    sample.state().setFrom(rng_->get());
     valid = true;
     for (std::size_t i = 0; i < map_count; ++i)
-      valid &= maps_[i]->validate(maps_T_w_[i] * sample.state);
+      valid &= maps_[i]->validate(maps_T_w_[i] * sample.state());
   }
 }
 

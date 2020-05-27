@@ -81,7 +81,7 @@ void LocalRegenerationKLD2D::doApply(sample_set_t& sample_set)
     /// prepare ordered sequence of random numbers
     std::vector<double> cumsum(size + 1, 0.0);
     for(std::size_t i = 0 ; i < size ; ++i) {
-        cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
+        cumsum[i+1] = cumsum[i] + p_t_1[i].weight();
 //            std::cerr << i << " " << p_t_1[i].state << "\n";
 //            out_ << p_t_1[i].weight << ",";
     }
@@ -130,7 +130,7 @@ void LocalRegenerationKLD2D::doApplyRecovery(sample_set_t& sample_set)
 
     std::vector<double> cumsum(size + 1, 0.0);
     for(std::size_t i = 0 ; i < size ; ++i) {
-        cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
+        cumsum[i+1] = cumsum[i] + p_t_1[i].weight();
     }
     cslibs_math::random::Uniform<double,1> rng_recovery(0.0, 1.0);
     for(std::size_t i = 0 ; i < sample_size_maximum ; ++i) {

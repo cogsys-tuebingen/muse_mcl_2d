@@ -6,7 +6,7 @@
 
 namespace muse_mcl_2d {
 class LocalRegenerationKLD2D : public Resampling2D {
-  using covariance_t = muse_smc::traits::Covariance<Sample2D>::type;
+  using covariance_t = muse_smc::traits::Covariance<Hypothesis2D>::type;
 
  public:
   LocalRegenerationKLD2D() = default;

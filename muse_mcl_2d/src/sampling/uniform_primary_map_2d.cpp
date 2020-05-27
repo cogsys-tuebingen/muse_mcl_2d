@@ -62,17 +62,17 @@ bool UniformPrimaryMap2D::apply(sample_set_t& sample_set) {
   const std::size_t secondary_maps_count = secondary_maps_.size();
   const ros::Time sampling_start = ros::Time::now();
   Sample2D sample;
-  sample.weight = 1.0 / static_cast<double>(sample_size_);
+  sample.weight() = 1.0 / static_cast<double>(sample_size_);
   for (std::size_t i = 0; i < sample_size_; ++i) {
     bool valid = false;
     while (!valid) {
       ros::Time now = ros::Time::now();
       if (sampling_start + sampling_timeout_ < now) return false;
 
-      sample.state.setFrom(rng_->get());
-      valid = primary_map_->validate(sample.state);
+      sample.state().setFrom(rng_->get());
+      valid = primary_map_->validate(sample.state());
       if (valid) {
-        auto pose = w_T_primary_ * sample.state;
+        auto pose = w_T_primary_ * sample.state();
         for (std::size_t i = 0; i < secondary_maps_count; ++i)
           valid &= secondary_maps_[i]->validate(secondary_maps_T_w_[i] * pose);
       }
@@ -90,10 +90,10 @@ void UniformPrimaryMap2D::apply(Sample2D& sample) {
     ros::Time now = ros::Time::now();
     if (sampling_start + sampling_timeout_ < now) return;
 
-    sample.state.setFrom(rng_->get());
-    valid = primary_map_->validate(sample.state);
+    sample.state().setFrom(rng_->get());
+    valid = primary_map_->validate(sample.state());
     if (valid) {
-      transform_t pose = w_T_primary_ * sample.state;
+      transform_t pose = w_T_primary_ * sample.state();
       for (std::size_t i = 0; i < secondary_maps_count; ++i)
         valid &= secondary_maps_[i]->validate(secondary_maps_T_w_[i] * pose);
     }
