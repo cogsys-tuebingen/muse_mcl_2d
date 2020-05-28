@@ -173,32 +173,32 @@ bool MuseMCL2DNode::setup()
         ROS_INFO_STREAM("Loaded data providers.");
         ROS_INFO_STREAM(data_provider_list);
     }
-    { /// sampling algorithms
-        loader.load<UniformSampling2D, map_provider_map_t, cslibs_math_ros::tf::TFProvider::Ptr, ros::NodeHandle&>(uniform_sampling_, map_providers_, tf_provider_backend_, nh_private_);
-        if(!uniform_sampling_) {
-            ROS_ERROR_STREAM("No uniform sampling function was found!");
-            ROS_ERROR_STREAM("Setup is incomplete and is aborted!");
-            return false;
-        }
-        ROS_INFO_STREAM("Loaded uniform sampler.");
-        ROS_INFO_STREAM("[" << uniform_sampling_->getName() << "]");
-        loader.load<NormalSampling2D, map_provider_map_t, cslibs_math_ros::tf::TFProvider::Ptr, ros::NodeHandle&>(normal_sampling_, map_providers_,  tf_provider_backend_, nh_private_);
-        if(!normal_sampling_) {
-            ROS_ERROR_STREAM("No gaussian sampling function was found!");
-            ROS_ERROR_STREAM("Setup is incomplete and is aborted!");
-            return false;
-        }
-        ROS_INFO_STREAM("Loaded gaussian sampler.");
-        ROS_INFO_STREAM("[" << normal_sampling_->getName() << "]");
-        loader.load<Resampling2D, UniformSampling2D::Ptr, NormalSampling2D::Ptr, ros::NodeHandle&>(resampling_, uniform_sampling_, normal_sampling_, nh_private_);
-        if(!resampling_) {
-            ROS_ERROR_STREAM("No resampling function was found!");
-            ROS_ERROR_STREAM("Setup is incomplete and is aborted!");
-            return false;
-        }
-        ROS_INFO_STREAM("Loaded resampling algorithm.");
-        ROS_INFO_STREAM("[" << resampling_->getName() << "]");
-    }
+    // { /// sampling algorithms
+    //     loader.load<UniformSampling2D, map_provider_map_t, cslibs_math_ros::tf::TFProvider::Ptr, ros::NodeHandle&>(uniform_sampling_, map_providers_, tf_provider_backend_, nh_private_);
+    //     if(!uniform_sampling_) {
+    //         ROS_ERROR_STREAM("No uniform sampling function was found!");
+    //         ROS_ERROR_STREAM("Setup is incomplete and is aborted!");
+    //         return false;
+    //     }
+    //     ROS_INFO_STREAM("Loaded uniform sampler.");
+    //     ROS_INFO_STREAM("[" << uniform_sampling_->getName() << "]");
+    //     loader.load<NormalSampling2D, map_provider_map_t, cslibs_math_ros::tf::TFProvider::Ptr, ros::NodeHandle&>(normal_sampling_, map_providers_,  tf_provider_backend_, nh_private_);
+    //     if(!normal_sampling_) {
+    //         ROS_ERROR_STREAM("No gaussian sampling function was found!");
+    //         ROS_ERROR_STREAM("Setup is incomplete and is aborted!");
+    //         return false;
+    //     }
+    //     ROS_INFO_STREAM("Loaded gaussian sampler.");
+    //     ROS_INFO_STREAM("[" << normal_sampling_->getName() << "]");
+    //     loader.load<Resampling2D, UniformSampling2D::Ptr, NormalSampling2D::Ptr, ros::NodeHandle&>(resampling_, uniform_sampling_, normal_sampling_, nh_private_);
+    //     if(!resampling_) {
+    //         ROS_ERROR_STREAM("No resampling function was found!");
+    //         ROS_ERROR_STREAM("Setup is incomplete and is aborted!");
+    //         return false;
+    //     }
+    //     ROS_INFO_STREAM("Loaded resampling algorithm.");
+    //     ROS_INFO_STREAM("[" << resampling_->getName() << "]");
+    // }
     { /// density estimation
         loader.load<SampleDensity2D, ros::NodeHandle&>(sample_density_, nh_private_);
         if(!sample_density_) {
