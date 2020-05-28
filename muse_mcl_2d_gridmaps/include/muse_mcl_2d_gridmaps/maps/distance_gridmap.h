@@ -12,7 +12,7 @@ class DistanceGridmap : public muse_mcl_2d::Map2D
 public:
     using Ptr = std::shared_ptr<DistanceGridmap>;
     using map_t = cslibs_gridmaps::static_maps::DistanceGridmap<double,double>;
-    using state_t = muse_mcl_2d::Sample2D::state_t;
+    using state_t = muse_smc::traits::State<muse_mcl_2d::Hypothesis2D>::type;
 
     DistanceGridmap(const map_t::Ptr &map,
                     const std::string frame_id);

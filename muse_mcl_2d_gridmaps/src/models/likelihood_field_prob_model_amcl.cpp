@@ -67,7 +67,7 @@ void LikelihoodFieldProbModelAMCL::apply(const data_t::ConstPtr          &data,
         const auto end = set.const_end();
         std::size_t sample_index = 0;
         for(auto it = set.const_begin() ; it != end ; ++it, ++sample_index) {
-            const state_t m_T_l = m_T_w * it->state * b_T_l; /// laser scanner pose in map coordinates
+            const state_t m_T_l = m_T_w * it->state() * b_T_l; /// laser scanner pose in map coordinates
             std::size_t observation_index = 0;
             for(std::size_t i = 0 ; i < rays_size ;  i+= ray_step, ++observation_index) {
                 const auto &ray = laser_rays[i];

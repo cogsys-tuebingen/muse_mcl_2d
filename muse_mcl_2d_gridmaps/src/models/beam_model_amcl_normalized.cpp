@@ -84,7 +84,7 @@ void BeamModelAMCLNormalized::apply(const data_t::ConstPtr &data,
     auto it_ps = ps_.begin();
     double max = std::numeric_limits<double>::lowest();
     for(auto it = set.const_begin() ; it != const_end ; ++it, ++it_ps) {
-        const state_t m_T_l = m_T_w * it->state * b_T_l; /// laser scanner pose in map coordinates
+        const state_t m_T_l = m_T_w * it->state() * b_T_l; /// laser scanner pose in map coordinates
         double p = 1.0;
         for(std::size_t i = 0 ; i < rays_size ;  i+= ray_step) {
             const auto &ray = laser_rays[i];
