@@ -243,6 +243,21 @@ target_link_libraries(${PROJECT_NAME}_node
         ${PROJECT_NAME}_helper
 )
 
+muse_mcl_2d_add_unit_test_ros(test_load_plugins
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    LAUNCH_FILE
+        test/plugins.test
+    SOURCE_FILES
+        test/plugins.cpp
+    LINK_LIBRARIES
+        ${catkin_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
+
 
 set(MUSE_MCL_2D_ADDTIONALS True)
 if(${MUSE_MCL_2D_ADDTIONALS})
@@ -260,24 +275,6 @@ if(${MUSE_MCL_2D_ADDTIONALS})
     target_link_libraries(${PROJECT_NAME}_box_muller
         PRIVATE
             ${catkin_LIBRARIES}
-    )
-
-    add_executable(${PROJECT_NAME}_benchmark_math
-        test/benchmark_math.cpp
-    )
-
-    target_include_directories(${PROJECT_NAME}_benchmark_math
-        PRIVATE
-            ${TARGET_INCLUDE_DIRS}
-    )
-
-    target_compile_options(${PROJECT_NAME}_benchmark_math
-    PRIVATE
-        ${TARGET_COMPILE_OPTIONS}
-    )
-
-    target_link_libraries(${PROJECT_NAME}_benchmark_math
-        ${catkin_LIBRARIES}
     )
 endif()
 
