@@ -281,9 +281,12 @@ endif()
 install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
 install(TARGETS
+            ${PROJECT_NAME}_density
+            ${PROJECT_NAME}_helper
             ${PROJECT_NAME}_resampling
             ${PROJECT_NAME}_normal_sampling
             ${PROJECT_NAME}_uniform_sampling
+            ${PROJECT_NAME}_scheduling
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
