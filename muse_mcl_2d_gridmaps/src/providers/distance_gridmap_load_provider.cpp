@@ -7,7 +7,7 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::DistanceGridmapLoadProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    DistanceGridmapLoadProvider::state_space_t::ConstPtr DistanceGridmapLoadProvider::getStateSpace() const
+std::shared_ptr<DistanceGridmapLoadProvider::state_space_t const> DistanceGridmapLoadProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
         return map_;

@@ -20,9 +20,6 @@ class UniformSampling2D
 
   static std::string Type() { return "muse_mcl_2d::UniformSampling2D"; }
 
-  inline UniformSampling2D() = default;
-  virtual ~UniformSampling2D() = default;
-
   inline void setup(
       const map_providers_t &map_providers,
       const tf_provider_t::Ptr &tf, ros::NodeHandle &nh) {
@@ -40,10 +37,10 @@ class UniformSampling2D
   }
 
  protected:
+  tf_provider_t::Ptr tf_{nullptr};
   std::size_t sample_size_{500};
   ros::Duration sampling_timeout_{10.0};
   ros::Duration tf_timeout_{0.1};
-  tf_provider_t::Ptr tf_{nullptr};
 
   virtual void doSetup(
       const map_providers_t &map_providers,

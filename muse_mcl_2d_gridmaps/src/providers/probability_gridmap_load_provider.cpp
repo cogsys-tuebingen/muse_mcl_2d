@@ -7,7 +7,7 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::ProbabilityGridmapLoadProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    ProbabilityGridmapLoadProvider::state_space_t::ConstPtr ProbabilityGridmapLoadProvider::getStateSpace() const
+std::shared_ptr<ProbabilityGridmapLoadProvider::state_space_t const> ProbabilityGridmapLoadProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
         return map_;

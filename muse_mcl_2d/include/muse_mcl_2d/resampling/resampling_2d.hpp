@@ -19,9 +19,11 @@ class Resampling2D : public muse_smc::traits::Resampling<Hypothesis2D>::type,
 
   static std::string Type() { return "muse_mcl_2d::Resampling2D"; }
 
-  inline void setup(
-      const typename uniform_sampling_t::Ptr &uniform_pose_sampler,
-      const typename normal_sampling_t::Ptr &normal_pose_sampler,
+  using base_t::setup;
+
+  void setup(
+      const std::shared_ptr<uniform_sampling_t> &uniform_pose_sampler,
+      const std::shared_ptr<normal_sampling_t> &normal_pose_sampler,
       ros::NodeHandle &nh) {
     auto param_name = [this](const std::string &name) {
       return name_ + "/" + name;

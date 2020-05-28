@@ -27,7 +27,7 @@ void StatePublisher::setup(ros::NodeHandle &nh) {
   }
 }
 
-void StatePublisher::publish(const sample_set_t::ConstPtr &sample_set) {
+void StatePublisher::publish(const std::shared_ptr<sample_set_t const> &sample_set) {
   /// calculate the latest transformation
   SampleDensity2D::ConstPtr density =
       std::dynamic_pointer_cast<SampleDensity2D const>(
@@ -54,19 +54,19 @@ void StatePublisher::publish(const sample_set_t::ConstPtr &sample_set) {
 }
 
 void StatePublisher::publishIntermediate(
-    const sample_set_t::ConstPtr &sample_set) {
+    const std::shared_ptr<sample_set_t const> &sample_set) {
   if (tf_publisher_) tf_publisher_->renewTimeStamp(sample_set->getStamp());
 
   publishState(sample_set);
 }
 
-void StatePublisher::publishConstant(const sample_set_t::ConstPtr &sample_set) {
+void StatePublisher::publishConstant(const std::shared_ptr<sample_set_t const> &sample_set) {
   if (tf_publisher_) tf_publisher_->renewTimeStamp(sample_set->getStamp());
 
   publishState(sample_set);
 }
 
-void StatePublisher::publishState(const sample_set_t::ConstPtr &sample_set) {
+void StatePublisher::publishState(const std::shared_ptr<sample_set_t const> &sample_set) {
   sample_publisher_->set(sample_set->getSamples(),
                          sample_set->getMaximumWeight(), latest_w_T_b_,
                          latest_w_T_b_covariance_, sample_set->getStamp());

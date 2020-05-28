@@ -15,7 +15,7 @@ bool Normal2D::update(const std::string& frame) {
   for (auto& m : map_providers_) {
     transform_t map_t_w;
     m->waitForStateSpace();
-    Map2D::ConstPtr map = m->getStateSpace();
+    const auto map = m->getStateSpace();
     if (!map) throw std::runtime_error("[Normal2D] : map was null!");
 
     if (tf_->lookupTransform(map->getFrame(), frame, now, map_t_w,

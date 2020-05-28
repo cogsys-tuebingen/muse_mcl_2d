@@ -13,7 +13,7 @@ OccupancyGridmap2dLikelihoodFieldModel::OccupancyGridmap2dLikelihoodFieldModel()
 }
 
 void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
-                                                   const state_space_t::ConstPtr  &map,
+                                                   const std::shared_ptr<state_space_t const>  &map,
                                                    sample_set_t::weight_iterator_t set)
 {
     using laserscan_t    = cslibs_plugins_data::types::Laserscan2d;

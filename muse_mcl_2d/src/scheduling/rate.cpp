@@ -13,7 +13,7 @@ void Rate::setup(const Rate::update_model_map_t&, ros::NodeHandle& nh) {
       duration_t(preferred_rate > 0.0 ? 1.0 / preferred_rate : 0.0);
 }
 
-bool Rate::apply(update_t::Ptr& u, sample_set_t::Ptr& s) {
+bool Rate::apply(std::shared_ptr<update_t>& u, std::shared_ptr<sample_set_t>& s) {
   auto now = []() { return time_t(ros::Time::now().toNSec()); };
 
   const time_t time_now = now();
@@ -30,7 +30,7 @@ bool Rate::apply(update_t::Ptr& u, sample_set_t::Ptr& s) {
   return false;
 }
 
-bool Rate::apply(resampling_t::Ptr& r, sample_set_t::Ptr& s) {
+bool Rate::apply(std::shared_ptr<resampling_t>& r, std::shared_ptr<sample_set_t>& s) {
   const cslibs_time::Time& stamp = s->getStamp();
 
   auto now = []() { return time_t(ros::Time::now().toNSec()); };
@@ -39,7 +39,7 @@ bool Rate::apply(resampling_t::Ptr& r, sample_set_t::Ptr& s) {
 
   if (resampling_time_.isZero()) resampling_time_ = time_now;
 
-  auto do_apply = [&stamp, &r, &s, &time_now, this]() {
+  auto do_apply = [&r, &s, &time_now, this]() {
     r->apply(*s);
 
     resampling_time_ = time_now + resampling_period_;

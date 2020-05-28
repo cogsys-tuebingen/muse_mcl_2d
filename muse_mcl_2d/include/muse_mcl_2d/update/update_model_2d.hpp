@@ -21,9 +21,6 @@ class UpdateModel2D : public muse_smc::traits::UpdateModel<Hypothesis2D>::type,
   using state_space_t = muse_smc::traits::StateSpace<Hypothesis2D>::type;
   using sample_set_t = muse_smc::traits::SampleSet<Hypothesis2D>::type;
 
-  UpdateModel2D() = default;
-  virtual ~UpdateModel2D() = default;
-
   static std::string Type() { return "muse_mcl_2d::UpdateModel2D"; }
 
   inline std::size_t getModelId() const override {

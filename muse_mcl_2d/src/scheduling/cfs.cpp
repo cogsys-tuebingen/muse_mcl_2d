@@ -33,7 +33,7 @@ void CFS::setup(const CFS::update_model_map_t& update_models,
       duration_t(preferred_rate > 0.0 ? 1.0 / preferred_rate : 0.0);
 }
 
-bool CFS::apply(update_t::Ptr& u, sample_set_t::Ptr& s) {
+bool CFS::apply(std::shared_ptr<update_t>& u, std::shared_ptr<sample_set_t>& s) {
   auto now = []() { return time_t(ros::Time::now().toNSec()); };
 
   const time_t time_now = now();
@@ -60,7 +60,7 @@ bool CFS::apply(update_t::Ptr& u, sample_set_t::Ptr& s) {
   return false;
 }
 
-bool CFS::apply(resampling_t::Ptr& r, sample_set_t::Ptr& s) {
+bool CFS::apply(std::shared_ptr<resampling_t>& r, std::shared_ptr<sample_set_t>& s) {
   const cslibs_time::Time& stamp = s->getStamp();
 
   if (resampling_time_.isZero()) resampling_time_ = stamp;

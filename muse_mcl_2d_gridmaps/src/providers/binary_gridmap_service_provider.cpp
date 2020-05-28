@@ -17,7 +17,7 @@ namespace muse_mcl_2d_gridmaps {
     }
 
 
-    BinaryGridmapServiceProvider::state_space_t::ConstPtr BinaryGridmapServiceProvider::getStateSpace() const
+std::shared_ptr<BinaryGridmapServiceProvider::state_space_t const> BinaryGridmapServiceProvider::getStateSpace() const
     {
         if(!map_) {
             nav_msgs::GetMap req;

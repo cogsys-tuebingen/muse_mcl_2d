@@ -22,7 +22,7 @@ bool UniformPrimaryMap2D::update(const std::string& frame) {
   for (std::size_t i = 0; i < map_provider_count; ++i) {
     const MapProvider2D::Ptr m = map_providers_[i];
     m->waitForStateSpace();
-    Map2D::ConstPtr map = m->getStateSpace();
+    const auto map = m->getStateSpace();
     if (!map) {
       throw std::runtime_error(
           "[UniformPrimaryMap2D] : a secondary map was null!");

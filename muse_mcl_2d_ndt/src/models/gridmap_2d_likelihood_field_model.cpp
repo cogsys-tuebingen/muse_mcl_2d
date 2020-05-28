@@ -13,7 +13,7 @@ Gridmap2dLikelihoodFieldModel::Gridmap2dLikelihoodFieldModel()
 }
 
 void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
-                                          const state_space_t::ConstPtr  &map,
+                                          const std::shared_ptr<state_space_t const>  &map,
                                           sample_set_t::weight_iterator_t set)
 {
     using distribution_t = typename Gridmap2d::map_t::distribution_t::distribution_t;

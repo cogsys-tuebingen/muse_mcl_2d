@@ -18,7 +18,7 @@ class KLD2D : public Resampling2D {
 
   cslibs_math::random::Uniform<double, 1> rng_;
 
-  virtual void doSetup(ros::NodeHandle &nh) override;
+  void doSetup(ros::NodeHandle &nh) override;
   void doApply(sample_set_t &sample_set) override;
   void doApplyRecovery(sample_set_t &sample_set) override;
 };

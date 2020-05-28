@@ -46,7 +46,7 @@ void RateDropStatistic::setup(const update_model_map_t& update_models,
   }
 }
 
-bool RateDropStatistic::apply(update_t::Ptr& u, sample_set_t::Ptr& s) {
+bool RateDropStatistic::apply(std::shared_ptr<update_t>& u, std::shared_ptr<sample_set_t>& s) {
   auto now = []() { return time_t(ros::Time::now().toNSec()); };
 
   const time_t time_now = now();
@@ -70,7 +70,7 @@ bool RateDropStatistic::apply(update_t::Ptr& u, sample_set_t::Ptr& s) {
   return false;
 }
 
-bool RateDropStatistic::apply(resampling_t::Ptr& r, sample_set_t::Ptr& s) {
+bool RateDropStatistic::apply(std::shared_ptr<resampling_t>& r, std::shared_ptr<sample_set_t>& s) {
   const cslibs_time::Time& stamp = s->getStamp();
 
   auto now = []() { return time_t(ros::Time::now().toNSec()); };
@@ -79,7 +79,7 @@ bool RateDropStatistic::apply(resampling_t::Ptr& r, sample_set_t::Ptr& s) {
 
   if (resampling_time_.isZero()) resampling_time_ = time_now;
 
-  auto do_apply = [&stamp, &r, &s, &time_now, this]() {
+  auto do_apply = [&r, &s, &time_now, this]() {
     r->apply(*s);
 
     resampling_time_ = time_now + resampling_period_;

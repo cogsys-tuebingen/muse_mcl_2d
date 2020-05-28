@@ -30,8 +30,8 @@ class Dummy : public muse_mcl_2d::Scheduler2D {
     update_all_ = nh.param<bool>(param_name("update_all"), false);
   }
 
-  virtual bool apply(typename update_t::Ptr &u,
-                     typename sample_set_t::Ptr &s) override {
+  virtual bool apply(std::shared_ptr<update_t> &u,
+                     std::shared_ptr<sample_set_t> &s) override {
     u->apply(s->getWeightIterator());
     applied_[u->getModelId()] = true;
 
@@ -41,8 +41,8 @@ class Dummy : public muse_mcl_2d::Scheduler2D {
     return true;
   }
 
-  virtual bool apply(typename resampling_t::Ptr &r,
-                     typename sample_set_t::Ptr &s) override {
+  virtual bool apply(std::shared_ptr<resampling_t> &r,
+                     std::shared_ptr<sample_set_t> &s) override {
     auto do_apply = [&r, &s, this]() {
       r->apply(*s);
 

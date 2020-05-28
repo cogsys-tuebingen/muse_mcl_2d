@@ -12,7 +12,7 @@ CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::NDT2D, muse_mcl_2d::UpdateModel2D)
 
 namespace muse_mcl_2d_ndt {
   void NDT2D::apply(const data_t::ConstPtr          &data,
-                    const state_space_t::ConstPtr   &map,
+                    const std::shared_ptr<state_space_t const>   &map,
                     sample_set_t::weight_iterator_t  set)
   {
       using laserscan_t = cslibs_plugins_data::types::Laserscan2d;

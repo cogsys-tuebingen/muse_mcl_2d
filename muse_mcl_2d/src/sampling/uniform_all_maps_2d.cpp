@@ -1,5 +1,9 @@
-#include <class_loader/register_macro.hpp>
 #include <muse_mcl_2d/impl/sampling/uniform_all_maps_2d.hpp>
+
+#include <class_loader/register_macro.hpp>
+CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d::UniformAllMaps2D,
+                            muse_mcl_2d::UniformSampling2D)
+
 
 namespace muse_mcl_2d {
 using Metric = cslibs_math::sampling::Metric;
@@ -22,7 +26,7 @@ bool UniformAllMaps2D::update(const std::string& frame) {
     const MapProvider2D::Ptr m = map_providers_[i];
 
     m->waitForStateSpace();
-    Map2D::ConstPtr map = m->getStateSpace();
+    const auto map = m->getStateSpace();
     if (!map) throw std::runtime_error("[UniformAllMaps2D] : map was null!");
 
     transform_t map_T_w;
@@ -121,6 +125,3 @@ void UniformAllMaps2D::doSetup(
   ms.back() = ']';
 }
 }  // namespace muse_mcl_2d
-
-CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d::UniformAllMaps2D,
-                            muse_mcl_2d::UniformSampling2D)

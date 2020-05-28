@@ -21,7 +21,7 @@ class LocalRegenerationKLD2D : public Resampling2D {
   double variance_threshold_;
   bool reset_one_;
 
-  virtual void doSetup(ros::NodeHandle &nh) override;
+  void doSetup(ros::NodeHandle &nh) override;
   void doApply(sample_set_t &sample_set) override;
   void doApplyRecovery(sample_set_t &sample_set) override;
 };

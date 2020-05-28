@@ -119,7 +119,7 @@ void LocalRegenerationKLD2D::doApplyRecovery(sample_set_t& sample_set)
     if(!density)
         throw std::runtime_error("[KLD2D] : Can only use 'SampleDensity2D' for adaptive sample size estimation!");
 
-    auto kld = [this, &sample_set, &density, sample_size_maximum](const std::size_t current_size){
+    auto kld = [this, &density, sample_size_maximum](const std::size_t current_size){
         const std::size_t k = density->histogramSize();
         const double fraction = 2.0 / (9.0 * (k-1));
         const double exponent = 1.0 - fraction + std::sqrt(fraction) * kld_z_;

@@ -9,7 +9,7 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::NDTGridmap3dServiceProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_ndt {
-NDTGridmap3dServiceProvider::state_space_t::ConstPtr NDTGridmap3dServiceProvider::getStateSpace() const
+std::shared_ptr<NDTGridmap3dServiceProvider::state_space_t const> NDTGridmap3dServiceProvider::getStateSpace() const
 {
   //    nav_msgs::GetMap req;
   //    if (source_.call(req))

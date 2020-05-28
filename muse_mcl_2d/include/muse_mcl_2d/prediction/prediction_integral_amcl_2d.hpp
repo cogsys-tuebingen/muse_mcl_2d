@@ -22,7 +22,7 @@ class PredictionIntegralAMCL2D : public muse_smc::traits::PredictionIntegrals<
 
   virtual ~PredictionIntegralAMCL2D() = default;
 
-  void add(const Result::ConstPtr &step) override {
+  void add(const std::shared_ptr<Result const> &step) override {
     if (step->isType<PredictionModel2D::Result2D>()) {
       const PredictionModel2D::Result2D &step_2d =
           step->as<PredictionModel2D::Result2D>();

@@ -16,7 +16,7 @@ public:
     NDTOccupancyGridmap2dProvider() = default;
     virtual ~NDTOccupancyGridmap2dProvider() = default;
 
-    state_space_t::ConstPtr getStateSpace() const override;
+    std::shared_ptr<state_space_t const> getStateSpace() const override;
     void waitForStateSpace() const override;
     void setup(ros::NodeHandle &nh) override;
 

@@ -8,7 +8,7 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::NDTOccupancyGridmap3dProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_ndt {
-NDTOccupancyGridmap3dProvider::state_space_t::ConstPtr NDTOccupancyGridmap3dProvider::getStateSpace() const
+std::shared_ptr<NDTOccupancyGridmap3dProvider::state_space_t const> NDTOccupancyGridmap3dProvider::getStateSpace() const
 {
     std::unique_lock<std::mutex> l(map_mutex_);
     return map_;

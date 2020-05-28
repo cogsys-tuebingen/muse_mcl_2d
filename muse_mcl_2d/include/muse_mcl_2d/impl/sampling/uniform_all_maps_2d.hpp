@@ -15,17 +15,16 @@ class EIGEN_ALIGN16 UniformAllMaps2D : public UniformSampling2D {
   using Metric = cslibs_math::sampling::Metric;
   using Radian = cslibs_math::sampling::Radian;
   using rng_t = cslibs_math::sampling::Uniform<double, Metric, Metric, Radian>;
-
-  using transform_t = typename muse_smc::traits::Transform<Hypothesis2D>::type;
+  using transform_t = muse_smc::traits::Transform<Hypothesis2D>::type;
 
   virtual bool update(const std::string &frame) override;
   virtual void apply(Sample2D &sample) override;
-
- protected:
   virtual bool apply(sample_set_t &particle_set) override;
 
+ protected:
+
   int random_seed_;
-  std::vector<Map2D::ConstPtr> maps_;
+  std::vector<std::shared_ptr<Map2D const>> maps_;
   std::vector<transform_t, transform_t::allocator_t> maps_T_w_;
   std::vector<MapProvider2D::Ptr> map_providers_;
   rng_t::Ptr rng_;

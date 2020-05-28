@@ -24,11 +24,11 @@ class EIGEN_ALIGN16 StatePublisher
 
   void setup(ros::NodeHandle &nh);
 
-  void publish(const sample_set_t::ConstPtr &sample_set) override;
+  void publish(const std::shared_ptr<sample_set_t const> &sample_set) override;
   void publishIntermediate(
-      const sample_set_t::ConstPtr &sample_set) override;
+      const std::shared_ptr<sample_set_t const> &sample_set) override;
   void publishConstant(
-      const sample_set_t::ConstPtr &sample_set) override;
+      const std::shared_ptr<sample_set_t const> &sample_set) override;
 
  private:
   TFPublisher::Ptr tf_publisher_;
@@ -41,7 +41,7 @@ class EIGEN_ALIGN16 StatePublisher
   stamped_t latest_w_T_b_;
   covariance_t latest_w_T_b_covariance_;
 
-  void publishState(const sample_set_t::ConstPtr &sample_set);
+  void publishState(const std::shared_ptr<sample_set_t const> &sample_set);
 };
 }  // namespace muse_mcl_2d
 

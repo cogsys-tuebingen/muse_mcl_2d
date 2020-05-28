@@ -7,7 +7,7 @@
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::BinaryGridmapLoadProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    BinaryGridmapLoadProvider::state_space_t::ConstPtr BinaryGridmapLoadProvider::getStateSpace() const
+std::shared_ptr<BinaryGridmapLoadProvider::state_space_t const> BinaryGridmapLoadProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
         return map_;

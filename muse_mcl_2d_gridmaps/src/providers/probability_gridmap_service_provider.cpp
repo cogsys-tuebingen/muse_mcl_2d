@@ -12,7 +12,7 @@ namespace muse_mcl_2d_gridmaps {
         source_ = nh_private.serviceClient<nav_msgs::GetMap>(service_name_);
     }
 
-    ProbabilityGridmapServiceProvider::state_space_t::ConstPtr ProbabilityGridmapServiceProvider::getStateSpace() const
+std::shared_ptr<ProbabilityGridmapServiceProvider::state_space_t const> ProbabilityGridmapServiceProvider::getStateSpace() const
     {
         if(!map_) {
             nav_msgs::GetMap req;

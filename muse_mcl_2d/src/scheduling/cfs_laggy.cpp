@@ -79,8 +79,8 @@ class CFSLaggy : public muse_mcl_2d::Scheduler2D {
         duration_t(preferred_rate > 0.0 ? 1.0 / preferred_rate : 0.0);
   }
 
-  virtual bool apply(typename update_t::Ptr &u,
-                     typename sample_set_t::Ptr &s) override {
+  virtual bool apply(std::shared_ptr<update_t> &u,
+                     std::shared_ptr<sample_set_t> &s) override {
     auto now = []() { return time_t(ros::Time::now().toNSec()); };
 
     const id_t id = u->getModelId();
@@ -104,8 +104,8 @@ class CFSLaggy : public muse_mcl_2d::Scheduler2D {
     return false;
   }
 
-  virtual bool apply(typename resampling_t::Ptr &r,
-                     typename sample_set_t::Ptr &s) override {
+  virtual bool apply(std::shared_ptr<resampling_t> &r,
+                     std::shared_ptr<sample_set_t> &s) override {
     const cslibs_time::Time &stamp = s->getStamp();
 
     auto now = []() { return time_t(ros::Time::now().toNSec()); };

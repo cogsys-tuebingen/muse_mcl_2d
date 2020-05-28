@@ -81,9 +81,9 @@ class MuseMCL2DNode {
   map_provider_map_t map_providers_;
   data_provider_map_t data_providers_;
 
-  smc_t::Ptr particle_filter_;
-  prediction_integrals_t::Ptr prediction_integrals_;
-  sample_set_t::Ptr sample_set_;
+  std::shared_ptr<smc_t> particle_filter_;
+  std::shared_ptr<prediction_integrals_t> prediction_integrals_;
+  std::shared_ptr<sample_set_t> sample_set_;
 
   SampleDensity2D::Ptr sample_density_;
   StatePublisher::Ptr state_publisher_;
@@ -98,8 +98,8 @@ class MuseMCL2DNode {
   Resampling2D::Ptr resampling_;
   Scheduler2D::Ptr scheduler_;
 
-  UpdateRelay2D::Ptr update_forwarder_;
-  PredictionRelay2D::Ptr prediction_forwarder_;
+  std::shared_ptr<UpdateRelay2D> update_forwarder_;
+  std::shared_ptr<PredictionRelay2D> prediction_forwarder_;
 
   void checkPoseInitialization();
   bool getUpdateModelProviderMapping(update_model_mapping_t &update_mapping);

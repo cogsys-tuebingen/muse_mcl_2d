@@ -15,7 +15,7 @@ OccupancyGridmap3dLikelihoodFieldModel::OccupancyGridmap3dLikelihoodFieldModel()
 }
 
 void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
-                                                   const state_space_t::ConstPtr  &map,
+                                                   const std::shared_ptr<state_space_t const>  &map,
                                                    sample_set_t::weight_iterator_t set)
 {
     using pointcloud_t   = cslibs_plugins_data::types::Pointcloud3d;

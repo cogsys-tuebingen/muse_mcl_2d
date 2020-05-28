@@ -17,7 +17,7 @@ class KLDAugmented2D : public Resampling2D {
   double uniform_percent_;
   double min_weight_ratio_;
 
-  virtual void doSetup(ros::NodeHandle &nh) override;
+  void doSetup(ros::NodeHandle &nh) override;
   void doApply(sample_set_t &sample_set) override;
   void doApplyRecovery(sample_set_t &sample_set) override;
 };

@@ -117,7 +117,7 @@ target_link_libraries(${PROJECT_NAME}_resampling
 )
 
 add_library(${PROJECT_NAME}_normal_sampling
-    src/sampling/normal_sampling_2d.cpp
+     src/sampling/normal_sampling_2d.cpp
 )
 
 target_include_directories(${PROJECT_NAME}_normal_sampling
@@ -278,18 +278,18 @@ if(${MUSE_MCL_2D_ADDTIONALS})
     )
 endif()
 
-install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+# install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-install(TARGETS
-            ${PROJECT_NAME}_density
-            ${PROJECT_NAME}_helper
-            ${PROJECT_NAME}_resampling
-            ${PROJECT_NAME}_normal_sampling
-            ${PROJECT_NAME}_uniform_sampling
-            ${PROJECT_NAME}_scheduling
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+# install(TARGETS
+#             ${PROJECT_NAME}_density
+#             ${PROJECT_NAME}_helper
+#             ${PROJECT_NAME}_resampling
+#             ${PROJECT_NAME}_normal_sampling
+#             ${PROJECT_NAME}_uniform_sampling
+#             ${PROJECT_NAME}_scheduling
+#         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
 
-install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+# install(DIRECTORY include/${PROJECT_NAME}/
+#         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

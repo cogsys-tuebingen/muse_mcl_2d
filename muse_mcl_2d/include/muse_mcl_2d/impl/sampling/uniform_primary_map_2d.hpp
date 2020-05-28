@@ -31,9 +31,9 @@ class EIGEN_ALIGN16 UniformPrimaryMap2D : public UniformSampling2D {
 
   rng_t::Ptr rng_;
   transform_t w_T_primary_;
-  Map2D::ConstPtr primary_map_;
+  std::shared_ptr<Map2D const> primary_map_;
   MapProvider2D::Ptr primary_map_provider_;
-  std::vector<Map2D::ConstPtr> secondary_maps_;
+  std::vector<std::shared_ptr<Map2D const>> secondary_maps_;
   std::vector<transform_t, transform_t::allocator_t> secondary_maps_T_w_;
 
   virtual void doSetup(
