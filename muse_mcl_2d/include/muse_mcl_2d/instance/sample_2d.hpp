@@ -4,6 +4,7 @@
 #include <cslibs_math_2d/linear/covariance.hpp>
 #include <cslibs_math_2d/linear/point.hpp>
 #include <cslibs_math_2d/linear/pose.hpp>
+#include <cslibs_math/approx/fractional.hpp>
 #include <cslibs_plugins_data/data_provider.hpp>
 #include <cslibs_time/rate.hpp>
 #include <memory>
@@ -110,6 +111,11 @@ struct Duration<muse_mcl_2d::Hypothesis2D> {
 template <>
 struct Rate<muse_mcl_2d::Hypothesis2D> {
   using type = cslibs_time::Rate;
+};
+
+template <>
+struct Weight<muse_mcl_2d::Hypothesis2D> {
+  using type = double; // cslibs_math::approx::Fractional<double>;
 };
 }  // namespace traits
 }  // namespace muse_smc

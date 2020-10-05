@@ -41,13 +41,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
                               tf_timeout_))
         return;
 
-
     /// evaluation functions
-    const double bundle_resolution_inv = 1.0 / gridmap.getBundleResolution();
-    auto to_bundle_index = [&bundle_resolution_inv](const cslibs_math_2d::Vector2d &p) {
-        return std::array<int, 2>({{static_cast<int>(std::floor(p(0) * bundle_resolution_inv)),
-                                    static_cast<int>(std::floor(p(1) * bundle_resolution_inv))}});
-    };
     auto likelihood = [this](const point_t &p,
                              const distribution_t &d) {
         const auto &q         = p.data() - d.getMean();
@@ -55,8 +49,8 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
         const double e        = d1_ * std::exp(exponent);
         return std::isnormal(e) ? e : 0.0;
     };
-    auto bundle_likelihood = [&gridmap, &to_bundle_index, &likelihood](const point_t &p) {
-        const auto *bundle = gridmap.getDistributionBundle(to_bundle_index(p));
+    auto bundle_likelihood = [&gridmap, &likelihood](const point_t &p) {
+        const auto *bundle = gridmap.getDistributionBundle(p);
         assert(bundle != nullptr);
         return 0.25 * (likelihood(p, *(bundle->at(0))) +
                        likelihood(p, *(bundle->at(1))) +

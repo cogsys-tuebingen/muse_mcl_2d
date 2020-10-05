@@ -160,7 +160,7 @@ class EIGEN_ALIGN16 TFPublisher {
         }
       }
       if (tf_renew_time_) {
-        if (tf_renew_time_stamp_ >= tf_time_w_T_o_) {
+        if (tf_renew_time_stamp_ > tf_time_w_T_o_) {
           renew_time_tf();
           w_T_o_.stamp_ = ros::Time(tf_time_w_T_o_.seconds()) + tf_tolerance_;
           tf_broadcaster_.sendTransform(w_T_o_);
