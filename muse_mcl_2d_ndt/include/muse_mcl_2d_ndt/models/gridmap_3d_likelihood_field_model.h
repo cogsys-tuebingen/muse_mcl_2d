@@ -17,6 +17,7 @@ protected:
     std::size_t max_points_;
     double      d1_;
     double      d2_;
+    double      p_rand_;
     double      histogram_resolution_;
 
     virtual void doSetup(ros::NodeHandle &nh) override;

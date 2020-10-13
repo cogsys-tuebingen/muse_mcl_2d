@@ -94,5 +94,6 @@ namespace muse_mcl_2d_ndt {
       auto param_name = [this](const std::string &name){return name_ + "/" + name;};
       d1_         = nh.param(param_name("d1"), 0.95);
       d2_         = nh.param(param_name("d2"), 0.05);
+      p_rand_                = nh.param(param_name("p_rand"), 0.03);
   }
 }

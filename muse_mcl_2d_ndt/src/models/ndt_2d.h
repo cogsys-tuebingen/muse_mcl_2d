@@ -16,6 +16,7 @@ public:
 private:
   double      d1_;
   double      d2_;
+  double      p_rand_;
 
   virtual void doSetup(ros::NodeHandle &nh) override;
 };

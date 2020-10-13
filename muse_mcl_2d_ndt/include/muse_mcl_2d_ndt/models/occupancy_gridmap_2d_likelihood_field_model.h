@@ -18,6 +18,7 @@ protected:
     std::size_t max_points_;
     double      d1_;
     double      d2_;
+    double      p_rand_;
     double      occupied_threshold_;
     double      histogram_resolution_;
     cslibs_gridmaps::utility::InverseModel<double>::Ptr inverse_model_;
