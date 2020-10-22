@@ -48,11 +48,11 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
         const double exponent = -0.5 * d2_ * double(q.transpose() * d.getInformationMatrix() * q);
         const double e        = d1_ * std::exp(exponent);
         // for experiment put sth similar to a laplace distribution here
-        const auto support_points = d.getN();
-        const auto scale = [support_points]() {
-            return 1.0 - std::exp(-0.25 * static_cast<double>(support_points));
-        };
-        return std::isnormal(e) ? scale() * e : 0.0;
+        // const auto support_points = d.getN();
+        // const auto scale = [support_points]() {
+        //     return 1.0 - std::exp(-0.25 * static_cast<double>(support_points));
+        // };
+        return std::isnormal(e) ? e : 0.0;
     };
     auto bundle_likelihood = [&gridmap, &likelihood](const point_t &p) {
         const auto *bundle = gridmap.getDistributionBundle(p);
@@ -72,7 +72,6 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
     const double range_max = laser_data.getLinearMax();
     const double angle_min = laser_data.getAngularMin();
     const double angle_max = laser_data.getAngularMax();
-    const double p_rand = 0.35 / range_max;
 
     auto valid = [range_min, range_max, angle_min, angle_max](const laserscan_t::Ray &r){
         return r.valid()
@@ -100,7 +99,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
             for (const std::size_t ri : ray_indices) {
                 const auto &ray = laser_rays[ri];
                 const point_t map_point = m_T_l * ray.end_point;
-                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand : 0.0;
+                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_ : 0.0;
             }
             *it *= p;
         }
@@ -112,7 +111,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
             for (std::size_t i = 0 ; i < rays_size ; i+= ray_step) {
                 const auto &ray = laser_rays[i];
                 const point_t map_point = m_T_l * ray.end_point;
-                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand : 0.0;
+                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_ : 0.0;
             }
             *it *= p;
         }

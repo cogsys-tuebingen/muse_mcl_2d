@@ -108,7 +108,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                 const auto &point = cloud_points->at(i);
                 const point_t map_point = m_T_s * point;
                 /// TODO: what if map origin is not identity?
-                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_ : 0.0;
             }
             *it *= p;
         }
@@ -123,7 +123,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                 const auto &point = cloud_points->at(i);
                 const point_t map_point = m_T_s * point;
                 /// TODO: what if map origin is not identity?
-                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_ : 0.0;
             }
             *it *= p;
         }

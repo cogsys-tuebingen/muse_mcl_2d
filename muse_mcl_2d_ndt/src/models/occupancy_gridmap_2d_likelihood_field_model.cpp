@@ -109,7 +109,7 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr       
             for (const std::size_t ri : ray_indices) {
                 const auto &ray = laser_rays[ri];
                 const point_t map_point = m_T_l * ray.end_point;
-                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_ : 0.0;
             }
             *it *= p;
         }
@@ -121,7 +121,7 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr       
             for (std::size_t i = 0 ; i < rays_size ; i+= ray_step) {
                 const auto &ray = laser_rays[i];
                 const point_t map_point = m_T_l * ray.end_point;
-                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_: 0.0;
             }
             *it *= p;
         }

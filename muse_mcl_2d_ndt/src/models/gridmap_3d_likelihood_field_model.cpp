@@ -97,7 +97,7 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
             for (const std::size_t i : cloud_indices) {
                 const auto &point = cloud_points->at(i);
                 const point_t map_point = m_T_s * point;
-                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_ : 0.0;
             }
             *it *= p;
         }
@@ -111,7 +111,7 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
             for (std::size_t i = 0 ; i < points_size ;  i+= points_step) {
                 const auto &point = cloud_points->at(i);
                 const point_t map_point = m_T_s * point;
-                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_ : 0.0;
             }
             *it *= p;
         }
