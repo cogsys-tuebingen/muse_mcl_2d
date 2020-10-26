@@ -52,8 +52,8 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                              const double &inv_occ) {
         auto apply = [&p, &d, &inv_occ, this](){
             const auto &q         = p.data() - d->getMean();
-            const double exponent = -0.5 * inv_occ * d2_ * double(q.transpose() * d->getInformationMatrix() * q);
-            const double e = d1_ * std::exp(exponent);
+            const double exponent = -0.5 * inv_occ * d_ * double(q.transpose() * d->getInformationMatrix() * q);
+            const double e = std::exp(exponent);
             return std::isnormal(e) ? e : 0.0;
         };
         return !d ? 0.0 : apply();
@@ -109,7 +109,7 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr       
             for (const std::size_t ri : ray_indices) {
                 const auto &ray = laser_rays[ri];
                 const point_t map_point = m_T_l * ray.end_point;
-                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_ : 0.0;
+                p += ray.valid() && map_point.isNormal() ? pow3(p_hit_ * bundle_likelihood(map_point) + p_rand_) : pow3(p_max_);
             }
             *it *= p;
         }
@@ -121,7 +121,7 @@ void OccupancyGridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr       
             for (std::size_t i = 0 ; i < rays_size ; i+= ray_step) {
                 const auto &ray = laser_rays[i];
                 const point_t map_point = m_T_l * ray.end_point;
-                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) + p_rand_: 0.0;
+                p += ray.valid() && map_point.isNormal() ? pow3(p_hit_ * bundle_likelihood(map_point) + p_rand_) : pow3(p_max_);
             }
             *it *= p;
         }
@@ -133,9 +133,10 @@ void OccupancyGridmap2dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
     auto param_name = [this](const std::string &name){return name_ + "/" + name;};
 
     max_points_ = nh.param(param_name("max_points"), 100);
-    d1_         = nh.param(param_name("d1"), 0.95);
-    d2_         = nh.param(param_name("d2"), 0.05);
-    p_rand_     = nh.param(param_name("p_rand"), 0.03);
+    d_          = nh.param(param_name("d"), 1.0);
+    p_rand_     = nh.param(param_name("p_rand"), 0.2);
+    p_max_      = nh.param(param_name("p_max"), 0.0);
+    p_hit_      = nh.param(param_name("p_hit"), 0.8);
 
     const double prob_prior     = nh.param(param_name("prob_prior"), 0.5);
     const double prob_free      = nh.param(param_name("prob_free"), 0.45);
