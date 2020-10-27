@@ -53,20 +53,19 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                                     static_cast<int>(std::floor(p(2) * bundle_resolution_inv))}});
     };
     auto likelihood = [this](const point_t &p,
-                             const typename distribution_t::Ptr &d,
-                             const double &inv_occ) {
-        auto apply = [&p, &d, &inv_occ, this](){
+                             const typename distribution_t::Ptr &d) {
+        auto apply = [this,&p,&d]() {
             const auto &q         = p.data() - d->getMean();
-            const double exponent = -0.5 * d_ * inv_occ * double(q.transpose() * d->getInformationMatrix() * q);
+            const double exponent = -0.5 * d_ * static_cast<double>(q.transpose() * d->getInformationMatrix() * q);
             const double e        = std::exp(exponent);
             return std::isnormal(e) ? e : 0.0;
         };
-        return !d ? 0.0 : apply();
+        return (!d || !(d->valid())) ? 0.0 : apply();
     };
     auto occupancy_likelihood = [this, &likelihood](const point_t &p,
                                                     const cslibs_ndt::OccupancyDistribution<double,3>* d) {
         double occ = d ? d->getOccupancy(inverse_model_) : 0.0;
-        double ndt = d ? occ * likelihood(p, d->getDistribution(), 1.0 - occ) : 0.0;
+        double ndt = d ? occ * likelihood(p, d->getDistribution()) : 0.0;
 
         return ndt;
     };

@@ -54,10 +54,13 @@ void Gridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
     };
     auto likelihood = [this](const point_t &p,
                              const distribution_t &d) {
-        const auto &q         = p.data() - d.getMean();
-        const double exponent = -0.5 * d_ * double(q.transpose() * d.getInformationMatrix() * q);
-        const double e        = std::exp(exponent);
-        return std::isnormal(e) ? e : 0.0;
+        auto apply = [this,&p,&d]() {
+            const auto &q         = p.data() - d.getMean();
+            const double exponent = -0.5 * d_ * static_cast<double>(q.transpose() * d.getInformationMatrix() * q);
+            const double e        = std::exp(exponent);
+            return std::isnormal(e) ? e : 0.0;
+        };
+        return d.valid() ? apply() : 0.0;
     };
     auto bundle_likelihood = [&gridmap, &to_bundle_index, &likelihood](const point_t &p) {
         const auto *bundle = gridmap.getDistributionBundle(to_bundle_index(p));
