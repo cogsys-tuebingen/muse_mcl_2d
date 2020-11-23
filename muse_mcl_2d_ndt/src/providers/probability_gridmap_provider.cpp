@@ -7,11 +7,11 @@
 #include <fstream>
 #include <yaml-cpp/yaml.h>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::ProbabilityGridmapProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_ndt {
-ProbabilityGridmapProvider::state_space_t::ConstPtr ProbabilityGridmapProvider::getStateSpace() const
+std::shared_ptr<ProbabilityGridmapProvider::state_space_t const> ProbabilityGridmapProvider::getStateSpace() const
 {
     std::unique_lock<std::mutex> l(map_mutex_);
     return map_;

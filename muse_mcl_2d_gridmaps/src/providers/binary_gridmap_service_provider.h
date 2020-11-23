@@ -18,8 +18,10 @@ public:
     BinaryGridmapServiceProvider() = default;
     virtual ~BinaryGridmapServiceProvider() = default;
 
+    using base_t = muse_mcl_2d::MapProvider2D;
+    using base_t::state_space_t;
 
-    state_space_t::ConstPtr getStateSpace() const override;
+    std::shared_ptr<state_space_t const> getStateSpace() const override;
     void setup(ros::NodeHandle &nh) override;
 
 protected:

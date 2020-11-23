@@ -3,20 +3,18 @@
 
 #include <ros/ros.h>
 #include <unordered_map>
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 
-#include <muse_smc/samples/sample_density.hpp>
-
-#include <muse_mcl_2d/samples/sample_2d.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
+#include <muse_mcl_2d/instance/sample_2d.hpp>
+#include <muse_smc/smc/traits/sample_set.hpp>
 
 #include <cslibs_math/statistics/weighted_angular_mean.hpp>
-#include <cslibs_math/statistics/weighted_distribution.hpp>
+#include <cslibs_math/statistics/stable_weighted_distribution.hpp>
 
 #include <cslibs_plugins/plugin.hpp>
 
 namespace muse_mcl_2d {
-class EIGEN_ALIGN16 SampleDensity2D : public muse_smc::SampleDensity<Sample2D>,
+class EIGEN_ALIGN16 SampleDensity2D : public muse_smc::traits::SampleSet<Hypothesis2D>::type::sample_density_t,
                                       public cslibs_plugins::Plugin
 {
 public:
@@ -24,15 +22,15 @@ public:
 
     using Ptr          = std::shared_ptr<SampleDensity2D>;
     using ConstPtr     = std::shared_ptr<SampleDensity2D const>;
-    using state_t      = StateSpaceDescription2D::state_t;
-    using covariance_t = StateSpaceDescription2D::covariance_t;
+    using state_t      = muse_smc::traits::State<Hypothesis2D>::type;
+    using covariance_t = muse_smc::traits::Covariance<Hypothesis2D>::type;
 
     inline const static std::string Type()
     {
         return "muse_mcl_2d::SampleDensity2D";
     }
 
-    using distribution_t      = cslibs_math::statistics::WeightedDistribution<double,2,0>;
+    using distribution_t      = cslibs_math::statistics::StableWeightedDistribution<double,2,0>;
     using angular_mean_t      = cslibs_math::statistics::WeightedAngularMean<double>;
     using distribution_map_t  = std::unordered_map<int,
                                                    distribution_t,

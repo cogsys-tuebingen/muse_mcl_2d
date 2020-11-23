@@ -25,11 +25,8 @@
      <description>2D resampling with adaptive sample size and local regeneration.</description>
    </class>
 </library>
-<library path="libmuse_mcl_2d_sampling">
-    <!-- Pose Generation -->
-    <class type="muse_mcl_2d::Normal2D" base_class_type="muse_mcl_2d::NormalSampling2D">
-        <description>2D normal distributed pose generation for pose initialation by the user.</description>
-    </class>
+
+<library path="libmuse_mcl_2d_uniform_sampling">
     <class type="muse_mcl_2d::UniformAllMaps2D" base_class_type="muse_mcl_2d::UniformSampling2D">
         <description>
         2D uniform pose generation for global initialization with an axis aligned
@@ -41,8 +38,15 @@
        2D uniform pose generation for global initialization with an axis aligned
        bounding rectangle of the main map. All other maps are used for validation.
     </description>
-</class>
+  </class>
 </library>
+
+<library path="libmuse_mcl_2d_normal_sampling">
+    <class type="muse_mcl_2d::Normal2D" base_class_type="muse_mcl_2d::NormalSampling2D">
+        <description>2D normal distributed pose generation for pose initialation by the user.</description>
+    </class>
+</library>
+
 <library path="libmuse_mcl_2d_density">
     <class type="muse_mcl_2d::SimpleSampleDensity2D" base_class_type="muse_mcl_2d::SampleDensity2D">
     <description>Simple density grid to estimate the sample density.</description>

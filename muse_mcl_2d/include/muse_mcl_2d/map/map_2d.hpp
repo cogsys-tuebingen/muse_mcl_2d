@@ -1,11 +1,11 @@
-#ifndef MAP_2D_HPP
-#define MAP_2D_HPP
+#ifndef MUSE_MCL_2D_MAP_2D_HPP
+#define MUSE_MCL_2D_MAP_2D_HPP
 
-#include <muse_smc/state_space/state_space.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
+#include <muse_mcl_2d/instance/sample_2d.hpp>
+#include <muse_smc/smc/traits/state_space.hpp>
 
 namespace muse_mcl_2d {
-using Map2D = muse_smc::StateSpace<StateSpaceDescription2D>;
+    using Map2D = muse_smc::traits::StateSpace<Hypothesis2D>::type;
 }
 
-#endif // MAP_2D_HPP
+#endif // MUSE_MCL_2D_MAP_2D_HPP

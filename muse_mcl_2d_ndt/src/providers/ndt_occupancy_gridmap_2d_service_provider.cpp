@@ -8,11 +8,11 @@
 #include <yaml-cpp/yaml.h>
 #include <nav_msgs/GetMap.h>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::NDTOccupancyGridmap2dServiceProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_ndt {
-NDTOccupancyGridmap2dServiceProvider::state_space_t::ConstPtr NDTOccupancyGridmap2dServiceProvider::getStateSpace() const
+std::shared_ptr<NDTOccupancyGridmap2dServiceProvider::state_space_t const> NDTOccupancyGridmap2dServiceProvider::getStateSpace() const
 {
   //    nav_msgs::GetMap req;
   //    if (source_.call(req))

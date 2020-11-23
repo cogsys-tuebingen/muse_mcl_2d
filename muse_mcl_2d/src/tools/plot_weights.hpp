@@ -4,7 +4,6 @@
 #include <opencv2/opencv.hpp>
 
 #include <muse_smc/samples/sample_set.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 
 #include <atomic>
 
@@ -12,7 +11,7 @@ namespace muse_mcl_2d {
 class PlotWeights
 {
 public:
-    using sample_set_t = muse_smc::SampleSet<StateSpaceDescription2D>;
+    using sample_set_t = muse_smc::SampleSet<Sample2D>;
     using Ptr = std::shared_ptr<PlotWeights>;
 
     PlotWeights(const std::size_t height,

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(muse_mcl_2d)
 
 #add_definitions("-DMUSE_SMC_USE_DOTTY")
@@ -7,64 +7,86 @@ project(muse_mcl_2d)
 
 find_package(catkin REQUIRED COMPONENTS
   cslibs_indexed_storage
-  nav_msgs
-  sensor_msgs
-  pcl_ros
-  pluginlib
-  roscpp
-  rostest
-  muse_smc
   cslibs_math_2d
   cslibs_math_ros
   cslibs_plugins
   cslibs_plugins_data
-  visualization_msgs
+  muse_smc
   geometry_msgs
   message_generation
+  nav_msgs
+  sensor_msgs
+  pluginlib
+  roscpp
   std_msgs
+  visualization_msgs
 )
-
-find_package(Eigen3 REQUIRED)
 
 add_service_files(
    FILES
-   GlobalInitialization.srv
-   PoseInitialization.srv
+       GlobalInitialization.srv
+       PoseInitialization.srv
 )
 
 add_message_files(
     FILES
-    SampleMsg.msg
-    SampleSetMsg.msg
+        SampleMsg.msg
+       SampleSetMsg.msg
 )
 
 generate_messages(
    DEPENDENCIES
-   std_msgs
-   geometry_msgs
+       std_msgs
+       geometry_msgs
 )
 
 catkin_package(
-    INCLUDE_DIRS    include
-    LIBRARIES       ${PROJECT_NAME}_resampling ${PROJECT_NAME}_sampling ${PROJECT_NAME}_scheduling ${PROJECT_NAME}_density ${PROJECT_NAME}_helper
-    CATKIN_DEPENDS  muse_smc cslibs_math_ros cslibs_math_2d cslibs_plugins cslibs_plugins_data
+    INCLUDE_DIRS
+        include/
+    LIBRARIES
+        ${PROJECT_NAME}_density
+        ${PROJECT_NAME}_helper
+        ${PROJECT_NAME}_resampling
+        ${PROJECT_NAME}_normal_sampling
+        ${PROJECT_NAME}_uniform_sampling
+        ${PROJECT_NAME}_scheduling
+    CATKIN_DEPENDS
+        muse_smc
+        cslibs_math_2d
+        cslibs_math_ros
+        cslibs_plugins
+        cslibs_plugins_data
 )
 
-include_directories(
-    include
-    ${Eigen3_INCLUDE_DIR}
+set(TARGET_INCLUDE_DIRS
+    include/
     ${catkin_INCLUDE_DIRS}
 )
 
+if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    set(TARGET_COMPILE_OPTIONS
+        -Wall -Werror -Ofast -ffast-math
+    )
+    # enabling -march=native my result in problems on some machines,
+    # my try -mtune=native
+
+    message(STATUS "[${PROJECT_NAME}]: Compiling with optimization!")
+endif()
+
 find_package(OpenCV 3.4 QUIET)
 if(${OpenCV_FOUND})
-include_directories(${OpenCV_INCLUDE_DIRS})
-add_executable(${PROJECT_NAME}_statistics_plotter
-    src/tools/statistics_plotter.cpp
-)
-target_link_libraries(${PROJECT_NAME}_statistics_plotter
-    ${OpenCV_LIBRARIES}
-)
+    add_executable(${PROJECT_NAME}_statistics_plotter
+        src/tools/statistics_plotter.cpp
+    )
+    target_include_directories(${PROJECT_NAME}_statistics_plotter
+        PRIVATE
+            ${OpenCV_INCLUDE_DIRS}
+            ${TARGET_INCLUDE_DIRS}
+    )
+    target_link_libraries(${PROJECT_NAME}_statistics_plotter
+        PRIVATE
+            ${OpenCV_LIBRARIES}
+    )
 endif()
 
 add_library(${PROJECT_NAME}_resampling
@@ -75,21 +97,62 @@ add_library(${PROJECT_NAME}_resampling
     src/resampling/residual_2d.cpp
     src/resampling/stratified_2d.cpp
     src/resampling/wheel_2d.cpp
+    src/resampling/multinomial.cpp
+)
+
+target_include_directories(${PROJECT_NAME}_resampling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_options(${PROJECT_NAME}_resampling
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 target_link_libraries(${PROJECT_NAME}_resampling
-    ${catkin_LIBRARIES}
-    ${OpenCV_LIBRARIES}
+    PRIVATE
+        ${catkin_LIBRARIES}
+        ${OpenCV_LIBRARIES}
 )
 
-add_library(${PROJECT_NAME}_sampling
-  src/sampling/normal_sampling_2d.cpp
+add_library(${PROJECT_NAME}_normal_sampling
+     src/sampling/normal_sampling_2d.cpp
+)
+
+target_include_directories(${PROJECT_NAME}_normal_sampling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_options(${PROJECT_NAME}_normal_sampling
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
+
+target_link_libraries(${PROJECT_NAME}_normal_sampling
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
+
+add_library(${PROJECT_NAME}_uniform_sampling
     src/sampling/uniform_primary_map_2d.cpp
     src/sampling/uniform_all_maps_2d.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}_sampling
-    ${catkin_LIBRARIES}
+target_include_directories(${PROJECT_NAME}_uniform_sampling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_options(${PROJECT_NAME}_uniform_sampling
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
+
+target_link_libraries(${PROJECT_NAME}_uniform_sampling
+    PRIVATE
+        ${catkin_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_density
@@ -97,8 +160,19 @@ add_library(${PROJECT_NAME}_density
     src/density/mean_centered_sample_density_2d.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_density
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_options(${PROJECT_NAME}_density
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
+
 target_link_libraries(${PROJECT_NAME}_density
-    ${catkin_LIBRARIES}
+    PRIVATE
+        ${catkin_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_scheduling
@@ -110,54 +184,112 @@ add_library(${PROJECT_NAME}_scheduling
     src/scheduling/cfs_laggy.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}_scheduling
-    ${catkin_LIBRARIES}
+target_include_directories(${PROJECT_NAME}_scheduling
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
 )
 
+target_compile_options(${PROJECT_NAME}_scheduling
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
+
+target_link_libraries(${PROJECT_NAME}_scheduling
+    PRIVATE
+        ${catkin_LIBRARIES}
+)
 
 add_library(${PROJECT_NAME}_helper
-    src/node/state_publisher_2d.cpp
-    src/node/sample_set_publisher_2d.cpp
+    src/instance/state_publisher_2d.cpp
+    src/instance/sample_set_publisher_2d.cpp
 )
+
+target_include_directories(${PROJECT_NAME}_helper
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_options(${PROJECT_NAME}_helper
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
+
 target_link_libraries(${PROJECT_NAME}_helper
-    ${catkin_LIBRARIES}
+    PRIVATE
+        ${catkin_LIBRARIES}
 )
-add_dependencies(${PROJECT_NAME}_helper ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(${PROJECT_NAME}_helper
+    ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS}
+)
 
 add_executable(${PROJECT_NAME}_node
     src/node/muse_mcl_2d_node.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_node
+    PRIVATE
+        ${TARGET_INCLUDE_DIRS}
+)
+
+
+target_compile_options(${PROJECT_NAME}_node
+    PRIVATE
+        ${TARGET_COMPILE_OPTIONS}
+)
+
 target_link_libraries(${PROJECT_NAME}_node
-    ${catkin_LIBRARIES}
-    ${PROJECT_NAME}_helper
-)
-
-add_executable(${PROJECT_NAME}_box_muller
-    test/test_box_muller.cpp
-)
-
-target_link_libraries(${PROJECT_NAME}_box_muller
-    ${catkin_LIBRARIES}
-)
-
-set(MUSE_MCL_2D_PERF_TESTS True)
-if(${MUSE_MCL_2D_PERF_TESTS})
-    message("[muse_mcl_2d]: Building with performance tests!")
-    add_executable(${PROJECT_NAME}_perf_runtimes_math_operations
-        test/perf_runtimes_math_operations.cpp
-    )
-    target_link_libraries(${PROJECT_NAME}_perf_runtimes_math_operations
+    PRIVATE
         ${catkin_LIBRARIES}
+        ${PROJECT_NAME}_helper
+)
+
+muse_mcl_2d_add_unit_test_ros(test_load_plugins
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    LAUNCH_FILE
+        test/plugins.test
+    SOURCE_FILES
+        test/plugins.cpp
+    LINK_LIBRARIES
+        ${catkin_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
+)
+
+
+
+set(MUSE_MCL_2D_ADDTIONALS True)
+if(${MUSE_MCL_2D_ADDTIONALS})
+    message(STATUS "[muse_mcl_2d]: Building additional executables!")
+
+    add_executable(${PROJECT_NAME}_box_muller
+        test/test_box_muller.cpp
+    )
+
+    target_include_directories(${PROJECT_NAME}_box_muller
+        PRIVATE
+            ${TARGET_INCLUDE_DIRS}
+    )
+
+    target_link_libraries(${PROJECT_NAME}_box_muller
+        PRIVATE
+            ${catkin_LIBRARIES}
     )
 endif()
 
-install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+# install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-install(TARGETS ${PROJECT_NAME}_resampling ${PROJECT_NAME}_sampling
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+# install(TARGETS
+#             ${PROJECT_NAME}_density
+#             ${PROJECT_NAME}_helper
+#             ${PROJECT_NAME}_resampling
+#             ${PROJECT_NAME}_normal_sampling
+#             ${PROJECT_NAME}_uniform_sampling
+#             ${PROJECT_NAME}_scheduling
+#         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+#         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
 
-install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+# install(DIRECTORY include/${PROJECT_NAME}/
+#         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

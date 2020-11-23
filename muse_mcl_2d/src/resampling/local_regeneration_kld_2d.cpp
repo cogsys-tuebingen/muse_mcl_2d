@@ -81,7 +81,7 @@ void LocalRegenerationKLD2D::doApply(sample_set_t& sample_set)
     /// prepare ordered sequence of random numbers
     std::vector<double> cumsum(size + 1, 0.0);
     for(std::size_t i = 0 ; i < size ; ++i) {
-        cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
+        cumsum[i+1] = cumsum[i] + p_t_1[i].weight();
 //            std::cerr << i << " " << p_t_1[i].state << "\n";
 //            out_ << p_t_1[i].weight << ",";
     }
@@ -119,7 +119,7 @@ void LocalRegenerationKLD2D::doApplyRecovery(sample_set_t& sample_set)
     if(!density)
         throw std::runtime_error("[KLD2D] : Can only use 'SampleDensity2D' for adaptive sample size estimation!");
 
-    auto kld = [this, &sample_set, &density, sample_size_maximum](const std::size_t current_size){
+    auto kld = [this, &density, sample_size_maximum](const std::size_t current_size){
         const std::size_t k = density->histogramSize();
         const double fraction = 2.0 / (9.0 * (k-1));
         const double exponent = 1.0 - fraction + std::sqrt(fraction) * kld_z_;
@@ -130,7 +130,7 @@ void LocalRegenerationKLD2D::doApplyRecovery(sample_set_t& sample_set)
 
     std::vector<double> cumsum(size + 1, 0.0);
     for(std::size_t i = 0 ; i < size ; ++i) {
-        cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
+        cumsum[i+1] = cumsum[i] + p_t_1[i].weight();
     }
     cslibs_math::random::Uniform<double,1> rng_recovery(0.0, 1.0);
     for(std::size_t i = 0 ; i < sample_size_maximum ; ++i) {

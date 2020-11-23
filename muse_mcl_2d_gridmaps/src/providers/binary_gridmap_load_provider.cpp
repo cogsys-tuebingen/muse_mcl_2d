@@ -3,11 +3,11 @@
 #include <muse_mcl_2d_gridmaps/utility/map_loader.hpp>
 #include <cslibs_gridmaps/static_maps/conversion/convert_binary_gridmap.hpp>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::BinaryGridmapLoadProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    BinaryGridmapLoadProvider::state_space_t::ConstPtr BinaryGridmapLoadProvider::getStateSpace() const
+std::shared_ptr<BinaryGridmapLoadProvider::state_space_t const> BinaryGridmapLoadProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
         return map_;

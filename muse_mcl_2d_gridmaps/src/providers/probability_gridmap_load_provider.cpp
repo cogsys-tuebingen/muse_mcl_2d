@@ -3,11 +3,11 @@
 #include <muse_mcl_2d_gridmaps/utility/map_loader.hpp>
 #include <cslibs_gridmaps/static_maps/conversion/convert_probability_gridmap.hpp>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::ProbabilityGridmapLoadProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
-    ProbabilityGridmapLoadProvider::state_space_t::ConstPtr ProbabilityGridmapLoadProvider::getStateSpace() const
+std::shared_ptr<ProbabilityGridmapLoadProvider::state_space_t const> ProbabilityGridmapLoadProvider::getStateSpace() const
     {
         std::unique_lock<std::mutex> l(map_mutex_);
         return map_;

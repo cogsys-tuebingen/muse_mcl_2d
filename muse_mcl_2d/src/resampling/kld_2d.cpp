@@ -44,7 +44,7 @@ void KLD2D::doApply(sample_set_t& sample_set)
     std::vector<double> cumsum(size + 1);
     cumsum[0] = 0.0;
     for (std::size_t i = 0 ; i < size ; ++i)
-        cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
+        cumsum[i+1] = cumsum[i] + p_t_1[i].weight();
 
     for (std::size_t i = 0 ; i < sample_size_maximum ; ++i) {
         const double u = rng_.get();
@@ -93,7 +93,7 @@ void KLD2D::doApplyRecovery(sample_set_t& sample_set)
     std::vector<double> cumsum(size + 1);
     cumsum[0] = 0.0;
     for (std::size_t i = 0 ; i < size ; ++i)
-        cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
+        cumsum[i+1] = cumsum[i] + p_t_1[i].weight();
 
     cslibs_math::random::Uniform<double,1> rng_recovery(0.0, 1.0);
     for (std::size_t i = 0 ; i < sample_size_maximum ; ++i) {

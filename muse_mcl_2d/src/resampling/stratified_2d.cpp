@@ -7,12 +7,12 @@ namespace muse_mcl_2d {
 
 void Stratified::doApply(sample_set_t& sample_set)
 {
-    muse_smc::impl::Stratified<StateSpaceDescription2D>::apply(sample_set);
+    muse_smc::impl::Stratified<sample_set_t, uniform_sampling_t>::apply(sample_set);
 }
 
 void Stratified::doApplyRecovery(sample_set_t& sample_set)
 {
-    muse_smc::impl::Stratified<StateSpaceDescription2D>::applyRecovery(uniform_pose_sampler_,
+    muse_smc::impl::Stratified<sample_set_t, uniform_sampling_t>::applyRecovery(uniform_pose_sampler_,
             recovery_random_pose_probability_,
             sample_set);
 }

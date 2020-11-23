@@ -7,12 +7,12 @@
 
 #include <muse_mcl_2d_ndt/maps/flat_gridmap_2d.h>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::NDT2D, muse_mcl_2d::UpdateModel2D)
 
 namespace muse_mcl_2d_ndt {
   void NDT2D::apply(const data_t::ConstPtr          &data,
-                    const state_space_t::ConstPtr   &map,
+                    const std::shared_ptr<state_space_t const>   &map,
                     sample_set_t::weight_iterator_t  set)
   {
       using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
@@ -94,5 +94,6 @@ namespace muse_mcl_2d_ndt {
       auto param_name = [this](const std::string &name){return name_ + "/" + name;};
       d1_         = nh.param(param_name("d1"), 0.95);
       d2_         = nh.param(param_name("d2"), 0.05);
+      p_rand_                = nh.param(param_name("p_rand"), 0.03);
   }
 }

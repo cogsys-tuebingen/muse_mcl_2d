@@ -27,10 +27,10 @@ void MCSampleDensity2D::clear()
 
 void MCSampleDensity2D::insert(const Sample2D& sample)
 {
-    state_t state = offset_ * sample.state;
+    state_t state = offset_ * sample.state();
     kdtree_->insert(indexation_.create(state), sample_data_t(sample));
-    global_position_.add(sample.state.translation());
-    global_angle_.add(sample.state.yaw());
+    global_position_.add(sample.state().translation());
+    global_angle_.add(sample.state().yaw());
 }
 
 void MCSampleDensity2D::estimate()

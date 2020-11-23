@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
     <name>muse_mcl_2d_gridmaps</name>
-    <version>0.0.6</version>
+    <version>0.0.7</version>
     <description>The muse_mcl_2d_gridmaps package</description>
 
     <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
@@ -13,8 +13,6 @@
     <depend>nav_msgs</depend>
     <depend>pluginlib</depend>
     <depend>roscpp</depend>
-    <depend>rostest</depend>
-    <depend>tf</depend>
     <depend>cslibs_math_2d</depend>
     <depend>cslibs_gridmaps</depend>
     <depend>cslibs_plugins_data</depend>

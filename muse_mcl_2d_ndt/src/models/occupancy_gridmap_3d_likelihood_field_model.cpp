@@ -6,7 +6,7 @@
 
 #include <cslibs_math_ros/tf/conversion_3d.hpp>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::OccupancyGridmap3dLikelihoodFieldModel, muse_mcl_2d::UpdateModel2D)
 
 namespace muse_mcl_2d_ndt {
@@ -15,7 +15,7 @@ OccupancyGridmap3dLikelihoodFieldModel::OccupancyGridmap3dLikelihoodFieldModel()
 }
 
 void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
-                                                   const state_space_t::ConstPtr  &map,
+                                                   const std::shared_ptr<state_space_t const>  &map,
                                                    sample_set_t::weight_iterator_t set)
 {
     using pointcloud_t   = cslibs_plugins_data::types::Pointcloud3d;
@@ -53,24 +53,23 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                                     static_cast<int>(std::floor(p(2) * bundle_resolution_inv))}});
     };
     auto likelihood = [this](const point_t &p,
-                             const typename distribution_t::Ptr &d,
-                             const double &inv_occ) {
-        auto apply = [&p, &d, &inv_occ, this](){
+                             const typename distribution_t::Ptr &d) {
+        auto apply = [this,&p,&d]() {
             const auto &q         = p.data() - d->getMean();
-            const double exponent = -0.5 * d2_ * inv_occ * double(q.transpose() * d->getInformationMatrix() * q);
-            const double e        = d1_ * std::exp(exponent);
+            const double exponent = -0.5 * d_ * static_cast<double>(q.transpose() * d->getInformationMatrix() * q);
+            const double e        = std::exp(exponent);
             return std::isnormal(e) ? e : 0.0;
         };
-        return !d ? 0.0 : apply();
+        return (!d || !(d->valid())) ? 0.0 : apply();
     };
     auto occupancy_likelihood = [this, &likelihood](const point_t &p,
                                                     const cslibs_ndt::OccupancyDistribution<double,3>* d) {
         double occ = d ? d->getOccupancy(inverse_model_) : 0.0;
-        double ndt = d ? occ * likelihood(p, d->getDistribution(), 1.0 - occ) : 0.0;
+        double ndt = d ? occ * likelihood(p, d->getDistribution()) : 0.0;
 
         return ndt;
     };
-    auto bundle_likelihood = [this, &gridmap, &to_bundle_index, &occupancy_likelihood](const point_t &p) {
+    auto bundle_likelihood = [&gridmap, &to_bundle_index, &occupancy_likelihood](const point_t &p) {
         const auto &bundle = gridmap.getDistributionBundle(to_bundle_index(p));
         return 0.125 * (occupancy_likelihood(p, bundle->at(0)) +
                         occupancy_likelihood(p, bundle->at(1)) +
@@ -108,7 +107,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                 const auto &point = cloud_points->at(i);
                 const point_t map_point = m_T_s * point;
                 /// TODO: what if map origin is not identity?
-                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += map_point.isNormal() ? pow3(p_hit_ * bundle_likelihood(map_point) + p_rand_) : pow3(p_max_);
             }
             *it *= p;
         }
@@ -123,7 +122,7 @@ void OccupancyGridmap3dLikelihoodFieldModel::apply(const data_t::ConstPtr       
                 const auto &point = cloud_points->at(i);
                 const point_t map_point = m_T_s * point;
                 /// TODO: what if map origin is not identity?
-                p += map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += map_point.isNormal() ? pow3(p_hit_ * bundle_likelihood(map_point) + p_rand_) : pow3(p_max_);
             }
             *it *= p;
         }
@@ -135,8 +134,10 @@ void OccupancyGridmap3dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
     auto param_name = [this](const std::string &name){return name_ + "/" + name;};
 
     max_points_ = nh.param(param_name("max_points"), 100);
-    d1_         = nh.param(param_name("d1"), 0.95);
-    d2_         = nh.param(param_name("d2"), 0.05);
+    d_          = nh.param(param_name("d"), 1.0);
+    p_rand_     = nh.param(param_name("p_rand"), 0.2);
+    p_max_      = nh.param(param_name("p_max"), 0.0);
+    p_hit_      = nh.param(param_name("p_hit"), 0.8);
 
     occupied_threshold_         = nh.param(param_name("occupied_threshold"), 0.169);
     const double prob_prior     = nh.param(param_name("prob_prior"), 0.5);

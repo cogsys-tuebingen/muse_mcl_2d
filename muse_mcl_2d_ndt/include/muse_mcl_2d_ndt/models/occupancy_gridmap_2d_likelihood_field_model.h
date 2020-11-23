@@ -11,13 +11,12 @@ public:
     OccupancyGridmap2dLikelihoodFieldModel();
 
     virtual void apply(const data_t::ConstPtr         &data,
-                       const state_space_t::ConstPtr  &map,
+                       const std::shared_ptr<state_space_t const>  &map,
                        sample_set_t::weight_iterator_t set) override;
 
 protected:
     std::size_t max_points_;
-    double      d1_;
-    double      d2_;
+    double      d_, p_rand_, p_max_, p_hit_;
     double      occupied_threshold_;
     double      histogram_resolution_;
     cslibs_gridmaps::utility::InverseModel<double>::Ptr inverse_model_;

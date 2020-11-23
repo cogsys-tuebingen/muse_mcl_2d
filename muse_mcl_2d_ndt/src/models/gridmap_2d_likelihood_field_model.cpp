@@ -4,7 +4,7 @@
 
 #include <cslibs_plugins_data/types/laserscan.hpp>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_ndt::Gridmap2dLikelihoodFieldModel, muse_mcl_2d::UpdateModel2D)
 
 namespace muse_mcl_2d_ndt {
@@ -13,14 +13,11 @@ Gridmap2dLikelihoodFieldModel::Gridmap2dLikelihoodFieldModel()
 }
 
 void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
-                                          const state_space_t::ConstPtr  &map,
+                                          const std::shared_ptr<state_space_t const>  &map,
                                           sample_set_t::weight_iterator_t set)
 {
-    using laserscan_t    = cslibs_plugins_data::types::Laserscan2d;
-    using transform_t    = muse_mcl_2d::StateSpaceDescription2D::transform_t;
-    using state_t        = muse_mcl_2d::StateSpaceDescription2D::state_t;
-    using point_t        = muse_mcl_2d::StateSpaceDescription2D::state_space_boundary_t;
     using distribution_t = typename Gridmap2d::map_t::distribution_t::distribution_t;
+    using laserscan_t = cslibs_plugins_data::types::Laserscan2d;
 
     if (!map->isType<Gridmap2d>() || !data->isType<laserscan_t>())
         return;
@@ -44,26 +41,24 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
                               tf_timeout_))
         return;
 
-
     /// evaluation functions
-    const double bundle_resolution_inv = 1.0 / gridmap.getBundleResolution();
-    auto to_bundle_index = [&bundle_resolution_inv](const cslibs_math_2d::Vector2d &p) {
-        return std::array<int, 2>({{static_cast<int>(std::floor(p(0) * bundle_resolution_inv)),
-                                    static_cast<int>(std::floor(p(1) * bundle_resolution_inv))}});
-    };
     auto likelihood = [this](const point_t &p,
                              const distribution_t &d) {
-        const auto &q         = p.data() - d.getMean();
-        const double exponent = -0.5 * d2_ * double(q.transpose() * d.getInformationMatrix() * q);
-        const double e        = d1_ * std::exp(exponent);
-        return std::isnormal(e) ? e : 0.0;
+        auto apply = [this,&p,&d]() {
+            const auto &q         = p.data() - d.getMean();
+            const double exponent = -0.5 * d_ * static_cast<double>(q.transpose() * d.getInformationMatrix() * q);
+            const double e        = std::exp(exponent);
+            return std::isnormal(e) ? e : 0.0;
+       };
+       return d.valid() ? apply() : 0.0;
     };
-    auto bundle_likelihood = [&gridmap, &to_bundle_index, &likelihood](const point_t &p) {
-        const auto &bundle = gridmap.getDistributionBundle(to_bundle_index(p));
-        return 0.25 * (likelihood(p, bundle->at(0)->data()) +
-                       likelihood(p, bundle->at(1)->data()) +
-                       likelihood(p, bundle->at(2)->data()) +
-                       likelihood(p, bundle->at(3)->data()));
+    auto bundle_likelihood = [&gridmap, &likelihood](const point_t &p) {
+        const auto *bundle = gridmap.getDistributionBundle(p);
+        assert(bundle != nullptr);
+        return 0.25 * (likelihood(p, *(bundle->at(0))) +
+                       likelihood(p, *(bundle->at(1))) +
+                       likelihood(p, *(bundle->at(2))) +
+                       likelihood(p, *(bundle->at(3))));
     };
 
     auto pow3 = [](const double& x) {
@@ -102,7 +97,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
             for (const std::size_t ri : ray_indices) {
                 const auto &ray = laser_rays[ri];
                 const point_t map_point = m_T_l * ray.end_point;
-                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += ray.valid() && map_point.isNormal() ? pow3(p_hit_ * bundle_likelihood(map_point) + p_rand_) : pow3(p_max_);
             }
             *it *= p;
         }
@@ -114,7 +109,7 @@ void Gridmap2dLikelihoodFieldModel::apply(const data_t::ConstPtr         &data,
             for (std::size_t i = 0 ; i < rays_size ; i+= ray_step) {
                 const auto &ray = laser_rays[i];
                 const point_t map_point = m_T_l * ray.end_point;
-                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point)) : 0.0;
+                p += ray.valid() && map_point.isNormal() ? pow3(bundle_likelihood(map_point) + p_rand_) : pow3(p_max_);
             }
             *it *= p;
         }
@@ -126,8 +121,12 @@ void Gridmap2dLikelihoodFieldModel::doSetup(ros::NodeHandle &nh)
     auto param_name = [this](const std::string &name){return name_ + "/" + name;};
 
     max_points_            = nh.param(param_name("max_points"), 100);
-    d1_                    = nh.param(param_name("d1"), 0.95);
-    d2_                    = nh.param(param_name("d2"), 0.05);
+    d_                     = nh.param(param_name("d"), 1.0);
+    p_rand_                = nh.param(param_name("p_rand"), 0.2);
+    p_max_                 = nh.param(param_name("p_max"), 0.0);
+    p_hit_                 = nh.param(param_name("p_hit"), 0.8);
+
     histogram_resolution_  = nh.param(param_name("histogram_resolution"), 0.0);
 }
 }
+

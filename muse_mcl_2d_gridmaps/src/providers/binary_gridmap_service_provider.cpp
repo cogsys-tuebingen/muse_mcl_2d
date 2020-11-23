@@ -4,7 +4,7 @@
 
 #include <nav_msgs/GetMap.h>
 
-#include <class_loader/class_loader_register_macro.h>
+#include <class_loader/register_macro.hpp>
 CLASS_LOADER_REGISTER_CLASS(muse_mcl_2d_gridmaps::BinaryGridmapServiceProvider, muse_mcl_2d::MapProvider2D)
 
 namespace muse_mcl_2d_gridmaps {
@@ -17,7 +17,7 @@ namespace muse_mcl_2d_gridmaps {
     }
 
 
-    BinaryGridmapServiceProvider::state_space_t::ConstPtr BinaryGridmapServiceProvider::getStateSpace() const
+std::shared_ptr<BinaryGridmapServiceProvider::state_space_t const> BinaryGridmapServiceProvider::getStateSpace() const
     {
         if(!map_) {
             nav_msgs::GetMap req;

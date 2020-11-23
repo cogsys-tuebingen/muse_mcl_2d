@@ -19,7 +19,10 @@ public:
     LikelihoodFieldGridmapProvider() = default;
     virtual ~LikelihoodFieldGridmapProvider() = default;
 
-    state_space_t::ConstPtr getStateSpace() const override;
+    using base_t = muse_mcl_2d::MapProvider2D;
+    using base_t::state_space_t;
+
+    std::shared_ptr<state_space_t const> getStateSpace() const override;
     void waitForStateSpace() const override;
     void setup(ros::NodeHandle &nh) override;
 

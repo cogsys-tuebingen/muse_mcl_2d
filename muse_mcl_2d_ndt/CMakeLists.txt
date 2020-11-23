@@ -1,37 +1,50 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.0.2)
 project(muse_mcl_2d_ndt)
 
 find_package(catkin REQUIRED COMPONENTS
-  muse_mcl_2d
-  muse_mcl_2d_gridmaps
   cslibs_ndt_2d
   cslibs_math_2d
   cslibs_ndt_3d
   cslibs_math_3d
   cslibs_gridmaps
   cslibs_plugins_data
+  muse_mcl_2d
+  muse_mcl_2d_gridmaps
   pluginlib
   roscpp
-  rostest
-  tf
 )
-find_package(PCL REQUIRED COMPONENTS common filters segmentation io)
+
+find_package(yaml-cpp REQUIRED)
 
 catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES ${PROJECT_NAME}_providers
-            ${PROJECT_NAME}_models
-            ${PROJECT_NAME}_maps
-  CATKIN_DEPENDS muse_mcl_2d cslibs_math_2d cslibs_ndt_2d cslibs_math_3d
-                 cslibs_ndt_3d cslibs_gridmaps cslibs_plugins_data
+  LIBRARIES
+    ${PROJECT_NAME}_providers
+    ${PROJECT_NAME}_models
+    ${PROJECT_NAME}_maps
+  CATKIN_DEPENDS
+    cslibs_gridmaps
+    cslibs_math_2d
+    cslibs_math_3d
+    cslibs_ndt_2d
+    cslibs_ndt_3d
+    cslibs_plugins_data
+    muse_mcl_2d
 )
 
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-  ${PCL_INCLUDE_DIRS}
+if(NOT ${CMAKE_BUILD_TYPE} STREQUAL Debug)
+    set(TARGET_COMPILE_OPTIONS
+        -Wall -Werror -Ofast -ffast-math
+    )
+    # enabling -march=native my result in problems on some machines,
+    # my try -mtune=native
+
+    message(STATUS "[${PROJECT_NAME}]: Compiling with optimization!")
+endif()
+
+set(TARGET_INCLUDE_DIRS
+    include/
+    ${catkin_INCLUDE_DIRS}
 )
-link_directories(${PCL_LIBRARY_DIRS})
 
 add_library(${PROJECT_NAME}_maps SHARED
   src/maps/gridmap_2d.cpp
@@ -41,8 +54,19 @@ add_library(${PROJECT_NAME}_maps SHARED
   src/maps/flat_gridmap_2d.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_maps
+  PRIVATE
+    ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_options(${PROJECT_NAME}_maps
+  PRIVATE
+    ${TARGET_COMPILE_OPTIONS}
+)
+
 target_link_libraries(${PROJECT_NAME}_maps
-  ${catkin_LIBRARIES}
+  PRIVATE
+    ${catkin_LIBRARIES}
 )
 
 add_library(${PROJECT_NAME}_providers SHARED
@@ -59,11 +83,21 @@ add_library(${PROJECT_NAME}_providers SHARED
   src/providers/probability_occupancy_gridmap_provider.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_providers
+  PRIVATE
+    ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_options(${PROJECT_NAME}_providers
+  PRIVATE
+    ${TARGET_COMPILE_OPTIONS}
+)
+
 target_link_libraries(${PROJECT_NAME}_providers
-  ${catkin_LIBRARIES}
-  ${PCL_LIBRARIES}
-  ${PROJECT_NAME}_maps
-  yaml-cpp
+  PRIVATE
+    ${catkin_LIBRARIES}
+    ${YAML_CPP_LIBRARIES}
+    ${PROJECT_NAME}_maps
 )
 
 add_library(${PROJECT_NAME}_models SHARED
@@ -74,16 +108,41 @@ add_library(${PROJECT_NAME}_models SHARED
 #  src/models/ndt_2d.cpp
 )
 
+target_include_directories(${PROJECT_NAME}_models
+  PRIVATE
+    ${TARGET_INCLUDE_DIRS}
+)
+
+target_compile_options(${PROJECT_NAME}_models
+  PRIVATE
+    ${TARGET_COMPILE_OPTIONS}
+)
+
 target_link_libraries(${PROJECT_NAME}_models
-  ${catkin_LIBRARIES}
-  ${PCL_LIBRARIES}
-  ${PROJECT_NAME}_maps
+  PRIVATE
+    ${catkin_LIBRARIES}
+    ${PROJECT_NAME}_maps
+)
+
+muse_mcl_2d_ndt_add_unit_test_ros(test_load_plugins
+    INCLUDE_DIRS
+        ${TARGET_INCLUDE_DIRS}
+    LAUNCH_FILE
+        test/plugins.test
+    SOURCE_FILES
+        test/plugins.cpp
+    LINK_LIBRARIES
+        ${catkin_LIBRARIES}
+        ${YAML_CPP_LIBRARIES}
+    COMPILE_OPTIONS
+        ${TARGET_COMPILE_OPTIONS}
 )
 
 install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-install(TARGETS ${PROJECT_NAME}_providers
-                ${PROJECT_NAME}_models
+install(TARGETS
+          ${PROJECT_NAME}_models
+          ${PROJECT_NAME}_providers
         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})

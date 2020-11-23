@@ -2,14 +2,15 @@ before_script:
   # Install ssh-agent if not already installed, it is required by Docker.
   # (change apt-get to yum if you use a CentOS-based image)
   - 'apt-get -qq update -y'
-  - 'apt-get -qq install build-essential \
-                 openssh-client libeigen3-dev \
-                 libyaml-cpp-dev \
-                 libtbb-dev \
-                 libopencv-dev \
-                 libgdal-dev \
-                 libpcl1-dev \
-                 python-catkin-tools \
+  - 'apt-get -qq install build-essential
+                 openssh-client
+                 libeigen3-dev
+                 libyaml-cpp-dev
+                 libtbb-dev
+                 libopencv-dev
+                 libpcl1-dev
+                 python-catkin-tools
+                 libtinyxml-dev
                  sudo -y'
 
   # Run ssh-agent (inside the build environment)
@@ -24,7 +25,9 @@ before_script:
   # you will overwrite your user's SSH config.
   - mkdir -p ~/.ssh
   - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-
+  - GIT_USER=gitlab
+  - GIT_HOST=$CI_SERVER_HOST
+  - if [ ! -z "$GIT_USER_OVERRIDE" ]; then GIT_USER=$GIT_USER_OVERRIDE; fi
   # Here we are at /build/$CI_PROJECT_NAME
   # For pure catkin projects, we need a workspace:
   - mkdir -p /build/ws/src/
@@ -32,16 +35,14 @@ before_script:
   - ln -s $CI_PROJECT_DIR src/$CI_PROJECT_NAME
   # clone dependencies here:
   - cd src
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:apps/muse_smc.git -b devel muse_smc
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_indexed_storage.git -b devel cslibs_indexed_storage
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_boost_geometry.git -b devel cslibs_boost_geometry
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_vectormaps.git -b devel cslibs_vectormaps
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_time.git -b devel cslibs_time
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_gridmaps.git -b devel cslibs_gridmaps
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_ndt.git -b devel cslibs_ndt
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_math.git -b devel cslibs_math
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_utility.git -b devel cslibs_utility
-  - git clone gitlab@gitlab.cs.uni-tuebingen.de:libs/cslibs_plugins.git -b devel cslibs_plugins
+  - git clone $GIT_USER@$GIT_HOST:apps/muse_smc.git -b devel muse_smc
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_indexed_storage.git -b devel cslibs_indexed_storage
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_time.git -b devel cslibs_time
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_gridmaps.git -b devel cslibs_gridmaps
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_ndt.git -b devel cslibs_ndt
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_math.git -b devel cslibs_math
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_utility.git -b devel cslibs_utility
+  - git clone $GIT_USER@$GIT_HOST:libs/cslibs_plugins.git -b devel cslibs_plugins
   - cd /build/ws/
 
 stages:
@@ -51,10 +52,14 @@ kinetic:
   stage: build
   image: ros:kinetic
   script:
+    - sudo apt-get install -y software-properties-common
+    - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+    - sudo apt-get update
+    - sudo apt-get install -y g++-7 gcc-7
     - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
     - rosdep install -y -r -i --from-paths src
-    - catkin build
-    - catkin run_tests
+    - catkin build -DCMAKE_C_COMPILER=/usr/bin/gcc-7 -DCMAKE_CXX_COMPILER=/usr/bin/g++-7
+    - catkin run_tests muse_mcl_2d muse_mcl_2d_gridmaps muse_mcl_2d_ndt muse_mcl_2d_odometry --no-deps
 
 melodic:
   stage: build
@@ -63,4 +68,4 @@ melodic:
     - source /opt/ros/$(ls /opt/ros/ | sort -r | head -n 1)/setup.bash
     - rosdep install -y -r -i --from-paths src
     - catkin build
-    - catkin run_tests
+    - catkin run_tests muse_mcl_2d muse_mcl_2d_gridmaps muse_mcl_2d_ndt muse_mcl_2d_odometry --no-deps

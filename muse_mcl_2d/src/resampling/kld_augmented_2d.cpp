@@ -42,7 +42,7 @@ void KLDAugmented2D::doApply(sample_set_t& sample_set)
     std::vector<double> cumsum(size + 1);
     cumsum[0] = 0.0;
     for (std::size_t i = 0 ; i < size ; ++i)
-        cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
+        cumsum[i+1] = cumsum[i] + p_t_1[i].weight();
 
     cslibs_math::random::Uniform<double,1> rng(0.0, 1.0);
     double min_weight = std::numeric_limits<double>::max();
@@ -51,7 +51,7 @@ void KLDAugmented2D::doApply(sample_set_t& sample_set)
         for (std::size_t j = 0 ; j < size ; ++j) {
             if (cumsum[j] <= u && u < cumsum[j+1]) {
                 i_p_t.insert(p_t_1[j]);
-                min_weight = std::min(min_weight, p_t_1[j].weight);
+                min_weight = std::min(min_weight, p_t_1[j].weight());
                 break;
             }
         }
@@ -66,10 +66,10 @@ void KLDAugmented2D::doApply(sample_set_t& sample_set)
     }
 
     const std::size_t left_to_insert = static_cast<std::size_t>(static_cast<double>(sample_set.getMaximumSampleSize() - i_p_t.getData().size()) * uniform_percent_);
-    sample_t sample;
+    Sample2D sample;
     for (std::size_t i = 0; i < left_to_insert; ++i) {
         uniform_pose_sampler_->apply(sample);
-        sample.weight = min_weight_ratio_ * min_weight;
+        sample.weight() = min_weight_ratio_ * min_weight;
         if (i_p_t.canInsert())
             i_p_t.insert(sample);
     }
@@ -112,7 +112,7 @@ void KLDAugmented2D::doApplyRecovery(sample_set_t& sample_set)
     std::vector<double> cumsum(size + 1);
     cumsum[0] = 0.0;
     for (std::size_t i = 0 ; i < size ; ++i)
-        cumsum[i+1] = cumsum[i] + p_t_1[i].weight;
+        cumsum[i+1] = cumsum[i] + p_t_1[i].weight();
 
     cslibs_math::random::Uniform<double,1> rng_recovery(0.0, 1.0);
     double min_weight = std::numeric_limits<double>::max();
@@ -126,7 +126,7 @@ void KLDAugmented2D::doApplyRecovery(sample_set_t& sample_set)
             for (std::size_t j = 0 ; j < size ; ++j) {
                 if (cumsum[j] <= u && u < cumsum[j+1]) {
                     i_p_t.insert(p_t_1[j]);
-                    min_weight = std::min(min_weight, p_t_1[j].weight);
+                    min_weight = std::min(min_weight, p_t_1[j].weight());
                     break;
                 }
             }
@@ -140,7 +140,7 @@ void KLDAugmented2D::doApplyRecovery(sample_set_t& sample_set)
     const std::size_t left_to_insert = static_cast<std::size_t>(static_cast<double>(sample_set.getMaximumSampleSize() - i_p_t.getData().size()) * uniform_percent_);
     for (std::size_t i = 0; i < left_to_insert; ++i) {
         uniform_pose_sampler_->apply(sample);
-        sample.weight = min_weight_ratio_ * min_weight;
+        sample.weight() = min_weight_ratio_ * min_weight;
         if (i_p_t.canInsert())
             i_p_t.insert(sample);
     }

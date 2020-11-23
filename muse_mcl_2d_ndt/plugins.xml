@@ -29,49 +29,7 @@
    <class type="muse_mcl_2d_ndt::ProbabilityGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
       <description></description>
    </class>
-   <class type="muse_mcl_2d_ndt::ProbabilityGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
    <class type="muse_mcl_2d_ndt::ProbabilityOccupancyGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::ProbabilityOccupancyGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::LikelihoodFieldGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::LikelihoodFieldGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::LikelihoodFieldOccupancyGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::LikelihoodFieldOccupancyGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::BinaryGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::BinaryGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::BinaryOccupancyGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::BinaryOccupancyGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::DistanceGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::DistanceGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::DistanceOccupancyGridmapProvider" base_class_type="muse_mcl_2d::MapProvider2D">
-      <description></description>
-   </class>
-   <class type="muse_mcl_2d_ndt::DistanceOccupancyGridmapServiceProvider" base_class_type="muse_mcl_2d::MapProvider2D">
       <description></description>
    </class>
 </library>
@@ -84,7 +42,7 @@
    </class>
    <class type="muse_mcl_2d_ndt::Gridmap3dLikelihoodFieldModel" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description></description>
-   </class>   
+   </class>
    <class type="muse_mcl_2d_ndt::OccupancyGridmap3dLikelihoodFieldModel" base_class_type="muse_mcl_2d::UpdateModel2D">
      <description></description>
    </class>

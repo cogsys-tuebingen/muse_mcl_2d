@@ -10,12 +10,13 @@ public:
   NDT2D() = default;
 
   void apply(const data_t::ConstPtr          &data,
-             const state_space_t::ConstPtr   &map,
+             const std::shared_ptr<state_space_t const>   &map,
              sample_set_t::weight_iterator_t  set) override;
 
 private:
   double      d1_;
   double      d2_;
+  double      p_rand_;
 
   virtual void doSetup(ros::NodeHandle &nh) override;
 };

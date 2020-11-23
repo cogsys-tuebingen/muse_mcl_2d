@@ -2,7 +2,6 @@
 #define MUSE_MCL_2D_GRIDMAPS_BINARY_GRIDMAP_HPP
 
 #include <muse_mcl_2d/map/map_2d.hpp>
-#include <muse_mcl_2d/state_space/state_space_description_2d.hpp>
 
 #include <cslibs_time/stamped.hpp>
 #include <cslibs_gridmaps/static_maps/binary_gridmap.h>
@@ -13,7 +12,7 @@ class BinaryGridmap : public muse_mcl_2d::Map2D
 public:
     using Ptr = std::shared_ptr<BinaryGridmap>;
     using map_t = cslibs_gridmaps::static_maps::BinaryGridmap<double>;
-    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using state_t = muse_smc::traits::State<muse_mcl_2d::Hypothesis2D>::type;
 
     BinaryGridmap(const map_t::Ptr &map,
                   const std::string frame_id);

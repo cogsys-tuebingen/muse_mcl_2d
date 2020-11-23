@@ -11,7 +11,7 @@ class ProbabilityGridmap : public muse_mcl_2d::Map2D
 public:
     using Ptr = std::shared_ptr<ProbabilityGridmap>;
     using map_t = cslibs_gridmaps::static_maps::ProbabilityGridmap<double,double>;
-    using state_t = muse_mcl_2d::StateSpaceDescription2D::state_t;
+    using state_t = muse_smc::traits::State<muse_mcl_2d::Hypothesis2D>::type;
 
     ProbabilityGridmap(const map_t::Ptr &map,
                        const std::string frame_id);
