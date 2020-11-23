@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>muse_mcl_2d</name>
-  <version>0.0.6</version>
+  <version>0.0.7</version>
   <description>The muse_mcl_2d package</description>
 
   <maintainer email="richard.hanten@uni-tuebingen.de">Richard Hanten</maintainer>
