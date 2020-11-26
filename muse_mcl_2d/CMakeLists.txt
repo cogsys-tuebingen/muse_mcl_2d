@@ -30,7 +30,7 @@ add_service_files(
 
 add_message_files(
     FILES
-        SampleMsg.msg
+       SampleMsg.msg
        SampleSetMsg.msg
 )
 
@@ -243,7 +243,7 @@ target_link_libraries(${PROJECT_NAME}_node
         ${PROJECT_NAME}_helper
 )
 
-muse_mcl_2d_add_unit_test_ros(test_load_plugins
+muse_mcl_2d_add_unit_test_ros(test_load_plugins_muse
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     LAUNCH_FILE
@@ -278,18 +278,18 @@ if(${MUSE_MCL_2D_ADDTIONALS})
     )
 endif()
 
-# install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(FILES plugins.xml DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-# install(TARGETS
-#             ${PROJECT_NAME}_density
-#             ${PROJECT_NAME}_helper
-#             ${PROJECT_NAME}_resampling
-#             ${PROJECT_NAME}_normal_sampling
-#             ${PROJECT_NAME}_uniform_sampling
-#             ${PROJECT_NAME}_scheduling
-#         ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-#         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
+install(TARGETS
+            ${PROJECT_NAME}_density
+            ${PROJECT_NAME}_helper
+            ${PROJECT_NAME}_resampling
+            ${PROJECT_NAME}_normal_sampling
+            ${PROJECT_NAME}_uniform_sampling
+            ${PROJECT_NAME}_scheduling
+        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION})
 
-# install(DIRECTORY include/${PROJECT_NAME}/
-#         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+install(DIRECTORY include/${PROJECT_NAME}/
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})

@@ -55,7 +55,7 @@ target_link_libraries(${PROJECT_NAME}_models
         ${catkin_LIBRARIES}
 )
 
-muse_mcl_2d_odometry_add_unit_test_ros(test_load_plugins
+muse_mcl_2d_odometry_add_unit_test_ros(test_load_plugins_odometry
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     LAUNCH_FILE

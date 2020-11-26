@@ -133,7 +133,7 @@ target_link_libraries(${PROJECT_NAME}_models
         ${PROJECT_NAME}_maps
 )
 
-muse_mcl_2d_gridmaps_add_unit_test_ros(test_load_plugins
+muse_mcl_2d_gridmaps_add_unit_test_ros(test_load_plugins_gridmaps
     INCLUDE_DIRS
         ${TARGET_INCLUDE_DIRS}
     LAUNCH_FILE
